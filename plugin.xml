@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="com.ht.scada.config.scadaconfig.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="监控对象透视图"
+            class="com.ht.scada.config.perspective.ScadaObjectPerspective"
+            id="com.ht.scada.config.perspective.ScadaObjectPerspective">
+      </perspective>
+      <perspective
+            class="com.ht.scada.config.perspective.ScadaObjectPerspective"
+            id="com.ht.scada.config.perspective.ScadaObjectPerspective"
+            name="监控对象透视图">
+      </perspective>
+      <perspective
+            class="com.ht.scada.config.perspective.RTURemotePerspective"
+            id="com.ht.scada.config.perspective.RTURemotePerspective"
+            name="RTU远程配置透视图">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="监控对象导航树"
+            allowMultiple="true"
+            icon="icons/sample2.gif"
+            class="com.ht.scada.config.view.ScadaObjectTreeView"
+            id="com.ht.scada.config.view.ScadaObjectTreeView">
+      </view>
+      <view
+            name="配置索引"
+            allowMultiple="true"
+            icon="icons/sample3.gif"
+            class="com.ht.scada.config.view.MainIndexView"
+            id="com.ht.scada.config.view.MainIndexView">
+      </view>
+      <view
+            allowMultiple="true"
+            class="com.ht.scada.config.view.EndTagView"
+            icon="icons/sample3.gif"
+            id="com.ht.scada.config.view.EndTagView"
+            name="配置监控对象">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="Mail"
+            id="scada-config.category">
+      </category>
+      <command
+            name="Open Mailbox"
+            description="Opens a mailbox"
+            categoryId="scada-config.category"
+            id="scada-config.open">
+      </command>
+      <command
+            name="Open Message Dialog"
+            description="Open a message dialog"
+            categoryId="scada-config.category"
+            id="scada-config.openMessage">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="scada-config.open"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+2">
+      </key>
+      <key
+            commandId="scada-config.openMessage"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+3">
+      </key>
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+X">
+      </key>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="scada-config.application"
+            name="丹东华通SCADA系统配置软件 2012-4-19">
+         <property
+               name="aboutText"
+               value="RCP Mail template created by PDE">
+         </property>
+         <property
+               name="windowImages"
+               value="icons/sample2.gif">
+         </property>
+         <property
+               name="aboutImage"
+               value="product_lg.gif">
+         </property>
+         <property
+               name="appName"
+               value="RCP Product">
+         </property>
+      </product>
+   </extension>
+
+</plugin>
