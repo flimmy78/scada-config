@@ -4,6 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -18,7 +19,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
+import com.ht.scada.common.tag.service.TagService;
+import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.MainTreeContentProvider;
@@ -28,6 +32,9 @@ import com.ht.scada.config.view.tree.RootTreeModel;
 public class ScadaObjectTreeView extends ViewPart {
 	
 	private static final Logger log = LoggerFactory.getLogger(ScadaObjectTreeView.class);
+	
+	private TagService tagService = (TagService) Activator.getDefault()
+			.getApplicationContext().getBean("tagService");
 	
 	public ScadaObjectTreeView() {
 	}
@@ -70,8 +77,7 @@ public class ScadaObjectTreeView extends ViewPart {
 								Display.getDefault().getDoubleClickTime(),
 								new Runnable() {
 									public void run() {
-										// edit(obj);
-//										log.debug("节点");
+										 edit(obj);
 									}
 								});
 					}
@@ -150,7 +156,7 @@ public class ScadaObjectTreeView extends ViewPart {
 					menuMng.add(objectIndex);
 				}
 			} else if(selectedObject instanceof MajorTag) {
-				MajorTag majorTag = (MajorTag)selectedObject;
+				final MajorTag majorTag = (MajorTag)selectedObject;
 				
 				Action objectIndex = new Action() {
 					public void run() {
@@ -185,9 +191,78 @@ public class ScadaObjectTreeView extends ViewPart {
 				};
 				objectIndex.setText("添加监控对象(&M)");
 				menuMng.add(objectIndex);
+				
+				objectIndex = new Action() {
+					public void run() {
+						edit(selectedObject);
+					}
+				};
+				objectIndex.setText("修改索引(&E)");
+				menuMng.add(objectIndex);
+				
+				objectIndex = new Action() {
+					public void run() {
+						if (MessageDialog.openConfirm(treeViewer.getTree()
+								.getShell(), "删除", "确认要删除吗？")) {
+							tagService.deleteMajorTagById(majorTag.getId().intValue());
+
+							treeViewer.remove(majorTag);
+						}
+					}
+				};
+				objectIndex.setText("删除索引(&D)");
+				menuMng.add(objectIndex);
+			}  else if(selectedObject instanceof EndTag) {
+				final EndTag endTag = (EndTag)selectedObject;
+				
+				Action objectIndex = new Action() {
+					public void run() {
+						edit(selectedObject);
+					}
+				};
+				objectIndex.setText("修改监控对象(&E)");
+				menuMng.add(objectIndex);
+				
+				objectIndex = new Action() {
+					public void run() {
+						if (MessageDialog.openConfirm(treeViewer.getTree()
+								.getShell(), "删除", "确认要删除吗？")) {
+							tagService.deleteEndTagById(endTag.getId());
+
+							treeViewer.remove(endTag);
+						}
+					}
+				};
+				objectIndex.setText("删除监控对象(&D)");
+				menuMng.add(objectIndex);
 			}
 		}
 
+	}
+	
+	private void edit(Object object) {
+		if(object instanceof MajorTag) {
+			try {
+				PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
+						.showView(MainIndexView.ID);
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+			ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.MAJOR_EDIT, object);
+		} else if(object instanceof EndTag) {
+			try {
+				PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
+						.showView(EndTagView.ID);
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+			ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.ENDTAG_EDIT, object);
+		}
+		
 	}
 
 	/**

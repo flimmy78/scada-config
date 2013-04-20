@@ -25,7 +25,6 @@ public class ScadaObjectPerspective implements IPerspectiveFactory {
 //		layout.addPerspectiveShortcut(ID);
 //		layout.addPerspectiveShortcut(ScadaDevicePerspective.ID);
 		
-		
 		layout.addView(ScadaObjectTreeView.ID, IPageLayout.LEFT, 0.25f, editorArea);
 //		IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, 0.25f, editorArea);
 //		leftFolder.addView(ScadaObjectTreeView.ID);

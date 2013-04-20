@@ -1,7 +1,5 @@
 package com.ht.scada.config.view;
 
-import java.util.EnumSet;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -17,6 +15,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.EndTag;
@@ -26,6 +28,7 @@ import com.ht.scada.common.tag.well.consts.EndTagType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
+import com.ht.scada.config.view.tree.RootTreeModel;
 
 public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	
@@ -33,7 +36,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		int lenght = EndTagType.values().length;
 		endTagType = new String[lenght];
 		for(int i=0;i<lenght;i++) {
-			endTagType[i] = EndTagType.values()[i].toString();
+			endTagType[i] = EndTagType.values()[i].getValue();
 		}
 			
 	}
@@ -83,7 +86,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			public void widgetSelected(SelectionEvent e) {
 				if(endTag.getId() == null) {//新建
 					if("".equals(text_name.getText().trim())) {
-						MessageDialog.openError(getSite().getShell(), "错误", "索引名字不能为空！");
+						MessageDialog.openError(getSite().getShell(), "错误", "监控对象名字不能为空！");
 						return;
 					}
 					
@@ -92,16 +95,43 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					
 					tagService.createEndTag(endTag);
 					
-				} else {//编辑
+					ScadaObjectTreeView.treeViewer.add(endTag.getMajorTag(), endTag);
+					ScadaObjectTreeView.treeViewer.setExpandedState(endTag.getMajorTag(), true);
 					
+				} else {//编辑
+					if("".equals(text_name.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误", "监控对象名字不能为空！");
+						return;
+					}
+					
+					endTag.setName(text_name.getText().trim());
+					endTag.setType(combo.getText());
+					
+					tagService.updateEndTag(endTag);
+					
+					ScadaObjectTreeView.treeViewer.update(endTag, null);
 				}
 				
-				ScadaObjectTreeView.treeViewer.refresh();
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPart part = page.getActivePart();
+				if (part instanceof IViewPart)
+					page.hideView((IViewPart) part);
 			}
 		});
 		btnNewButton.setText(" 保  存 ");
 		
 		Button btnNewButton_1 = new Button(parent, SWT.NONE);
+		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPart part = page.getActivePart();
+				if (part instanceof IViewPart)
+					page.hideView((IViewPart) part);
+			}
+		});
 		btnNewButton_1.setText(" 取  消 ");
 		
 		ViewPropertyChange.getInstance().addPropertyChangeListener("endtag", this);
@@ -122,6 +152,9 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			}
 		} else if(event.getProperty().equals(FirePropertyConstants.ENDTAG_EDIT)) {
 			endTag = (EndTag)event.getNewValue();
+			
+			//初始化控件值
+			text_name.setText(endTag.getName());
 		}
 	}
 
