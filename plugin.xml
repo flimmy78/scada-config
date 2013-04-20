@@ -95,7 +95,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="scada-config.application"
-            name="丹东华通SCADA系统配置软件 2012-4-19">
+            name="RCP Product">
          <property
                name="aboutText"
                value="RCP Mail template created by PDE">

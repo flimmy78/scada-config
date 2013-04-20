@@ -1,5 +1,7 @@
 package com.ht.scada.config.view;
 
+import java.util.EnumSet;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -17,10 +19,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
-import com.ht.scada.common.tag.consts.EndTagType;
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.TagService;
+import com.ht.scada.common.tag.well.consts.EndTagType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
@@ -28,19 +30,11 @@ import com.ht.scada.config.util.ViewPropertyChange;
 public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	
 	public EndTagView() {
-		endTagType = new String[11];
-			
-		endTagType[0] = EndTagType.YOU_JING;
-		endTagType[1] = EndTagType.SHUI_YUAN_JING;
-		endTagType[2] = EndTagType.ZHU_SHUI_JING;
-		endTagType[3] = EndTagType.ZENG_YA_ZHAN;
-		endTagType[4] = EndTagType.ZHU_QI_ZHAN;
-		endTagType[5] = EndTagType.LIAN_HE_ZHAN;
-		endTagType[6] = EndTagType.JIE_ZHUAN_ZHAN;
-		endTagType[7] = EndTagType.ZHU_SHUI_ZHAN;
-		endTagType[8] = EndTagType.JI_LIANG_ZHAN;
-		endTagType[9] = EndTagType.PEI_SHUI_JIAN;
-		endTagType[10] = EndTagType.OTHER;
+		int lenght = EndTagType.values().length;
+		endTagType = new String[lenght];
+		for(int i=0;i<lenght;i++) {
+			endTagType[i] = EndTagType.values()[i].toString();
+		}
 			
 	}
 
