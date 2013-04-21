@@ -52,9 +52,11 @@ public class ScadaObjectTreeView extends ViewPart {
 
 		treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.BORDER);
+		treeViewer.setAutoExpandLevel(3);
 		treeViewer.setContentProvider(new MainTreeContentProvider());
 		treeViewer.setLabelProvider(new MainTreeLabelProvider());
 		treeViewer.setInput(RootTreeModel.instanse);
+		
 
 		Tree tree = treeViewer.getTree();
 

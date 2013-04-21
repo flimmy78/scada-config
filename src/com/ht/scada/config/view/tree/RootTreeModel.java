@@ -17,7 +17,7 @@ public enum RootTreeModel {
 //	public static String[] getRoottree() {
 //		return rootTree;
 //	}
-	public String labelIndex = "监控对象变量";
+	public String labelIndex = "监控对象索引";
 	public String normalIndex = "常规分类索引";
 	public String energyIndex = "能耗分类分项";
 	public String otherConfig = "其他配置";
