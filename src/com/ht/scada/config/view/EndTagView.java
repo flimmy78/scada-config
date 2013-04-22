@@ -34,9 +34,10 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	
 	public EndTagView() {
 		int lenght = EndTagType.values().length;
-		endTagType = new String[lenght];
-		for(int i=0;i<lenght;i++) {
-			endTagType[i] = EndTagType.values()[i].getValue();
+		endTagType = new String[lenght+1];
+		endTagType[0] = "";
+		for(int i=1;i<=lenght;i++) {
+			endTagType[i] = EndTagType.values()[i-1].getValue();
 		}
 			
 	}
@@ -48,6 +49,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	
 	private TagService tagService = (TagService) Activator.getDefault().getApplicationContext().getBean("tagService");
 	private Table table;
+	private Combo combo;
 	
 	public void createPartControl(Composite parent) {
 		GridLayout gl_parent = new GridLayout(2, false);
@@ -57,6 +59,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		parent.setLayout(gl_parent);
 		
 		Label label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		label.setText("监控对象名：");
 		
 		text_name = new Text(parent, SWT.BORDER);
@@ -68,15 +71,25 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		label_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		label_1.setText("监控对象类型：");
 		
-		final Combo combo = new Combo(parent, SWT.NONE);
+		combo = new Combo(parent, SWT.NONE);
 		GridData gd_combo = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_combo.widthHint = 100;
+		gd_combo.widthHint = 85;
 		combo.setLayoutData(gd_combo);
 		combo.setItems(endTagType);
 		
+		Label label_2 = new Label(parent, SWT.NONE);
+		label_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label_2.setText("监控对象子类型：");
+		
+		Combo combo_1 = new Combo(parent, SWT.NONE);
+		GridData gd_combo_1 = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_combo_1.widthHint = 85;
+		combo_1.setLayoutData(gd_combo_1);
+		
 		TableViewer tableViewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
 		table = tableViewer.getTable();
-		GridData gd_table = new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1);
+		GridData gd_table = new GridData(SWT.LEFT, SWT.TOP, true, false, 2, 1);
+		gd_table.heightHint = 300;
 		gd_table.widthHint = 220;
 		table.setLayoutData(gd_table);
 		
@@ -91,7 +104,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					}
 					
 					endTag.setName(text_name.getText().trim());
-					endTag.setType(combo.getText());
+					endTag.setType(EndTagType.getByValue(combo.getText())==null?null:EndTagType.getByValue(combo.getText()).toString());
 					
 					tagService.createEndTag(endTag);
 					
@@ -105,7 +118,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					}
 					
 					endTag.setName(text_name.getText().trim());
-					endTag.setType(combo.getText());
+					endTag.setType(EndTagType.getByValue(combo.getText())==null?null:EndTagType.getByValue(combo.getText()).toString());
 					
 					tagService.updateEndTag(endTag);
 					
@@ -155,6 +168,13 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			
 			//初始化控件值
 			text_name.setText(endTag.getName());
+			
+			if(endTag.getType() != null) {
+				combo.setText(EndTagType.valueOf(endTag.getType()).getValue());
+			} else {
+				combo.setText("");
+			}
+			
 		}
 	}
 

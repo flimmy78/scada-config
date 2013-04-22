@@ -19,9 +19,9 @@
             id="com.ht.scada.config.perspective.ScadaObjectPerspective">
       </perspective>
       <perspective
-            class="com.ht.scada.config.perspective.ScadaObjectPerspective"
-            id="com.ht.scada.config.perspective.ScadaObjectPerspective"
-            name="监控对象透视图">
+            class="com.ht.scada.config.perspective.ScadaDevicePerspective"
+            id="com.ht.scada.config.perspective.ScadaDevicePerspective"
+            name="监控设备透视图">
       </perspective>
       <perspective
             class="com.ht.scada.config.perspective.RTURemotePerspective"
