@@ -16,7 +16,6 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
-import com.ht.scada.config.action.MessagePopupAction;
 import com.ht.scada.config.action.PerspectiveChangeAction;
 import com.ht.scada.config.perspective.RTURemotePerspective;
 import com.ht.scada.config.perspective.ScadaDevicePerspective;
@@ -36,7 +35,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction aboutAction;
     private IWorkbenchAction newWindowAction;
 //    private OpenViewAction openViewAction;
-    private Action messagePopupAction;
+//    private Action messagePopupAction;
 //    private IContributionItem perspectivesMenu;
     
     private Action scadaObjectChangeAction;
@@ -67,8 +66,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        openViewAction = new OpenViewAction(window, "Open Another Message View", MainIndexView.ID);
 //        register(openViewAction);
         
-        messagePopupAction = new MessagePopupAction("Open Message", window);
-        register(messagePopupAction);
         
 //        perspectivesMenu = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
         
@@ -102,7 +99,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // File
         fileMenu.add(newWindowAction);
         fileMenu.add(new Separator());
-        fileMenu.add(messagePopupAction);
+//        fileMenu.add(messagePopupAction);
 //        fileMenu.add(openViewAction);
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
@@ -121,6 +118,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main"));   
 //        toolbar.add(openViewAction);
-        toolbar.add(messagePopupAction);
+//        toolbar.add(messagePopupAction);
     }
 }
