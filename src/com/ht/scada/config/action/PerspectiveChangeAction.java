@@ -18,7 +18,7 @@ public class PerspectiveChangeAction extends Action {
 		this.perspectiveId = perspectiveId;
 		setId(perspectiveId);
 	}
-
+	// 
 	public void run() {
 		IWorkbench w = PlatformUI.getWorkbench();
 		ActionFactory.IWorkbenchAction closePerspectiveAction = ActionFactory.CLOSE_PERSPECTIVE
