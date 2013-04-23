@@ -42,6 +42,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private Action scadaDeviceChangeAction;
     private Action rtuRemoteChangeAction;
     
+    private Action areaViewShowAction;
+    private Action energyViewShowAction;
+    
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -71,6 +74,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         scadaObjectChangeAction = new PerspectiveChangeAction("监控对象配置",ScadaObjectPerspective.ID, window);
         register(scadaObjectChangeAction);
+        
+        areaViewShowAction = new PerspectiveChangeAction("常规分类配置",ScadaObjectPerspective.ID, window);
+        register(areaViewShowAction);
+        
+        energyViewShowAction = new PerspectiveChangeAction("能耗分类分项",ScadaObjectPerspective.ID, window);
+        register(energyViewShowAction);
         
         scadaDeviceChangeAction = new PerspectiveChangeAction("监控设备配置",ScadaDevicePerspective.ID, window);
         register(scadaDeviceChangeAction);
@@ -108,6 +117,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         helpMenu.add(aboutAction);
         
         scadaObjectMenu.add(scadaObjectChangeAction);
+        scadaObjectMenu.add(areaViewShowAction);
+        scadaObjectMenu.add(energyViewShowAction);
         
         scadaDeviceMenu.add(scadaDeviceChangeAction);
         

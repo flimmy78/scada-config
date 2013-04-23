@@ -16,4 +16,5 @@ public class FirePropertyConstants {
 	public final static String ENDTAG_ADD = "endTag_add";
 	
 	public final static String ENDTAG_EDIT = "endTag_edit";
+	
 }

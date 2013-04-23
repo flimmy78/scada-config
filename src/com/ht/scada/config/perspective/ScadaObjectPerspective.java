@@ -4,6 +4,10 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
+import com.ht.scada.config.view.AreaIndexView;
+import com.ht.scada.config.view.AreaTreeView;
+import com.ht.scada.config.view.EnergyIndexView;
+import com.ht.scada.config.view.EnergyTreeView;
 import com.ht.scada.config.view.MainIndexView;
 import com.ht.scada.config.view.ScadaObjectTreeView;
 /**
@@ -25,9 +29,13 @@ public class ScadaObjectPerspective implements IPerspectiveFactory {
 //		layout.addPerspectiveShortcut(ID);
 //		layout.addPerspectiveShortcut(ScadaDevicePerspective.ID);
 		
-		layout.addView(ScadaObjectTreeView.ID, IPageLayout.LEFT, 0.25f, editorArea);
-//		IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, 0.25f, editorArea);
-//		leftFolder.addView(ScadaObjectTreeView.ID);
+//		layout.addView(ScadaObjectTreeView.ID, IPageLayout.LEFT, 0.25f, editorArea);
+		IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, 0.25f, editorArea);
+		leftFolder.addView(ScadaObjectTreeView.ID);
+		
+		leftFolder.addView(AreaTreeView.ID);
+		
+		leftFolder.addView(EnergyTreeView.ID);
 		
 		IFolderLayout folder = layout.createFolder("messages", IPageLayout.LEFT, 1f, editorArea);
 		folder.addPlaceholder(MainIndexView.ID + ":*");
