@@ -29,7 +29,7 @@
 		<link>
 			<name>java</name>
 			<type>2</type>
-			<location>D:/workspace/scada-common/src/main/java</location>
+			<location>E:/GitRepository/scada-common/src/main/java</location>
 		</link>
 	</linkedResources>
 </projectDescription>
