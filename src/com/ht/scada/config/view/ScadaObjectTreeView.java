@@ -69,7 +69,7 @@ public class ScadaObjectTreeView extends ViewPart {
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-//				if (e.button == 1) {
+				if (e.button == 1) {
 					IStructuredSelection sel = ((IStructuredSelection) treeViewer
 							.getSelection());
 					if (!sel.isEmpty()) {
@@ -84,7 +84,7 @@ public class ScadaObjectTreeView extends ViewPart {
 								});
 					}
 
-//				}
+				}
 			}
 
 		});
