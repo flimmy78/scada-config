@@ -4,6 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -12,24 +13,29 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.AreaMinorTag;
+import com.ht.scada.common.tag.entity.EndTag;
+import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.config.scadaconfig.Activator;
-import com.ht.scada.config.view.tree.MainTreeContentProvider;
-import com.ht.scada.config.view.tree.MainTreeLabelProvider;
+import com.ht.scada.config.util.FirePropertyConstants;
+import com.ht.scada.config.util.ViewPropertyChange;
+import com.ht.scada.config.view.tree.AreaTreeContentProvider;
+import com.ht.scada.config.view.tree.AreaTreeLabelProvider;
 import com.ht.scada.config.view.tree.RootTreeModel;
 
 public class AreaTreeView extends ViewPart {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(AreaTreeView.class);
-	
-	private TagService tagService = (TagService) Activator.getDefault()
-			.getApplicationContext().getBean("tagService");
-	
+
+	private TagService tagService = (TagService) Activator.getDefault().getApplicationContext().getBean("tagService");
+
 	public AreaTreeView() {
 	}
 
@@ -44,13 +50,11 @@ public class AreaTreeView extends ViewPart {
 	 */
 	public void createPartControl(Composite parent) {
 
-		treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.BORDER);
+		treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		treeViewer.setAutoExpandLevel(3);
-		treeViewer.setContentProvider(null);
-		treeViewer.setLabelProvider(null);
+		treeViewer.setContentProvider(new AreaTreeContentProvider());
+		treeViewer.setLabelProvider(new AreaTreeLabelProvider());
 		treeViewer.setInput("常规分类索引");
-		
 
 		Tree tree = treeViewer.getTree();
 
@@ -63,22 +67,20 @@ public class AreaTreeView extends ViewPart {
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-//				if (e.button == 1) {
-					IStructuredSelection sel = ((IStructuredSelection) treeViewer
-							.getSelection());
-					if (!sel.isEmpty()) {
-						final Object obj = ((IStructuredSelection) treeViewer
-								.getSelection()).getFirstElement();
-						Display.getDefault().timerExec(
-								Display.getDefault().getDoubleClickTime(),
-								new Runnable() {
-									public void run() {
-										 edit(obj);
-									}
-								});
-					}
+				// if (e.button == 1) {
+				System.out.println("点击打开编辑页面" + ((IStructuredSelection) treeViewer.getSelection()).getFirstElement());
 
-//				}
+				IStructuredSelection sel = ((IStructuredSelection) treeViewer.getSelection());
+				if (!sel.isEmpty()) {
+					final Object obj = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
+					Display.getDefault().timerExec(Display.getDefault().getDoubleClickTime(), new Runnable() {
+						public void run() {
+							edit(obj);
+						}
+					});
+				}
+
+				// }
 			}
 
 		});
@@ -93,8 +95,7 @@ public class AreaTreeView extends ViewPart {
 
 		@Override
 		public void menuAboutToShow(IMenuManager manager) {
-			IStructuredSelection selection = (IStructuredSelection) treeViewer
-					.getSelection();
+			IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
 			if (!selection.isEmpty()) {
 				createContextMenu(selection.getFirstElement());
 			}
@@ -112,21 +113,110 @@ public class AreaTreeView extends ViewPart {
 				if (str.equals(RootTreeModel.instanse.normalIndex)) {// 常规分类索引
 					Action objectIndex = new Action() {
 						public void run() {
+							try {
+								PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+										.showView(AreaTreeView.ID);
+							} catch (PartInitException e) {
+								e.printStackTrace();
+							}
+							ViewPropertyChange.getInstance().firePropertyChangeListener(
+									FirePropertyConstants.MAJOR_ADD, selectedObject);
 
 						}
 					};
 					objectIndex.setText("添加索引(&A)");
 					menuMng.add(objectIndex);
 				}
-			} else if(selectedObject instanceof AreaMinorTag) {
-				
+			} else if (selectedObject instanceof AreaMinorTag) {
+				final AreaMinorTag areaMinorTag = (AreaMinorTag) selectedObject;
+
+				Action objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+									.showView(AreaIndexView.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.MAJOR_ADD,
+								selectedObject);
+
+					}
+				};
+				objectIndex.setText("添加索引(&A)");
+				menuMng.add(objectIndex);
+
+				objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+									.showView(AreaIndexView.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.ENDTAG_ADD,
+								selectedObject);
+
+					}
+				};
+				objectIndex.setText("添加监控对象(&M)");
+				menuMng.add(objectIndex);
+
+				objectIndex = new Action() {
+					public void run() {
+						edit(selectedObject);
+					}
+				};
+				objectIndex.setText("修改索引(&E)");
+				menuMng.add(objectIndex);
+
+				objectIndex = new Action() {
+					public void run() {
+						if (MessageDialog.openConfirm(treeViewer.getTree().getShell(), "删除", "确认要删除吗？")) {
+							tagService.deleteAreaMinorTagById(areaMinorTag.getId().intValue());
+
+							treeViewer.remove(areaMinorTag);
+						}
+					}
+				};
+				objectIndex.setText("删除索引(&D)");
+				menuMng.add(objectIndex);
+			} else if (selectedObject instanceof EndTag) {
+				final EndTag endTag = (EndTag) selectedObject;
+
+				Action objectIndex = new Action() {
+					public void run() {
+						edit(selectedObject);
+					}
+				};
+				objectIndex.setText("修改监控对象(&E)");
+				menuMng.add(objectIndex);
+
+				objectIndex = new Action() {
+					public void run() {
+						if (MessageDialog.openConfirm(treeViewer.getTree().getShell(), "删除", "确认要删除吗？")) {
+							tagService.deleteEndTagById(endTag.getId());
+
+							treeViewer.remove(endTag);
+						}
+					}
+				};
+				objectIndex.setText("删除监控对象(&D)");
+				menuMng.add(objectIndex);
 			}
 		}
 
 	}
-	
+
 	private void edit(Object object) {
-		
+		if (object instanceof AreaMinorTag) {
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(AreaIndexView.ID);
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+			ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.AreaMinor_EDIT, object);
+		}
 	}
 
 	/**

@@ -22,7 +22,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowCoolBar(true);	//是否显示工具栏
         configurer.setShowStatusLine(false);	
         
-        configurer.setShowPerspectiveBar(false);//是否显示透视图栏
+        configurer.setShowPerspectiveBar(true);//是否显示透视图栏
     }
     
 }
