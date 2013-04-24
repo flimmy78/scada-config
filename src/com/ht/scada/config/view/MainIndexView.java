@@ -32,12 +32,12 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 
 	public MainIndexView() {
 		int lenght = MajorTagType.values().length;
-		majorTagTypeArray = new String[lenght+1];
+		majorTagTypeArray = new String[lenght + 1];
 		majorTagTypeArray[0] = "";
-		for(int i=1;i<=lenght;i++) {
-			majorTagTypeArray[i] = MajorTagType.values()[i-1].getValue();
+		for (int i = 1; i <= lenght; i++) {
+			majorTagTypeArray[i] = MajorTagType.values()[i - 1].getValue();
 		}
-		
+
 	}
 
 	public static final String ID = "com.ht.scada.config.view.MainIndexView";
@@ -45,8 +45,7 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 	private MajorTag majorTag;
 	private String[] majorTagTypeArray;
 
-	private TagService tagService = (TagService) Activator.getDefault()
-			.getApplicationContext().getBean("tagService");
+	private TagService tagService = (TagService) Activator.getDefault().getApplicationContext().getBean("tagService");
 	private Combo combo;
 
 	public void createPartControl(Composite parent) {
@@ -60,15 +59,14 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 		label.setText("索引名：");
 
 		text = new Text(parent, SWT.BORDER);
-		GridData gd_text = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1,
-				1);
+		GridData gd_text = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_text.widthHint = 100;
 		text.setLayoutData(gd_text);
-		
+
 		Label label_1 = new Label(parent, SWT.NONE);
 		label_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		label_1.setText("类型：");
-		
+
 		combo = new Combo(parent, SWT.NONE);
 		GridData gd_combo = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_combo.widthHint = 90;
@@ -81,46 +79,44 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 			public void widgetSelected(SelectionEvent e) {
 				if (majorTag.getId() == null) {// 新建
 					if ("".equals(text.getText().trim())) {
-						MessageDialog.openError(getSite().getShell(), "错误",
-								"索引名字不能为空！");
+						MessageDialog.openError(getSite().getShell(), "错误", "索引名字不能为空！");
 						return;
 					}
 
 					majorTag.setName(text.getText().trim());
-					majorTag.setType(MajorTagType.getByValue(combo.getText())==null?null:MajorTagType.getByValue(combo.getText()).toString());
-					
+					majorTag.setType(MajorTagType.getByValue(combo.getText()) == null ? null : MajorTagType.getByValue(
+							combo.getText()).toString());
+
 					tagService.createMajorTag(majorTag);
-					
+
 					Object parentObject;
-					if(majorTag.getParent() == null) {
+					if (majorTag.getParent() == null) {
 						parentObject = RootTreeModel.instanse.labelIndex;
 					} else {
 						parentObject = majorTag.getParent();
 					}
-					
-					
+
 					ScadaObjectTreeView.treeViewer.add(parentObject, majorTag);
 					ScadaObjectTreeView.treeViewer.setExpandedState(parentObject, true);
 
 				} else {// 编辑
 					if ("".equals(text.getText().trim())) {
-						MessageDialog.openError(getSite().getShell(), "错误",
-								"索引名字不能为空！");
+						MessageDialog.openError(getSite().getShell(), "错误", "索引名字不能为空！");
 						return;
 					}
 					majorTag.setName(text.getText().trim());
-					majorTag.setType(MajorTagType.getByValue(combo.getText())==null?null:MajorTagType.getByValue(combo.getText()).toString());
-					
+					majorTag.setType(MajorTagType.getByValue(combo.getText()) == null ? null : MajorTagType.getByValue(
+							combo.getText()).toString());
+
 					tagService.updateMajorTag(majorTag);
-					
+
 					ScadaObjectTreeView.treeViewer.update(majorTag, null);
 
 				}
 
-//				ScadaObjectTreeView.treeViewer.refresh();
+				// ScadaObjectTreeView.treeViewer.refresh();
 
-				IWorkbenchPage page = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				IWorkbenchPart part = page.getActivePart();
 				if (part instanceof IViewPart)
 					page.hideView((IViewPart) part);
@@ -132,8 +128,7 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IWorkbenchPage page = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				IWorkbenchPart part = page.getActivePart();
 				if (part instanceof IViewPart)
 					page.hideView((IViewPart) part);
@@ -141,8 +136,7 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 		});
 		btnNewButton_1.setText(" 取  消 ");
 
-		ViewPropertyChange.getInstance()
-				.addPropertyChangeListener("main", this);
+		ViewPropertyChange.getInstance().addPropertyChangeListener("main", this);
 	}
 
 	@Override
@@ -162,17 +156,16 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 			}
 		} else if (event.getProperty().equals(FirePropertyConstants.MAJOR_EDIT)) {
 			majorTag = (MajorTag) event.getNewValue();
-			
-			//初始化控件值
+
+			// 初始化控件值
 			text.setText(majorTag.getName());
-			
-			if(majorTag.getType() != null) {
+
+			if (majorTag.getType() != null) {
 				combo.setText(MajorTagType.valueOf(majorTag.getType()).getValue());
 			} else {
 				combo.select(0);
 			}
-			
-			
+
 		}
 	}
 

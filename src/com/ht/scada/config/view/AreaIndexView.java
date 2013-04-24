@@ -3,12 +3,18 @@ package com.ht.scada.config.view;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.service.TagService;
@@ -43,11 +49,23 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 		gd_text.widthHint = 100;
 		text.setLayoutData(gd_text);
 
-		Button btnNewButton = new Button(parent, SWT.NONE);
-		btnNewButton.setText(" 保  存 ");
+		Button btnSave = new Button(parent, SWT.NONE);
+		btnSave.setText(" 保  存 ");
+		
+		btnSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPart part = page.getActivePart();
+				if (part instanceof IViewPart)
+					page.hideView((IViewPart) part);
+				
+				System.out.println("btnSave监听添加成功！");
+			}
+		});
 
-		Button btnNewButton_1 = new Button(parent, SWT.NONE);
-		btnNewButton_1.setText(" 取  消 ");
+		Button btnCancel = new Button(parent, SWT.NONE);
+		btnCancel.setText(" 取  消 ");
 
 	}
 
