@@ -80,6 +80,11 @@
             id="com.ht.scada.config.view.EnergyTreeView"
             name="能耗分类导航树">
       </view>
+      <view
+            class="com.ht.scada.config.view.tree.e"
+            id="com.ht.scada.config.view.tree.e"
+            name="New ViewPart">
+      </view>
    </extension>
    <extension
          id="product"

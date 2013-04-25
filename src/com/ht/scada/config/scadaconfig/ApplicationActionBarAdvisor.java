@@ -16,10 +16,15 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
+import com.ht.scada.config.action.OpenViewAction;
 import com.ht.scada.config.action.PerspectiveChangeAction;
 import com.ht.scada.config.perspective.RTURemotePerspective;
 import com.ht.scada.config.perspective.ScadaDevicePerspective;
 import com.ht.scada.config.perspective.ScadaObjectPerspective;
+import com.ht.scada.config.view.AreaTreeView;
+import com.ht.scada.config.view.EnergyTreeView;
+import com.ht.scada.config.view.MainIndexView;
+import com.ht.scada.config.view.ScadaObjectTreeView;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of the
@@ -72,13 +77,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
 //        perspectivesMenu = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
         
-        scadaObjectChangeAction = new PerspectiveChangeAction("监控对象配置",ScadaObjectPerspective.ID, window);
+        scadaObjectChangeAction = new OpenViewAction(window, ScadaObjectPerspective.ID, ScadaObjectTreeView.ID, "监控对象配置");
         register(scadaObjectChangeAction);
         
-        areaViewShowAction = new PerspectiveChangeAction("常规分类配置",ScadaObjectPerspective.ID, window);
+        areaViewShowAction = new OpenViewAction(window, ScadaObjectPerspective.ID, AreaTreeView.ID, "常规分类配置");
         register(areaViewShowAction);
         
-        energyViewShowAction = new PerspectiveChangeAction("能耗分类分项",ScadaObjectPerspective.ID, window);
+        energyViewShowAction = new OpenViewAction(window, ScadaObjectPerspective.ID, EnergyTreeView.ID, "能耗分类分项");
         register(energyViewShowAction);
         
         scadaDeviceChangeAction = new PerspectiveChangeAction("监控设备配置",ScadaDevicePerspective.ID, window);
