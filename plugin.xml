@@ -91,14 +91,14 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="scada-config.application"
-            name="RCP Product">
+            name="SCADA配置软件">
          <property
                name="aboutText"
                value="RCP Mail template created by PDE">
          </property>
          <property
                name="windowImages"
-               value="icons/sample2.gif">
+               value="icons/sample.gif">
          </property>
          <property
                name="aboutImage"
@@ -106,7 +106,7 @@
          </property>
          <property
                name="appName"
-               value="RCP Product">
+               value="SCADA配置软件">
          </property>
       </product>
    </extension>
