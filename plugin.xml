@@ -81,9 +81,25 @@
             name="能耗分类导航树">
       </view>
       <view
-            class="com.ht.scada.config.view.tree.e"
-            id="com.ht.scada.config.view.tree.e"
-            name="New ViewPart">
+            allowMultiple="true"
+            class="com.ht.scada.config.view.ScadaDeviceTreeView"
+            icon="icons/sample2.gif"
+            id="com.ht.scada.config.view.ScadaDeviceTreeView"
+            name="监控设备导航树">
+      </view>
+      <view
+            allowMultiple="true"
+            class="com.ht.scada.config.view.AquisitionChannelView"
+            icon="icons/sample3.gif"
+            id="com.ht.scada.config.view.AquisitionChannelView"
+            name="配置采集通道">
+      </view>
+      <view
+            allowMultiple="true"
+            class="com.ht.scada.config.view.AquisitionDeviceView"
+            icon="icons/sample3.gif"
+            id="com.ht.scada.config.view.AquisitionDeviceView"
+            name="配置设备">
       </view>
    </extension>
    <extension
