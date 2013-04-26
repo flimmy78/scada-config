@@ -21,7 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
-import com.ht.scada.common.tag.service.TagService;
+import com.ht.scada.common.tag.service.EndTagService;
+import com.ht.scada.common.tag.service.MajorTagService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
@@ -33,8 +34,10 @@ public class ScadaObjectTreeView extends ViewPart {
 	
 	private static final Logger log = LoggerFactory.getLogger(ScadaObjectTreeView.class);
 	
-	private TagService tagService = (TagService) Activator.getDefault()
-			.getApplicationContext().getBean("tagService");
+	private MajorTagService majorTagService = (MajorTagService) Activator.getDefault()
+			.getApplicationContext().getBean("majorTagService");
+	private EndTagService endTagService = (EndTagService) Activator.getDefault()
+			.getApplicationContext().getBean("endTagService");
 	
 	public ScadaObjectTreeView() {
 	}
@@ -206,7 +209,7 @@ public class ScadaObjectTreeView extends ViewPart {
 					public void run() {
 						if (MessageDialog.openConfirm(treeViewer.getTree()
 								.getShell(), "删除", "确认要删除吗？")) {
-							tagService.deleteMajorTagById(majorTag.getId().intValue());
+							majorTagService.deleteById(majorTag.getId().intValue());
 
 							treeViewer.remove(majorTag);
 						}
@@ -229,7 +232,7 @@ public class ScadaObjectTreeView extends ViewPart {
 					public void run() {
 						if (MessageDialog.openConfirm(treeViewer.getTree()
 								.getShell(), "删除", "确认要删除吗？")) {
-							tagService.deleteEndTagById(endTag.getId());
+							endTagService.deleteById(endTag.getId());
 
 							treeViewer.remove(endTag);
 						}

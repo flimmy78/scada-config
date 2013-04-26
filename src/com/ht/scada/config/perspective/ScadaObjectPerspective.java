@@ -35,7 +35,7 @@ public class ScadaObjectPerspective implements IPerspectiveFactory {
 		leftFolder.addPlaceholder(AreaTreeView.ID);
 		leftFolder.addPlaceholder(EnergyTreeView.ID);
 		
-		leftFolder.addView(ScadaObjectTreeView.ID);
+//		leftFolder.addView(ScadaObjectTreeView.ID);
 		
 		
 		IFolderLayout folder = layout.createFolder("messages", IPageLayout.LEFT, 1f, editorArea);

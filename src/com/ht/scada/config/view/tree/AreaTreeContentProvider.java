@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.ht.scada.common.tag.entity.AreaMinorTag;
+import com.ht.scada.common.tag.service.AreaMinorTagService;
 import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.config.scadaconfig.Activator;
 //import org.slf4j.Logger;
@@ -20,8 +21,8 @@ public class AreaTreeContentProvider implements ITreeContentProvider {
 	// private final Logger log =
 	// LoggerFactory.getLogger(MainTreeContentProvider.class);
 
-	private TagService tagService = (TagService) Activator.getDefault()
-			.getApplicationContext().getBean("tagService");
+	private AreaMinorTagService areaMinorTagService = (AreaMinorTagService) Activator.getDefault()
+			.getApplicationContext().getBean("areaMinorTagService");
 
 	@Override
 	public void dispose() {
@@ -42,7 +43,7 @@ public class AreaTreeContentProvider implements ITreeContentProvider {
 			// TODO 
 		} else if (parentElement instanceof AreaMinorTag) {
 			List<Object> objectList = new ArrayList<Object>();
-			List<AreaMinorTag> areaMinorTagList = tagService
+			List<AreaMinorTag> areaMinorTagList = areaMinorTagService
 					.getAreaMinorTagsByParentId(((AreaMinorTag) parentElement)
 							.getId());
 			if (areaMinorTagList != null) {
@@ -58,7 +59,7 @@ public class AreaTreeContentProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement.equals(RootTreeModel.instanse.normalIndex)) { // 常规分类索引
-			List<AreaMinorTag> areaMinorTagList = tagService
+			List<AreaMinorTag> areaMinorTagList = areaMinorTagService
 					.getRootAreaMinorTag();
 			if (areaMinorTagList != null) {
 				return areaMinorTagList.toArray();

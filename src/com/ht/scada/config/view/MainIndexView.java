@@ -9,6 +9,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -19,14 +20,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.MajorTag;
-import com.ht.scada.common.tag.service.TagService;
-import com.ht.scada.common.tag.well.consts.EndTagType;
+import com.ht.scada.common.tag.service.MajorTagService;
 import com.ht.scada.common.tag.well.consts.MajorTagType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.RootTreeModel;
-import org.eclipse.swt.widgets.Combo;
 
 public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 
@@ -45,7 +44,8 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 	private MajorTag majorTag;
 	private String[] majorTagTypeArray;
 
-	private TagService tagService = (TagService) Activator.getDefault().getApplicationContext().getBean("tagService");
+	private MajorTagService majorTagService = (MajorTagService) Activator.getDefault()
+			.getApplicationContext().getBean("majorTagService");
 	private Combo combo;
 
 	public void createPartControl(Composite parent) {
@@ -87,7 +87,7 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 					majorTag.setType(MajorTagType.getByValue(combo.getText()) == null ? null : MajorTagType.getByValue(
 							combo.getText()).toString());
 
-					tagService.createMajorTag(majorTag);
+					majorTagService.create(majorTag);
 
 					Object parentObject;
 					if (majorTag.getParent() == null) {
@@ -108,7 +108,7 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 					majorTag.setType(MajorTagType.getByValue(combo.getText()) == null ? null : MajorTagType.getByValue(
 							combo.getText()).toString());
 
-					tagService.updateMajorTag(majorTag);
+					majorTagService.update(majorTag);
 
 					ScadaObjectTreeView.treeViewer.update(majorTag, null);
 

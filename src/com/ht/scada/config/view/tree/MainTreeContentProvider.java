@@ -8,6 +8,8 @@ import org.eclipse.jface.viewers.Viewer;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
+import com.ht.scada.common.tag.service.EndTagService;
+import com.ht.scada.common.tag.service.MajorTagService;
 import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.config.scadaconfig.Activator;
 //import org.slf4j.Logger;
@@ -17,7 +19,10 @@ import com.ht.scada.config.scadaconfig.Activator;
 public class MainTreeContentProvider implements ITreeContentProvider {
 //	private final Logger log = LoggerFactory.getLogger(MainTreeContentProvider.class);
 	
-	private TagService tagService = (TagService) Activator.getDefault().getApplicationContext().getBean("tagService");
+	private MajorTagService majorTagService = (MajorTagService) Activator.getDefault()
+			.getApplicationContext().getBean("majorTagService");
+	private EndTagService endTagService = (EndTagService) Activator.getDefault()
+			.getApplicationContext().getBean("endTagService");
 	
 	@Override
 	public void dispose() {
@@ -39,7 +44,7 @@ public class MainTreeContentProvider implements ITreeContentProvider {
 //			log.debug(label);
 //			return label;
 			if (label.equals(RootTreeModel.instanse.labelIndex)) {	//主索引
-				List<MajorTag> majorTagList = tagService.getRootMajorTag();
+				List<MajorTag> majorTagList = majorTagService.getRootMajorTag();
 				if(majorTagList != null) {
 					return majorTagList.toArray();
 				}
@@ -68,11 +73,11 @@ public class MainTreeContentProvider implements ITreeContentProvider {
 //			}
 		} else if(parentElement instanceof MajorTag) {
 			List<Object> objectList = new ArrayList<Object>();
-			List<MajorTag> majorTagList = tagService.getMajorTagsByParentId(((MajorTag)parentElement).getId());
+			List<MajorTag> majorTagList = majorTagService.getMajorTagsByParentId(((MajorTag)parentElement).getId());
 			if(majorTagList != null) {
 				objectList.addAll(majorTagList);
 			}
-			List<EndTag> endTagList = tagService.getEndTagByParentId(((MajorTag)parentElement).getId());
+			List<EndTag> endTagList = endTagService.getEndTagByParentId(((MajorTag)parentElement).getId());
 			if(endTagList != null) {
 				objectList.addAll(endTagList);
 			}

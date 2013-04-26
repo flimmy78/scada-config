@@ -20,6 +20,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.AreaMinorTag;
 import com.ht.scada.common.tag.entity.MajorTag;
+import com.ht.scada.common.tag.service.AreaMinorTagService;
 import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.common.tag.well.consts.EndTagType;
 import com.ht.scada.common.tag.well.consts.MajorTagType;
@@ -46,8 +47,8 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 	private AreaMinorTag areaMinorTag;
 	private String[] areaMinorTagTypeArray;
 
-	private TagService tagService = (TagService) Activator.getDefault()
-			.getApplicationContext().getBean("tagService");
+	private AreaMinorTagService areaMinorTagService = (AreaMinorTagService) Activator.getDefault()
+			.getApplicationContext().getBean("areaMinorTagService");
 	private Text textType;
 
 	public void createPartControl(Composite parent) {
@@ -92,7 +93,7 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 					areaMinorTag.setName(textIndex.getText().trim());
 					areaMinorTag.setType(textType.getText().trim());
 					
-					tagService.createAreaMinorTag(areaMinorTag);
+					areaMinorTagService.create(areaMinorTag);
 
 					Object parentObject;
 					if (areaMinorTag.getParent() == null) {
@@ -115,7 +116,7 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 					areaMinorTag.setName(textIndex.getText().trim());
 					areaMinorTag.setType(textType.getText().trim());
 				
-					tagService.updateAreaMinorTag(areaMinorTag);
+					areaMinorTagService.update(areaMinorTag);
 
 					AreaTreeView.treeViewer.update(areaMinorTag, null);
 
@@ -161,6 +162,10 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 			} else {
 				areaMinorTag.setParent(null);
 			}
+			// 初始化控件值
+			textIndex.setText("");
+			textType.setText("");
+			
 		} else if (event.getProperty().equals(
 				FirePropertyConstants.AreaMinor_EDIT)) {
 			areaMinorTag = (AreaMinorTag) event.getNewValue();
@@ -171,8 +176,10 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 			String typeStr = areaMinorTag.getType();
 			if(typeStr == null){
 				typeStr = "";
-			} else
-			textType.setText(areaMinorTag.getType());
+			} else {
+			    textType.setText(areaMinorTag.getType());
+			}
+			
 
 		}
 	}

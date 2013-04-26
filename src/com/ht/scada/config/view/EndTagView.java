@@ -23,6 +23,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
+import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.common.tag.well.consts.EndTagType;
 import com.ht.scada.config.scadaconfig.Activator;
@@ -47,7 +48,8 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private EndTag endTag;
 	private String endTagType[];
 	
-	private TagService tagService = (TagService) Activator.getDefault().getApplicationContext().getBean("tagService");
+	private EndTagService endTagService = (EndTagService) Activator.getDefault()
+			.getApplicationContext().getBean("endTagService");
 	private Table table;
 	private Combo combo;
 	
@@ -106,7 +108,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					endTag.setName(text_name.getText().trim());
 					endTag.setType(EndTagType.getByValue(combo.getText())==null?null:EndTagType.getByValue(combo.getText()).toString());
 					
-					tagService.createEndTag(endTag);
+					endTagService.create(endTag);
 					
 					ScadaObjectTreeView.treeViewer.add(endTag.getMajorTag(), endTag);
 					ScadaObjectTreeView.treeViewer.setExpandedState(endTag.getMajorTag(), true);
@@ -120,7 +122,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					endTag.setName(text_name.getText().trim());
 					endTag.setType(EndTagType.getByValue(combo.getText())==null?null:EndTagType.getByValue(combo.getText()).toString());
 					
-					tagService.updateEndTag(endTag);
+					endTagService.update(endTag);
 					
 					ScadaObjectTreeView.treeViewer.update(endTag, null);
 				}

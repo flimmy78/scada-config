@@ -19,8 +19,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ht.scada.common.tag.dao.AreaMinorTagDao;
 import com.ht.scada.common.tag.entity.AreaMinorTag;
 import com.ht.scada.common.tag.entity.EndTag;
+import com.ht.scada.common.tag.service.AreaMinorTagService;
 import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
@@ -34,8 +36,8 @@ public class AreaTreeView extends ViewPart {
 	private static final Logger log = LoggerFactory
 			.getLogger(AreaTreeView.class);
 
-	private TagService tagService = (TagService) Activator.getDefault()
-			.getApplicationContext().getBean("tagService");
+	private AreaMinorTagService areaMinorTagService = (AreaMinorTagService) Activator.getDefault()
+			.getApplicationContext().getBean("areaMinorTagService");
 
 	public AreaTreeView() {
 	}
@@ -186,7 +188,7 @@ public class AreaTreeView extends ViewPart {
 					public void run() {
 						if (MessageDialog.openConfirm(treeViewer.getTree()
 								.getShell(), "删除", "确认要删除吗？")) {
-							tagService.deleteAreaMinorTagById(areaMinorTag
+							areaMinorTagService.deleteById(areaMinorTag
 									.getId().intValue());
 
 							treeViewer.remove(areaMinorTag);
