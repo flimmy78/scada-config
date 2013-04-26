@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.AreaMinorTag;
 import com.ht.scada.common.tag.entity.EndTag;
-import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
@@ -70,10 +69,7 @@ public class AreaTreeView extends ViewPart {
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				if (e.button == 1) {
-//					System.out.println("点击打开编辑页面"
-//							+ ((IStructuredSelection) treeViewer.getSelection())
-//									.getFirstElement());
+				if (e.button == 1) { // 右键
 
 					IStructuredSelection sel = ((IStructuredSelection) treeViewer
 							.getSelection());
@@ -131,7 +127,8 @@ public class AreaTreeView extends ViewPart {
 							} catch (PartInitException e) {
 								e.printStackTrace();
 							}
-							ViewPropertyChange.getInstance()
+							ViewPropertyChange
+									.getInstance()
 									.firePropertyChangeListener(
 											FirePropertyConstants.AreaMinor_ADD,
 											selectedObject);
@@ -144,6 +141,7 @@ public class AreaTreeView extends ViewPart {
 			} else if (selectedObject instanceof AreaMinorTag) {
 				final AreaMinorTag areaMinorTag = (AreaMinorTag) selectedObject;
 
+				// ===============添加索引=======================
 				Action objectIndex = new Action() {
 					public void run() {
 						try {
@@ -163,6 +161,7 @@ public class AreaTreeView extends ViewPart {
 				objectIndex.setText("添加索引(&A)");
 				menuMng.add(objectIndex);
 
+				// ===============修改索引=======================
 				objectIndex = new Action() {
 					public void run() {
 						try {
@@ -174,7 +173,7 @@ public class AreaTreeView extends ViewPart {
 						}
 						ViewPropertyChange.getInstance()
 								.firePropertyChangeListener(
-										FirePropertyConstants.ENDTAG_ADD,
+										FirePropertyConstants.AreaMinor_EDIT,
 										selectedObject);
 
 					}
@@ -182,6 +181,7 @@ public class AreaTreeView extends ViewPart {
 				objectIndex.setText("修改索引(&E)");
 				menuMng.add(objectIndex);
 
+				// ===============删除索引=======================
 				objectIndex = new Action() {
 					public void run() {
 						if (MessageDialog.openConfirm(treeViewer.getTree()
@@ -195,7 +195,7 @@ public class AreaTreeView extends ViewPart {
 				};
 				objectIndex.setText("删除索引(&D)");
 				menuMng.add(objectIndex);
-			} 
+			}
 		}
 
 	}
@@ -205,7 +205,6 @@ public class AreaTreeView extends ViewPart {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getActivePage().showView(AreaIndexView.ID);
-				System.out.println(((AreaMinorTag) object).getName());
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}
@@ -219,7 +218,7 @@ public class AreaTreeView extends ViewPart {
 				e.printStackTrace();
 			}
 			ViewPropertyChange.getInstance().firePropertyChangeListener(
-					FirePropertyConstants.ENDTAG_EDIT, object);
+					FirePropertyConstants.AreaMinor_ADD, object);
 		}
 	}
 

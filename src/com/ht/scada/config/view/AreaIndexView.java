@@ -18,6 +18,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.ht.scada.common.tag.entity.AreaMinorTag;
 import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.common.tag.well.consts.EndTagType;
@@ -32,20 +33,21 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 
 	public AreaIndexView() {
 		int lenght = MajorTagType.values().length;
-		majorTagTypeArray = new String[lenght + 1];
-		majorTagTypeArray[0] = "";
+		areaMinorTagTypeArray = new String[lenght + 1];
+		areaMinorTagTypeArray[0] = "";
 		for (int i = 1; i <= lenght; i++) {
-			majorTagTypeArray[i] = MajorTagType.values()[i - 1].getValue();
+			areaMinorTagTypeArray[i] = MajorTagType.values()[i - 1].getValue();
 		}
 
 	}
 
 	public static final String ID = "com.ht.scada.config.view.AreaIndexView";
 	private Text textIndex;
-	private MajorTag majorTag;
-	private String[] majorTagTypeArray;
+	private AreaMinorTag areaMinorTag;
+	private String[] areaMinorTagTypeArray;
 
-	private TagService tagService = (TagService) Activator.getDefault().getApplicationContext().getBean("tagService");
+	private TagService tagService = (TagService) Activator.getDefault()
+			.getApplicationContext().getBean("tagService");
 	private Text textType;
 
 	public void createPartControl(Composite parent) {
@@ -59,82 +61,89 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 		labIndex.setText("索引名：");
 
 		textIndex = new Text(parent, SWT.BORDER);
-		GridData gd_textIndex = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_textIndex = new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1);
 		gd_textIndex.widthHint = 100;
 		textIndex.setLayoutData(gd_textIndex);
 
 		Label labType = new Label(parent, SWT.NONE);
 		labType.setText("类型：");
-		
+
 		textType = new Text(parent, SWT.BORDER);
-		GridData gd_textType = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_textType = new GridData(SWT.LEFT, SWT.CENTER, false, false,
+				1, 1);
 		gd_textType.widthHint = 100;
 		textType.setLayoutData(gd_textType);
-
+		
+		// -------------------------------保存按钮处理----------------
 		Button btnSave = new Button(parent, SWT.NONE);
+		btnSave.setText(" 保  存 ");
+
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (majorTag.getId() == null) {// 新建
+				if (areaMinorTag.getId() == null) {// 新建
 					if ("".equals(textIndex.getText().trim())) {
-						MessageDialog.openError(getSite().getShell(), "错误", "索引名字不能为空！");
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"索引名字不能为空！");
 						return;
 					}
 
-					majorTag.setName(textIndex.getText().trim());
-//					majorTag.setType(MajorTagType.getByValue(comboType.getText()) == null ? null : MajorTagType.getByValue(
-//							comboType.getText()).toString());
-
-					tagService.createMajorTag(majorTag);
+					areaMinorTag.setName(textIndex.getText().trim());
+					areaMinorTag.setType(textType.getText().trim());
+					
+					tagService.createAreaMinorTag(areaMinorTag);
 
 					Object parentObject;
-					if (majorTag.getParent() == null) {
+					if (areaMinorTag.getParent() == null) {
 						parentObject = RootTreeModel.instanse.labelIndex;
 					} else {
-						parentObject = majorTag.getParent();
+						parentObject = areaMinorTag.getParent();
 					}
 
-					ScadaObjectTreeView.treeViewer.add(parentObject, majorTag);
-					ScadaObjectTreeView.treeViewer.setExpandedState(parentObject, true);
+					AreaTreeView.treeViewer.add(parentObject,
+							areaMinorTag);
+					AreaTreeView.treeViewer.setExpandedState(
+							parentObject, true);
 
 				} else {// 编辑
 					if ("".equals(textIndex.getText().trim())) {
-						MessageDialog.openError(getSite().getShell(), "错误", "索引名字不能为空！");
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"索引名字不能为空！");
 						return;
 					}
-					majorTag.setName(textIndex.getText().trim());
-//					majorTag.setType(MajorTagType.getByValue(comboType.getText()) == null ? null : MajorTagType.getByValue(
-//							comboType.getText()).toString());
+					areaMinorTag.setName(textIndex.getText().trim());
+					areaMinorTag.setType(textType.getText().trim());
+				
+					tagService.updateAreaMinorTag(areaMinorTag);
 
-					tagService.updateMajorTag(majorTag);
-
-					ScadaObjectTreeView.treeViewer.update(majorTag, null);
+					AreaTreeView.treeViewer.update(areaMinorTag, null);
 
 				}
 
-				// ScadaObjectTreeView.treeViewer.refresh();
-
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
 				IWorkbenchPart part = page.getActivePart();
 				if (part instanceof IViewPart)
 					page.hideView((IViewPart) part);
 			}
 		});
-		btnSave.setText(" 保  存 ");
-
+		// -------------------------------取消按钮处理----------------
 		Button btnCancel = new Button(parent, SWT.NONE);
+		btnCancel.setText(" 取  消 ");
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
 				IWorkbenchPart part = page.getActivePart();
 				if (part instanceof IViewPart)
 					page.hideView((IViewPart) part);
 			}
 		});
-		btnCancel.setText(" 取  消 ");
 
-		ViewPropertyChange.getInstance().addPropertyChangeListener("main", this);
+		ViewPropertyChange.getInstance()
+				.addPropertyChangeListener("main", this);
 	}
 
 	@Override
@@ -144,25 +153,26 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(FirePropertyConstants.MAJOR_ADD)) {
-			majorTag = new MajorTag();
+		if (event.getProperty().equals(FirePropertyConstants.AreaMinor_ADD)) {
+			areaMinorTag = new AreaMinorTag();
 			Object object = event.getNewValue();
-			if (object instanceof MajorTag) {
-				majorTag.setParent((MajorTag) object);
+			if (object instanceof AreaMinorTag) {
+				areaMinorTag.setParent((AreaMinorTag) object);
 			} else {
-				majorTag.setParent(null);
+				areaMinorTag.setParent(null);
 			}
-		} else if (event.getProperty().equals(FirePropertyConstants.MAJOR_EDIT)) {
-			majorTag = (MajorTag) event.getNewValue();
+		} else if (event.getProperty().equals(
+				FirePropertyConstants.AreaMinor_EDIT)) {
+			areaMinorTag = (AreaMinorTag) event.getNewValue();
 
 			// 初始化控件值
-			textIndex.setText(majorTag.getName());
-
-//			if (majorTag.getType() != null) {
-//				comboType.setText(MajorTagType.valueOf(majorTag.getType()).getValue());
-//			} else {
-//				comboType.select(0);
-//			}
+			textIndex.setText(areaMinorTag.getName());
+			
+			String typeStr = areaMinorTag.getType();
+			if(typeStr == null){
+				typeStr = "";
+			} else
+			textType.setText(areaMinorTag.getType());
 
 		}
 	}
