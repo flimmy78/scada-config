@@ -6,6 +6,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 
 import com.ht.scada.config.view.AreaIndexView;
 import com.ht.scada.config.view.AreaTreeView;
+import com.ht.scada.config.view.EndTagView;
 import com.ht.scada.config.view.EnergyIndexView;
 import com.ht.scada.config.view.EnergyTreeView;
 import com.ht.scada.config.view.MainIndexView;
@@ -29,18 +30,19 @@ public class ScadaObjectPerspective implements IPerspectiveFactory {
 //		layout.addPerspectiveShortcut(ID);
 //		layout.addPerspectiveShortcut(ScadaDevicePerspective.ID);
 		
-//		layout.addView(ScadaObjectTreeView.ID, IPageLayout.LEFT, 0.25f, editorArea);
 		IFolderLayout leftFolder = layout.createFolder("left", IPageLayout.LEFT, 0.25f, editorArea);
+		leftFolder.addPlaceholder(ScadaObjectTreeView.ID);
+		leftFolder.addPlaceholder(AreaTreeView.ID);
+		leftFolder.addPlaceholder(EnergyTreeView.ID);
+		
 		leftFolder.addView(ScadaObjectTreeView.ID);
 		
-		leftFolder.addView(AreaTreeView.ID);
-		
-		leftFolder.addView(EnergyTreeView.ID);
 		
 		IFolderLayout folder = layout.createFolder("messages", IPageLayout.LEFT, 1f, editorArea);
-		folder.addPlaceholder(MainIndexView.ID + ":*");
-//		folder.addView(MainIndexView.ID);
-//		layout.addView(MainIndexView.ID, IPageLayout.LEFT, 1f, editorArea);
+		folder.addPlaceholder(MainIndexView.ID);
+		folder.addPlaceholder(EndTagView.ID);
+		folder.addPlaceholder(AreaIndexView.ID);
+		folder.addPlaceholder(EnergyIndexView.ID);
 		
 //		layout.getViewLayout(ScadaObjectTreeView.ID).setCloseable(false);
 	}
