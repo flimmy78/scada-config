@@ -68,4 +68,8 @@ Bundle-ClassPath: lib/antlr-2.7.7.jar,
  lib/test-1.0.0-SNAPSHOT.jar,
  lib/testng-6.8.jar,
  lib/validation-api-1.0.0.GA.jar,
- .
+ .,
+ lib/org.eclipse.nebula.widgets.tablecombo_1.0.0.201304181950.jar,
+ lib/org.eclipse.nebula.widgets.tablecombo.example_1.0.0.201304181950.jar,
+ lib/org.eclipse.nebula.widgets.tablecombo.example.source_1.0.0.201304181950.jar,
+ lib/org.eclipse.nebula.widgets.tablecombo.source_1.0.0.201304181950.jar

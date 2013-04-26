@@ -163,6 +163,11 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			if(object instanceof MajorTag) {
 				endTag.setMajorTag((MajorTag)object);
 			}
+			
+			//初始化控件值
+			text_name.setText("");
+			combo.select(0);
+			
 		} else if(event.getProperty().equals(FirePropertyConstants.ENDTAG_EDIT)) {
 			endTag = (EndTag)event.getNewValue();
 			

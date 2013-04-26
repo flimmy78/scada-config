@@ -154,6 +154,9 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 			} else {
 				majorTag.setParent(null);
 			}
+			
+			// 初始化控件值
+			text.setText("");
 		} else if (event.getProperty().equals(FirePropertyConstants.MAJOR_EDIT)) {
 			majorTag = (MajorTag) event.getNewValue();
 
