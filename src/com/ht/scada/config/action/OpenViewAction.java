@@ -9,7 +9,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.actions.ActionFactory;
 
-import com.ht.scada.config.perspective.ScadaObjectPerspective;
 
 
 public class OpenViewAction extends Action {

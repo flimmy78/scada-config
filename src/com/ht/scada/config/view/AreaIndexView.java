@@ -143,7 +143,7 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 		});
 
 		ViewPropertyChange.getInstance()
-				.addPropertyChangeListener("main", this);
+				.addPropertyChangeListener("area", this);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 
 	@Override
 	public void dispose() {
-		ViewPropertyChange.getInstance().removePropertyChangeListener("main");
+		ViewPropertyChange.getInstance().removePropertyChangeListener("area");
 		super.dispose();
 	}
 
