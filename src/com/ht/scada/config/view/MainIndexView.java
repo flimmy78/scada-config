@@ -24,6 +24,7 @@ import com.ht.scada.common.tag.service.MajorTagService;
 import com.ht.scada.common.tag.well.consts.MajorTagType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
+import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.RootTreeModel;
 
@@ -114,12 +115,7 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 
 				}
 
-				// ScadaObjectTreeView.treeViewer.refresh();
-
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				IWorkbenchPart part = page.getActivePart();
-				if (part instanceof IViewPart)
-					page.hideView((IViewPart) part);
+				LayoutUtil.hideViewPart();
 			}
 		});
 		btnNewButton.setText(" 保  存 ");
