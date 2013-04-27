@@ -4,14 +4,9 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
-import com.ht.scada.config.view.AreaIndexView;
-import com.ht.scada.config.view.AreaTreeView;
-import com.ht.scada.config.view.EndTagView;
-import com.ht.scada.config.view.EnergyIndexView;
-import com.ht.scada.config.view.EnergyTreeView;
-import com.ht.scada.config.view.MainIndexView;
+import com.ht.scada.config.view.AquisitionChannelView;
+import com.ht.scada.config.view.AquisitionDeviceView;
 import com.ht.scada.config.view.ScadaDeviceTreeView;
-import com.ht.scada.config.view.ScadaObjectTreeView;
 
 /**
  * 监控设备透视图
@@ -31,14 +26,12 @@ public class ScadaDevicePerspective implements IPerspectiveFactory {
 		
 //		IFolderLayout leftFolder = layout.createFolder("device_left", IPageLayout.LEFT, 0.25f, editorArea);
 //		leftFolder.addPlaceholder(ScadaDeviceTreeView.ID);
-		layout.addStandaloneView(ScadaDeviceTreeView.ID, true, IPageLayout.LEFT, 0.25f, editorArea);
+		layout.addStandaloneView(ScadaDeviceTreeView.ID, true, IPageLayout.LEFT, 0.4f, editorArea);
 //		leftFolder.addView(ScadaObjectTreeView.ID);
 		
 		
-//		IFolderLayout folder = layout.createFolder("device_messages", IPageLayout.LEFT, 1f, editorArea);
-//		folder.addPlaceholder(MainIndexView.ID);
-//		folder.addPlaceholder(EndTagView.ID);
-//		folder.addPlaceholder(AreaIndexView.ID);
-//		folder.addPlaceholder(EnergyIndexView.ID);
+		IFolderLayout folder = layout.createFolder("device_messages", IPageLayout.LEFT, 0.8f, editorArea);
+		folder.addPlaceholder(AquisitionChannelView.ID);
+		folder.addPlaceholder(AquisitionDeviceView.ID);
 	}
 }
