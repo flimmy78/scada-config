@@ -4,13 +4,13 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
-import com.ht.scada.common.tag.entity.AreaMinorTag;
+import com.ht.scada.common.tag.entity.EnergyMinorTag;
 /**
- * 分区树标签提供者
+ * 能耗标签提供者
  * @author 陈志强
  *
  */
-public class AreaTreeLabelProvider implements ILabelProvider {
+public class EnergyTreeLabelProvider implements ILabelProvider {
 	
 	
 	@Override
@@ -46,8 +46,8 @@ public class AreaTreeLabelProvider implements ILabelProvider {
 	public String getText(Object object) {
 		if(object instanceof String) {
 			return (String)object;
-		} else if(object instanceof AreaMinorTag) {
-			return ((AreaMinorTag)object).getName();
+		} else if(object instanceof EnergyMinorTag) {
+			return ((EnergyMinorTag)object).getName();
 		} 
 		return null;
 	}
