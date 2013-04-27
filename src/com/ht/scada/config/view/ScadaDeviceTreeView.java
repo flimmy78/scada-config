@@ -8,18 +8,29 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
+
+import com.ht.scada.common.tag.entity.AcquisitionChannel;
+import com.ht.scada.common.tag.entity.EndTag;
+import com.ht.scada.config.util.FirePropertyConstants;
+import com.ht.scada.config.util.ViewPropertyChange;
+import com.ht.scada.config.view.tree.AreaTreeContentProvider;
+import com.ht.scada.config.view.tree.AreaTreeLabelProvider;
+import com.ht.scada.config.view.tree.ScadaDeviceTreeContentProvider;
+import com.ht.scada.config.view.tree.ScadaDeviceTreeLabelProvider;
 
 public class ScadaDeviceTreeView extends ViewPart {
 	
@@ -70,11 +81,47 @@ public class ScadaDeviceTreeView extends ViewPart {
 		gd_treeComposite.heightHint = 119;
 		treeComposite.setLayoutData(gd_treeComposite);
 		
-		treeViewer = new TreeViewer(treeComposite, SWT.BORDER);
-		Tree tree = treeViewer.getTree();
+		treeViewer = new TreeViewer(treeComposite, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.BORDER);
+		treeViewer.setAutoExpandLevel(3);
+		
+		treeViewer.setContentProvider(new ScadaDeviceTreeContentProvider());
+		treeViewer.setLabelProvider(new ScadaDeviceTreeLabelProvider());
+		treeViewer.setInput("通道配置");
 
+		Tree tree = treeViewer.getTree();
 		menuMng = new MenuManager();
 		menuMng.setRemoveAllWhenShown(true);
+		
+		menuMng.addMenuListener(new MenuListener(treeViewer));
+		tree.setMenu(menuMng.createContextMenu(tree));
+		
+				// 点击打开编辑页面
+				tree.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDown(MouseEvent e) {
+						if (e.button == 1) { // 右键
+		
+							IStructuredSelection sel = ((IStructuredSelection) treeViewer
+									.getSelection());
+							if (!sel.isEmpty()) {
+								final Object obj = ((IStructuredSelection) treeViewer
+										.getSelection()).getFirstElement();
+								Display.getDefault().timerExec(
+										Display.getDefault().getDoubleClickTime(),
+										new Runnable() {
+											public void run() {
+												edit(obj);
+											}
+										});
+							}
+		
+						}
+					}
+		
+				});
+
+		
 	}
 
 	private class MenuListener implements IMenuListener {
@@ -105,7 +152,25 @@ public class ScadaDeviceTreeView extends ViewPart {
 	}
 	
 	private void edit(Object object) {
-		
+		if (object instanceof AcquisitionChannel) {
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().showView(AreaIndexView.ID);
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+			ViewPropertyChange.getInstance().firePropertyChangeListener(
+					FirePropertyConstants.ACQUISITIONCHANNEL_EDIT, object);
+		} else if (object instanceof EndTag) {
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().showView(EndTagView.ID);
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+			ViewPropertyChange.getInstance().firePropertyChangeListener(
+					FirePropertyConstants.ACQUISITIONCHANNEL_ADD, object);
+		}
 		
 	}
 

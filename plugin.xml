@@ -99,7 +99,7 @@
             class="com.ht.scada.config.view.AquisitionDeviceView"
             icon="icons/sample3.gif"
             id="com.ht.scada.config.view.AquisitionDeviceView"
-            name="配置设备">
+            name="配置采集设备">
       </view>
    </extension>
    <extension

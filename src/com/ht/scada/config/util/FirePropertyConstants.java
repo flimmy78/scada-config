@@ -25,4 +25,8 @@ public class FirePropertyConstants {
 	
 	public final static String ENERGYMINOR_EDIT = "energyminor_edit";
 	
+	public final static String ACQUISITIONCHANNEL_ADD = "acquisitionchannel_add";
+	
+	public final static String ACQUISITIONCHANNEL_EDIT = "acquisitionchannel_edit";
+	
 }
