@@ -216,6 +216,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 				} catch (Exception e) {
 					subType = null;
 //					e.printStackTrace();
+					log.error("无子类型" + endTag.getSubType());
 				}
 				
 				combo_1.setText(subType==null?endTag.getSubType():subType.getValue());

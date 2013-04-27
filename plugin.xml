@@ -28,6 +28,11 @@
             id="com.ht.scada.config.perspective.RTURemotePerspective"
             name="RTU远程配置透视图">
       </perspective>
+      <perspective
+            class="com.ht.scada.config.perspective.VariableConfigPerspective"
+            id="com.ht.scada.config.perspective.VariableConfigPerspective"
+            name="变量配置透视图">
+      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -101,6 +106,20 @@
             id="com.ht.scada.config.view.AquisitionDeviceView"
             name="配置设备">
       </view>
+      <view
+            allowMultiple="true"
+            class="com.ht.scada.config.view.VariableGroupConfigView"
+            icon="icons/sample3.gif"
+            id="com.ht.scada.config.view.VariableGroupConfigView"
+            name="变量分组配置">
+      </view>
+      <view
+            allowMultiple="true"
+            class="com.ht.scada.config.view.VariableTemplateConfigView"
+            icon="icons/sample3.gif"
+            id="com.ht.scada.config.view.VariableTemplateConfigView"
+            name="变量模板配置">
+      </view>
    </extension>
    <extension
          id="product"
@@ -108,22 +127,6 @@
       <product
             application="scada-config.application"
             name="SCADA配置软件">
-         <property
-               name="aboutText"
-               value="RCP Mail template created by PDE">
-         </property>
-         <property
-               name="windowImages"
-               value="icons/sample.gif">
-         </property>
-         <property
-               name="aboutImage"
-               value="product_lg.gif">
-         </property>
-         <property
-               name="appName"
-               value="SCADA配置软件">
-         </property>
       </product>
    </extension>
 
