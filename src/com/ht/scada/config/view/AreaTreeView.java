@@ -19,11 +19,9 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ht.scada.common.tag.dao.AreaMinorTagDao;
 import com.ht.scada.common.tag.entity.AreaMinorTag;
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.service.AreaMinorTagService;
-import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
@@ -132,7 +130,7 @@ public class AreaTreeView extends ViewPart {
 							ViewPropertyChange
 									.getInstance()
 									.firePropertyChangeListener(
-											FirePropertyConstants.AreaMinor_ADD,
+											FirePropertyConstants.AREAMINOR_ADD,
 											selectedObject);
 
 						}
@@ -155,7 +153,7 @@ public class AreaTreeView extends ViewPart {
 						}
 						ViewPropertyChange.getInstance()
 								.firePropertyChangeListener(
-										FirePropertyConstants.AreaMinor_ADD,
+										FirePropertyConstants.AREAMINOR_ADD,
 										selectedObject);
 
 					}
@@ -175,7 +173,7 @@ public class AreaTreeView extends ViewPart {
 						}
 						ViewPropertyChange.getInstance()
 								.firePropertyChangeListener(
-										FirePropertyConstants.AreaMinor_EDIT,
+										FirePropertyConstants.AREAMINOR_EDIT,
 										selectedObject);
 
 					}
@@ -211,7 +209,7 @@ public class AreaTreeView extends ViewPart {
 				e.printStackTrace();
 			}
 			ViewPropertyChange.getInstance().firePropertyChangeListener(
-					FirePropertyConstants.AreaMinor_EDIT, object);
+					FirePropertyConstants.AREAMINOR_EDIT, object);
 		} else if (object instanceof EndTag) {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -220,7 +218,7 @@ public class AreaTreeView extends ViewPart {
 				e.printStackTrace();
 			}
 			ViewPropertyChange.getInstance().firePropertyChangeListener(
-					FirePropertyConstants.AreaMinor_ADD, object);
+					FirePropertyConstants.AREAMINOR_ADD, object);
 		}
 	}
 

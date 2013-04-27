@@ -17,8 +17,12 @@ public class FirePropertyConstants {
 	
 	public final static String ENDTAG_EDIT = "endTag_edit";
 	
-	public final static String AreaMinor_ADD = "areaminor_add";
+	public final static String AREAMINOR_ADD = "areaminor_add";
 	
-	public final static String AreaMinor_EDIT = "areaminor_edit";
+	public final static String AREAMINOR_EDIT = "areaminor_edit";
+	
+	public final static String ENERGYMINOR_ADD = "energyminor_add";
+	
+	public final static String ENERGYMINOR_EDIT = "energyminor_edit";
 	
 }

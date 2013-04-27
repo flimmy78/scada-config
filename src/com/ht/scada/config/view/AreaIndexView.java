@@ -33,19 +33,11 @@ import org.eclipse.swt.widgets.Combo;
 public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 
 	public AreaIndexView() {
-		int lenght = MajorTagType.values().length;
-		areaMinorTagTypeArray = new String[lenght + 1];
-		areaMinorTagTypeArray[0] = "";
-		for (int i = 1; i <= lenght; i++) {
-			areaMinorTagTypeArray[i] = MajorTagType.values()[i - 1].getValue();
-		}
-
 	}
 
 	public static final String ID = "com.ht.scada.config.view.AreaIndexView";
 	private Text textIndex;
 	private AreaMinorTag areaMinorTag;
-	private String[] areaMinorTagTypeArray;
 
 	private AreaMinorTagService areaMinorTagService = (AreaMinorTagService) Activator.getDefault()
 			.getApplicationContext().getBean("areaMinorTagService");
@@ -154,7 +146,7 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(FirePropertyConstants.AreaMinor_ADD)) {
+		if (event.getProperty().equals(FirePropertyConstants.AREAMINOR_ADD)) {
 			areaMinorTag = new AreaMinorTag();
 			Object object = event.getNewValue();
 			if (object instanceof AreaMinorTag) {
@@ -167,7 +159,7 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 			textType.setText("");
 			
 		} else if (event.getProperty().equals(
-				FirePropertyConstants.AreaMinor_EDIT)) {
+				FirePropertyConstants.AREAMINOR_EDIT)) {
 			areaMinorTag = (AreaMinorTag) event.getNewValue();
 
 			// 初始化控件值
