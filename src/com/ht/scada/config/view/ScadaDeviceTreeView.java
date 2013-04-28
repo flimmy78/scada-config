@@ -24,11 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
-import com.ht.scada.common.tag.entity.EndTag;
+import com.ht.scada.common.tag.entity.AcquisitionDevice;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
-import com.ht.scada.config.view.tree.AreaTreeContentProvider;
-import com.ht.scada.config.view.tree.AreaTreeLabelProvider;
 import com.ht.scada.config.view.tree.ScadaDeviceTreeContentProvider;
 import com.ht.scada.config.view.tree.ScadaDeviceTreeLabelProvider;
 
@@ -101,7 +99,6 @@ public class ScadaDeviceTreeView extends ViewPart {
 					@Override
 					public void mouseDown(MouseEvent e) {
 						if (e.button == 1) { // 右键
-		
 							IStructuredSelection sel = ((IStructuredSelection) treeViewer
 									.getSelection());
 							if (!sel.isEmpty()) {
@@ -155,21 +152,21 @@ public class ScadaDeviceTreeView extends ViewPart {
 		if (object instanceof AcquisitionChannel) {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().showView(AreaIndexView.ID);
+						.getActivePage().showView(ScadaChannelIndexView.ID);
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}
 			ViewPropertyChange.getInstance().firePropertyChangeListener(
 					FirePropertyConstants.ACQUISITIONCHANNEL_EDIT, object);
-		} else if (object instanceof EndTag) {
+		} else if (object instanceof AcquisitionDevice) {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().showView(EndTagView.ID);
+						.getActivePage().showView(ScadaDeviceIndexView.ID);
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}
 			ViewPropertyChange.getInstance().firePropertyChangeListener(
-					FirePropertyConstants.ACQUISITIONCHANNEL_ADD, object);
+					FirePropertyConstants.ACQUISITIONDEVICE_EDIT, object);
 		}
 		
 	}

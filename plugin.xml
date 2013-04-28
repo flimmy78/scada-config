@@ -44,6 +44,20 @@
             id="com.ht.scada.config.view.ScadaObjectTreeView">
       </view>
       <view
+            name="采集设备配置索引"
+            allowMultiple="true"
+            icon="icons/sample3.gif"
+            class="com.ht.scada.config.view.ScadaDeviceIndexView"
+            id="com.ht.scada.config.view.ScadaDeviceIndexView">
+      </view>
+      <view
+            name="采集通道配置索引"
+            allowMultiple="true"
+            icon="icons/sample3.gif"
+            class="com.ht.scada.config.view.ScadaChannelIndexView"
+            id="com.ht.scada.config.view.ScadaChannelIndexView">
+      </view>
+      <view
             name="配置索引"
             allowMultiple="true"
             icon="icons/sample3.gif"
