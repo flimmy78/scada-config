@@ -1,29 +1,34 @@
 package com.ht.scada.config.view;
 
+import java.util.Date;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
+import com.ht.scada.common.tag.service.AcquisitionDeviceService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeListener {
 
@@ -35,6 +40,9 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 
 	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator.getDefault()
 			.getApplicationContext().getBean("acquisitionChannelService");
+	private AcquisitionDeviceService acquisitionDeviceService = (AcquisitionDeviceService) Activator.getDefault()
+			.getApplicationContext().getBean("acquisitionDeviceService");
+	
 	private Text textDeviceName;
 	private Text textType;
 	private Text textAddress;
@@ -43,6 +51,7 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 	private Text textManufacture;
 	private Text textFixPositin;
 	private Text textRemark;
+	private Button btnUsed;
 
 	public void createPartControl(Composite parent) {
 		GridLayout gl_parent = new GridLayout(1, false);
@@ -163,9 +172,9 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		textRetry.setText("<dynamic>");
 		new Label(groupCommuInfo, SWT.NONE);
 		
-		Button button = new Button(groupCommuInfo, SWT.CHECK);
-		button.setSelection(true);
-		button.setText("启用");
+		btnUsed = new Button(groupCommuInfo, SWT.CHECK);
+		btnUsed.setSelection(true);
+		btnUsed.setText("启用");
 		new Label(groupCommuInfo, SWT.NONE);
 		new Label(groupCommuInfo, SWT.NONE);
 		
@@ -177,6 +186,54 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		composite_1.setLayout(null);
 		
 		Button btnSave = new Button(composite_1, SWT.NONE);
+		btnSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (acquisitionDevice.getId() == null) {// 新建
+//					if ("".equals(acquisitionDevice.getName().trim())) {
+//						MessageDialog.openError(getSite().getShell(), "错误",
+//								"设备名称不能为空！");
+//						return;
+//					}
+
+					acquisitionDevice.setName(textDeviceName.getText().trim());
+					acquisitionDevice.setManufacture(textManufacture.getText().trim());
+					acquisitionDevice.setType(textType.getText().trim());
+					acquisitionDevice.setFixTime(new Date());
+					acquisitionDevice.setFixPositin(textFixPositin.getText().trim());
+					acquisitionDevice.setRemark(textRemark.getText().trim());
+//					acquisitionDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
+					acquisitionDevice.setTimeout(Integer.valueOf(textTimeout.getText().trim()));
+					acquisitionDevice.setRetry(Integer.valueOf(textRetry.getText().trim()));
+					acquisitionDevice.setUsed(btnUsed.getSelection());
+					
+					// 更新数据库
+					acquisitionDeviceService.create(acquisitionDevice);
+
+				}
+//				else {// 编辑
+//					if ("".equals(textIndex.getText().trim())) {
+//						MessageDialog.openError(getSite().getShell(), "错误",
+//								"索引名字不能为空！");
+//						return;
+//					}
+//					areaMinorTag.setName(textIndex.getText().trim());
+//					areaMinorTag.setType(textType.getText().trim());
+//				
+//					areaMinorTagService.update(areaMinorTag);
+//
+//					AreaTreeView.treeViewer.update(areaMinorTag, null);
+//
+//				}
+
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPart part = page.getActivePart();
+				if (part instanceof IViewPart)
+					page.hideView((IViewPart) part);
+				
+			}
+		});
 		btnSave.setBounds(42, 10, 60, 27);
 		btnSave.setText("保存(S)");
 		

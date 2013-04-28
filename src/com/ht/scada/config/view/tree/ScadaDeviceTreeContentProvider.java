@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.hibernate.loader.custom.RootReturn;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
+import com.ht.scada.common.tag.entity.EnergyMinorTag;
 import com.ht.scada.common.tag.entity.SensorDevice;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.service.AcquisitionDeviceService;
@@ -32,9 +34,10 @@ public class ScadaDeviceTreeContentProvider implements ITreeContentProvider {
 	private AcquisitionDeviceService acquisitionDeviceService = (AcquisitionDeviceService) Activator
 			.getDefault().getApplicationContext()
 			.getBean("acquisitionDeviceService");
-//	private SensorDeviceService sensorDeviceService = (SensorDeviceService) Activator
-//			.getDefault().getApplicationContext()
-//			.getBean("sensorDeviceService");
+
+	private SensorDeviceService sensorDeviceService = (SensorDeviceService) Activator
+			.getDefault().getApplicationContext()
+			.getBean("sensorDeviceService");
 
 	@Override
 	public void dispose() {
@@ -53,6 +56,14 @@ public class ScadaDeviceTreeContentProvider implements ITreeContentProvider {
 
 		if (parentElement instanceof String) {
 			// TODO
+			String str = (String) parentElement;
+			if (str.equals("采集通道")) { // 采集通道
+				List<AcquisitionChannel> acquisitionChannelList = acquisitionChannelService
+						.getRootAcquisitionChannel();
+				if (acquisitionChannelList != null) {
+					return acquisitionChannelList.toArray();
+				}
+			}
 		} else if (parentElement instanceof AcquisitionChannel) {
 			List<Object> objectList = new ArrayList<Object>();
 			List<AcquisitionDevice> acquisitionDeviceList = acquisitionDeviceService
@@ -64,31 +75,35 @@ public class ScadaDeviceTreeContentProvider implements ITreeContentProvider {
 			if (!objectList.isEmpty()) {
 				return objectList.toArray();
 			}
+		} else if (parentElement instanceof AcquisitionDevice) {
+			List<Object> objectList = new ArrayList<Object>();
+			List<SensorDevice> sensorDeviceList = sensorDeviceService
+					.getSensorByDeviceId(((AcquisitionDevice) parentElement)
+							.getId());
+			if (sensorDeviceList != null) {
+				objectList.addAll(sensorDeviceList);
+			}
+			if (!objectList.isEmpty()) {
+				return objectList.toArray();
+			}
 		}
-//		else if (parentElement instanceof AcquisitionDevice) {
-//			List<Object> objectList = new ArrayList<Object>();
-//			List<SensorDevice> sensorDeviceList = sensorDeviceService
-//					.getSensorByDeviceId(((AcquisitionDevice) parentElement)
-//							.getId());
-//			if (sensorDeviceList != null) {
-//				objectList.addAll(sensorDeviceList);
-//			}
-//			if (!objectList.isEmpty()) {
-//				return objectList.toArray();
-//			}
-//		}
 		return null;
 	}
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		if (inputElement.equals("通道配置")) { // 通道配置
-			List<AcquisitionChannel> acquisitionChannelList = acquisitionChannelService
-					.getRootAcquisitionChannel();
-			if (acquisitionChannelList != null) {
-				return acquisitionChannelList.toArray();
-			}
+		// if (inputElement.equals("通道配置")) { // 通道配置
+		// List<AcquisitionChannel> acquisitionChannelList =
+		// acquisitionChannelService
+		// .getRootAcquisitionChannel();
+		// if (acquisitionChannelList != null) {
+		// return acquisitionChannelList.toArray();
+		// }
+		// }
+		if (inputElement instanceof String) {
+			return new String[] { "采集通道" };
 		}
+
 		return null;
 	}
 

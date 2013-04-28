@@ -39,8 +39,14 @@ public class EnergyTreeContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 
 		if (parentElement instanceof String) {
-			// TODO 
-			System.out.println("String ");
+			String str = (String) parentElement;
+			if (str.equals(RootTreeModel.instanse.energyIndex) ){ // 能耗分类索引
+				List<EnergyMinorTag> energyMinorTagList = energyMinorTagService
+						.getRootEnergyMinorTag();
+				if (energyMinorTagList != null) {
+					return energyMinorTagList.toArray();
+				}
+			}
 		} else if (parentElement instanceof EnergyMinorTag) {
 			List<Object> objectList = new ArrayList<Object>();
 			List<EnergyMinorTag> energyMinorTagList = energyMinorTagService
@@ -58,12 +64,16 @@ public class EnergyTreeContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		if (inputElement.equals(RootTreeModel.instanse.energyIndex)) { // 能耗分类索引
-			List<EnergyMinorTag> energyMinorTagList = energyMinorTagService
-					.getRootEnergyMinorTag();
-			if (energyMinorTagList != null) {
-				return energyMinorTagList.toArray();
-			}
+//		if (inputElement.equals(RootTreeModel.instanse.energyIndex)) { // 能耗分类索引
+//			List<EnergyMinorTag> energyMinorTagList = energyMinorTagService
+//					.getRootEnergyMinorTag();
+//			if (energyMinorTagList != null) {
+//				return energyMinorTagList.toArray();
+//			}
+//		}
+		
+		if(inputElement instanceof String){
+			return new String[]{RootTreeModel.instanse.energyIndex};
 		}
 		return null;
 	}

@@ -171,8 +171,6 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 			} else {
 			    textType.setText(areaMinorTag.getType());
 			}
-			
-
 		}
 	}
 

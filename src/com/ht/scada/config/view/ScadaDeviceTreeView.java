@@ -1,8 +1,10 @@
 package com.ht.scada.config.view;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -25,8 +27,13 @@ import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
+import com.ht.scada.common.tag.entity.AreaMinorTag;
+import com.ht.scada.common.tag.service.AcquisitionChannelService;
+import com.ht.scada.common.tag.service.AreaMinorTagService;
+import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
+import com.ht.scada.config.view.tree.RootTreeModel;
 import com.ht.scada.config.view.tree.ScadaDeviceTreeContentProvider;
 import com.ht.scada.config.view.tree.ScadaDeviceTreeLabelProvider;
 
@@ -34,6 +41,9 @@ public class ScadaDeviceTreeView extends ViewPart {
 	
 	private static final Logger log = LoggerFactory.getLogger(ScadaDeviceTreeView.class);
 	
+	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator.getDefault()
+			.getApplicationContext().getBean("acquisitionChannelService");
+
 	
 	public ScadaDeviceTreeView() {
 	}
@@ -85,7 +95,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 		
 		treeViewer.setContentProvider(new ScadaDeviceTreeContentProvider());
 		treeViewer.setLabelProvider(new ScadaDeviceTreeLabelProvider());
-		treeViewer.setInput("通道配置");
+		treeViewer.setInput("channel");
 
 		Tree tree = treeViewer.getTree();
 		menuMng = new MenuManager();
@@ -112,7 +122,6 @@ public class ScadaDeviceTreeView extends ViewPart {
 											}
 										});
 							}
-		
 						}
 					}
 		
@@ -143,7 +152,89 @@ public class ScadaDeviceTreeView extends ViewPart {
 		 * @param selectedObject
 		 */
 		private void createContextMenu(final Object selectedObject) {
+			if (selectedObject instanceof String) {
+				final String str = (String) selectedObject;
 
+				if (str.equals("采集通道")) {// 采集通道
+					Action objectIndex = new Action() {
+						public void run() {
+							try {
+								PlatformUI.getWorkbench()
+										.getActiveWorkbenchWindow()
+										.getActivePage()
+										.showView(ScadaChannelIndexView.ID);
+							} catch (PartInitException e) {
+								e.printStackTrace();
+							}
+							ViewPropertyChange
+									.getInstance()
+									.firePropertyChangeListener(
+											FirePropertyConstants.ACQUISITIONCHANNEL_ADD,
+											selectedObject);
+
+						}
+					};
+					objectIndex.setText("添加采集通道(&A)");
+					menuMng.add(objectIndex);
+				}
+			} else if (selectedObject instanceof AcquisitionChannel) { // 采集通道
+				final AcquisitionChannel acquisitionChannel = (AcquisitionChannel) selectedObject;
+
+				// ===============添加设备=======================
+				Action objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow().getActivePage()
+									.showView(ScadaDeviceIndexView.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance()
+								.firePropertyChangeListener(
+										FirePropertyConstants.ACQUISITIONDEVICE_ADD,
+										selectedObject);
+
+					}
+				};
+				objectIndex.setText("添加设备(&A)");
+				menuMng.add(objectIndex);
+
+				// ===============修改采集通道(E)=======================
+				objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow().getActivePage()
+									.showView(ScadaChannelIndexView.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance()
+								.firePropertyChangeListener(
+										FirePropertyConstants.ACQUISITIONCHANNEL_EDIT,
+										selectedObject);
+
+					}
+				};
+				objectIndex.setText("修改采集通道(&E)");
+				menuMng.add(objectIndex);
+
+				// ===============删除采集通道(D)=======================
+				objectIndex = new Action() {
+					public void run() {
+						if (MessageDialog.openConfirm(treeViewer.getTree()
+								.getShell(), "删除", "确认要删除吗？")) {
+							acquisitionChannelService.deleteById(acquisitionChannel
+									.getId().intValue());
+
+							treeViewer.remove(acquisitionChannel);
+						}
+					}
+				};
+				objectIndex.setText("删除采集通道(&D)");
+				menuMng.add(objectIndex);
+			}
 		}
 
 	}

@@ -56,7 +56,7 @@ public class EnergyTreeView extends ViewPart {
 		treeViewer.setAutoExpandLevel(3);
 		treeViewer.setContentProvider(new EnergyTreeContentProvider());
 		treeViewer.setLabelProvider(new EnergyTreeLabelProvider());
-		treeViewer.setInput("能耗分类分项");
+		treeViewer.setInput("energy");
 		Tree tree = treeViewer.getTree();
 
 		menuMng = new MenuManager();

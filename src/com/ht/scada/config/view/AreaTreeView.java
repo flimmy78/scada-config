@@ -56,7 +56,7 @@ public class AreaTreeView extends ViewPart {
 		treeViewer.setAutoExpandLevel(3);
 		treeViewer.setContentProvider(new AreaTreeContentProvider());
 		treeViewer.setLabelProvider(new AreaTreeLabelProvider());
-		treeViewer.setInput("常规分类索引");
+		treeViewer.setInput("areaMinor");
 
 		Tree tree = treeViewer.getTree();
 
@@ -115,7 +115,6 @@ public class AreaTreeView extends ViewPart {
 		private void createContextMenu(final Object selectedObject) {
 			if (selectedObject instanceof String) {
 				final String str = (String) selectedObject;
-
 				if (str.equals(RootTreeModel.instanse.normalIndex)) {// 常规分类索引
 					Action objectIndex = new Action() {
 						public void run() {
