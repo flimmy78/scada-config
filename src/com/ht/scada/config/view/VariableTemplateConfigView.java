@@ -1,11 +1,14 @@
 package com.ht.scada.config.view;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
@@ -25,21 +28,43 @@ import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.nebula.widgets.grid.GridColumnGroup;
 
+import com.ht.scada.common.tag.service.MajorTagService;
+import com.ht.scada.common.tag.service.TagCfgTplService;
+import com.ht.scada.config.scadaconfig.Activator;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
+
 /**
  * 变量模板配置
  * @author 赵磊
  *
  */
-public class VariableTemplateConfigView extends ViewPart implements IPropertyChangeListener {
+public class VariableTemplateConfigView extends ViewPart {
+	private static class ViewerLabelProvider extends LabelProvider {
+		public Image getImage(Object element) {
+			return super.getImage(element);
+		}
+		public String getText(Object element) {
+			if(element instanceof String) {
+				return (String)element;
+			}
+			return super.getText(element);
+		}
+	}
 
 	public VariableTemplateConfigView() {
-
+		tplNameList = tagCfgTplService.findAllTplName();
 	}
+	
+	private TagCfgTplService tagCfgTplService = (TagCfgTplService) Activator.getDefault()
+			.getApplicationContext().getBean("tagCfgTplService");
 	
 	private MenuManager menuMng;
 
 	public static final String ID = "com.ht.scada.config.view.VariableTemplateConfigView";
 	private Text text_muban_name;
+	private ListViewer listViewer_1;
+	private java.util.List<String> tplNameList;
 
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -57,11 +82,15 @@ public class VariableTemplateConfigView extends ViewPart implements IPropertyCha
 		group.setText("变量模板");
 		group.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		ListViewer listViewer = new ListViewer(group, SWT.BORDER | SWT.V_SCROLL);
-		List list = listViewer.getList();
-		menuMng.addMenuListener(new MenuListener(listViewer));
+		listViewer_1 = new ListViewer(group, SWT.BORDER | SWT.V_SCROLL);
+		List list = listViewer_1.getList();
+		menuMng.addMenuListener(new MenuListener(listViewer_1));
 		
 				list.setMenu(menuMng.createContextMenu(list)); // 添加菜单
+				listViewer_1.setLabelProvider(new ViewerLabelProvider());
+				
+		listViewer_1.setContentProvider(ArrayContentProvider.getInstance());
+		listViewer_1.setInput(tplNameList);
 		
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
 		composite_1.setLayout(new GridLayout(1, false));
@@ -248,9 +277,6 @@ public class VariableTemplateConfigView extends ViewPart implements IPropertyCha
 		// TODO Auto-generated method stub
 	}
 
-	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-	}
 
 	@Override
 	public void dispose() {
