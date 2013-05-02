@@ -6,6 +6,8 @@ import org.eclipse.swt.graphics.Image;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
+import com.ht.scada.config.scadaconfig.Activator;
+import com.ht.scada.config.util.ImagePath;
 
 public class MainTreeLabelProvider implements ILabelProvider {
 	
@@ -36,6 +38,12 @@ public class MainTreeLabelProvider implements ILabelProvider {
 
 	@Override
 	public Image getImage(Object object) {
+		if(object instanceof MajorTag) {
+			return Activator.getDefault().getImageDescriptor(ImagePath.MAJOR_TAG_IMAGE).createImage();
+		} else if(object instanceof EndTag) {
+			return Activator.getDefault().getImageDescriptor(ImagePath.END_TAG_IMAGE).createImage();
+		}
+		
 		return null;
 	}
 
