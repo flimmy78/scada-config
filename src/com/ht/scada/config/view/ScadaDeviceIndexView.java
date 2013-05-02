@@ -1,8 +1,8 @@
 package com.ht.scada.config.view;
 
+import java.util.Calendar;
 import java.util.Date;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -22,12 +22,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import com.fasterxml.jackson.databind.node.TextNode;
+import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.service.AcquisitionDeviceService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
+import com.ht.scada.config.util.Utils;
 import com.ht.scada.config.util.ViewPropertyChange;
 
 public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeListener {
@@ -36,7 +37,7 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 	}
 
 	public static final String ID = "com.ht.scada.config.view.ScadaDeviceIndexView";
-	private AcquisitionDevice acquisitionDevice;
+	private AcquisitionDevice acquisitionDevice = new AcquisitionDevice();
 
 	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator.getDefault()
 			.getApplicationContext().getBean("acquisitionChannelService");
@@ -45,6 +46,7 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 	
 	private Text textDeviceName;
 	private Text textType;
+	private DateTime dateTimeFixTime;
 	private Text textAddress;
 	private Text textTimeout;
 	private Text textRetry;
@@ -112,7 +114,7 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		Label labelFixTime = new Label(groupBasicInfo, SWT.NONE);
 		labelFixTime.setText("安装日期：");
 		
-		DateTime dateTimeFixTime = new DateTime(groupBasicInfo, SWT.BORDER);
+		dateTimeFixTime = new DateTime(groupBasicInfo, SWT.BORDER);
 		GridData gd_dateTimeFixTime = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_dateTimeFixTime.widthHint = 120;
 		dateTimeFixTime.setLayoutData(gd_dateTimeFixTime);
@@ -156,7 +158,7 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		GridData gd_textTimeout = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_textTimeout.widthHint = 120;
 		textTimeout.setLayoutData(gd_textTimeout);
-		textTimeout.setText("<dynamic>");
+		textTimeout.setText("5");
 		
 		Label lblMs = new Label(groupCommuInfo, SWT.NONE);
 		lblMs.setText("ms");
@@ -169,7 +171,7 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		GridData gd_textRetry = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_textRetry.widthHint = 120;
 		textRetry.setLayoutData(gd_textRetry);
-		textRetry.setText("<dynamic>");
+		textRetry.setText("3");
 		new Label(groupCommuInfo, SWT.NONE);
 		
 		btnUsed = new Button(groupCommuInfo, SWT.CHECK);
@@ -202,29 +204,45 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 					acquisitionDevice.setFixTime(new Date());
 					acquisitionDevice.setFixPositin(textFixPositin.getText().trim());
 					acquisitionDevice.setRemark(textRemark.getText().trim());
-//					acquisitionDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
+					acquisitionDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
 					acquisitionDevice.setTimeout(Integer.valueOf(textTimeout.getText().trim()));
 					acquisitionDevice.setRetry(Integer.valueOf(textRetry.getText().trim()));
 					acquisitionDevice.setUsed(btnUsed.getSelection());
 					
 					// 更新数据库
 					acquisitionDeviceService.create(acquisitionDevice);
+					
+					// 更新左边的树状结构
+					Object parentObject;
+					parentObject = acquisitionDevice.getChannel();
+					ScadaDeviceTreeView.treeViewer.add(parentObject, acquisitionDevice);
+					ScadaDeviceTreeView.treeViewer.setExpandedState(parentObject, true);
 
 				}
-//				else {// 编辑
+				else {// 编辑
 //					if ("".equals(textIndex.getText().trim())) {
 //						MessageDialog.openError(getSite().getShell(), "错误",
 //								"索引名字不能为空！");
 //						return;
 //					}
-//					areaMinorTag.setName(textIndex.getText().trim());
-//					areaMinorTag.setType(textType.getText().trim());
-//				
-//					areaMinorTagService.update(areaMinorTag);
-//
-//					AreaTreeView.treeViewer.update(areaMinorTag, null);
-//
-//				}
+					acquisitionDevice.setName(textDeviceName.getText().trim());
+					acquisitionDevice.setManufacture(textManufacture.getText().trim());
+					acquisitionDevice.setType(textType.getText().trim());
+					acquisitionDevice.setFixTime(new Date());
+					acquisitionDevice.setFixPositin(textFixPositin.getText().trim());
+					acquisitionDevice.setRemark(textRemark.getText().trim());
+					acquisitionDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
+					acquisitionDevice.setTimeout(Integer.valueOf(textTimeout.getText().trim()));
+					acquisitionDevice.setRetry(Integer.valueOf(textRetry.getText().trim()));
+					acquisitionDevice.setUsed(btnUsed.getSelection());
+					
+					// 更新数据库
+					acquisitionDeviceService.update(acquisitionDevice);
+					
+					// 更新左边的树状结构
+					ScadaDeviceTreeView.treeViewer.update(acquisitionDevice, null);
+
+				}
 
 				IWorkbenchPage page = PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getActivePage();
@@ -241,6 +259,11 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPart part = page.getActivePart();
+				if (part instanceof IViewPart)
+					page.hideView((IViewPart) part);
 			}
 		});
 		btnCancel.setText("取消(C)");
@@ -257,11 +280,12 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(FirePropertyConstants.ACQUISITIONCHANNEL_ADD)) {
+		if (event.getProperty().equals(FirePropertyConstants.ACQUISITIONDEVICE_ADD)) {
 			acquisitionDevice = new AcquisitionDevice();
 			Object object = event.getNewValue();
-			if (object instanceof AcquisitionDevice) {
-				//acquisitionDevice.setChannel((AcquisitionDevice) object);
+			if (object instanceof AcquisitionChannel) {
+				acquisitionDevice.setChannel((AcquisitionChannel) object);
+				System.out.println(((AcquisitionDevice) object).getName());
 			} else {
 				acquisitionDevice.setChannel(null);
 			}
@@ -270,19 +294,25 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 //			textType.setText("");
 			
 		} else if (event.getProperty().equals(
-				FirePropertyConstants.AREAMINOR_EDIT)) {
-			//acquisitionDevice = (AreaMinorTag) event.getNewValue();
+				FirePropertyConstants.ACQUISITIONDEVICE_EDIT)) {
+			acquisitionDevice = (AcquisitionDevice) event.getNewValue();
 
-//			// 初始化控件值
-//			textIndex.setText(areaMinorTag.getName());
-//			
-//			String typeStr = areaMinorTag.getType();
-//			if(typeStr == null){
-//				typeStr = "";
-//			} else {
-//			    textType.setText(areaMinorTag.getType());
-//			}
-			
+			// 初始化控件值
+			textDeviceName.setText(acquisitionDevice.getName());
+			textManufacture.setText(acquisitionDevice.getManufacture());
+			textType.setText(acquisitionDevice.getType());
+			Date fixTime = acquisitionDevice.getFixTime();
+			Calendar fixTimeCalendar = Utils.date2CalendarUtil(fixTime);
+			int year = fixTimeCalendar.get(Calendar.YEAR);
+			int month = fixTimeCalendar.get(Calendar.MONTH);
+			int day = fixTimeCalendar.get((Calendar.DAY_OF_MONTH));
+			dateTimeFixTime.setDate(year, month, day);
+			textFixPositin.setText(acquisitionDevice.getFixPositin());
+			textRemark.setText(acquisitionDevice.getRemark());
+			textAddress.setText(acquisitionDevice.getAddress() + "");
+			textTimeout.setText(acquisitionDevice.getTimeout() + "");
+			textRetry.setText(acquisitionDevice.getRetry() + "");
+			btnUsed.setSelection(btnUsed.getSelection());
 
 		}
 	}

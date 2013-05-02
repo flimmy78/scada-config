@@ -1,0 +1,18 @@
+2013-04-28 20:27:56,107 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_Acquisition_Channel  (id int identity not null, frames text, idx int, interval int not null, name varchar(255), offline int not null, portInfo varchar(255), protocal varchar(255), schedule varchar(255), update_time datetime, primary key (id))
+2013-04-28 20:27:56,110 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_Acquisition_Channel' 的对象。
+2013-04-28 20:27:56,111 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Tag_Cfg_Tpl add var_storage  text
+2013-04-28 20:27:56,112 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 各表中的列名必须唯一。在表 'T_Tag_Cfg_Tpl' 中多次指定了列名 'var_storage'。
+2013-04-28 20:27:56,114 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Acquisition_Device add constraint FKB2D8A953A01B1A96 foreign key (channel_id) references T_Acquisition_Channel 
+2013-04-28 20:27:56,114 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKB2D8A953A01B1A96' 的对象。
+2013-04-28 20:31:18,333 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_Acquisition_Channel  (id int identity not null, frames text, idx int, interval int not null, name varchar(255), offline int not null, portInfo varchar(255), protocal varchar(255), schedule varchar(255), update_time datetime, primary key (id))
+2013-04-28 20:31:18,337 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_Acquisition_Channel' 的对象。
+2013-04-28 20:31:18,339 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Tag_Cfg_Tpl add var_storage  text
+2013-04-28 20:31:18,340 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 各表中的列名必须唯一。在表 'T_Tag_Cfg_Tpl' 中多次指定了列名 'var_storage'。
+2013-04-28 20:31:18,342 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Acquisition_Device add constraint FKB2D8A953A01B1A96 foreign key (channel_id) references T_Acquisition_Channel 
+2013-04-28 20:31:18,342 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKB2D8A953A01B1A96' 的对象。
+2013-04-28 20:33:59,871 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_Acquisition_Channel  (id int identity not null, frames varchar(255), idx int, interval int not null, name varchar(255), offline int not null, portInfo varchar(255), protocal varchar(255), schedule varchar(255), update_time datetime, primary key (id))
+2013-04-28 20:33:59,874 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_Acquisition_Channel' 的对象。
+2013-04-28 20:33:59,876 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Tag_Cfg_Tpl add var_storage  text
+2013-04-28 20:33:59,876 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 各表中的列名必须唯一。在表 'T_Tag_Cfg_Tpl' 中多次指定了列名 'var_storage'。
+2013-04-28 20:33:59,878 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Acquisition_Device add constraint FKB2D8A953A01B1A96 foreign key (channel_id) references T_Acquisition_Channel 
+2013-04-28 20:33:59,879 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKB2D8A953A01B1A96' 的对象。

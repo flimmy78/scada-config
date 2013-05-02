@@ -27,13 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
-import com.ht.scada.common.tag.entity.AreaMinorTag;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
-import com.ht.scada.common.tag.service.AreaMinorTagService;
+import com.ht.scada.common.tag.service.AcquisitionDeviceService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
-import com.ht.scada.config.view.tree.RootTreeModel;
 import com.ht.scada.config.view.tree.ScadaDeviceTreeContentProvider;
 import com.ht.scada.config.view.tree.ScadaDeviceTreeLabelProvider;
 
@@ -43,6 +41,8 @@ public class ScadaDeviceTreeView extends ViewPart {
 	
 	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator.getDefault()
 			.getApplicationContext().getBean("acquisitionChannelService");
+	private AcquisitionDeviceService acquisitionDeviceService = (AcquisitionDeviceService) Activator.getDefault()
+			.getApplicationContext().getBean("acquisitionDeviceService");
 
 	
 	public ScadaDeviceTreeView() {
@@ -51,7 +51,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 	public static final String ID = "com.ht.scada.config.view.ScadaDeviceTreeView";
 
 	private MenuManager menuMng;
-	private TreeViewer treeViewer;
+	public static TreeViewer treeViewer;
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
@@ -194,6 +194,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 								.firePropertyChangeListener(
 										FirePropertyConstants.ACQUISITIONDEVICE_ADD,
 										selectedObject);
+						System.out.println(((AcquisitionChannel) selectedObject).getName());
 
 					}
 				};
@@ -233,6 +234,63 @@ public class ScadaDeviceTreeView extends ViewPart {
 					}
 				};
 				objectIndex.setText("删除采集通道(&D)");
+				menuMng.add(objectIndex);
+			}
+			else if (selectedObject instanceof AcquisitionDevice) { // 采集通道
+				final AcquisitionDevice acquisitionDevice = (AcquisitionDevice) selectedObject;
+
+				// ===============添加传感器=======================
+				Action objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow().getActivePage()
+									.showView(ScadaDeviceIndexView.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance()
+								.firePropertyChangeListener(
+										FirePropertyConstants.SENSORDEVICE_ADD,
+										selectedObject);
+					}
+				};
+				objectIndex.setText("添加传感器(&A)");
+				menuMng.add(objectIndex);
+
+				// ===============修改设备(E)=======================
+				objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow().getActivePage()
+									.showView(ScadaChannelIndexView.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance()
+								.firePropertyChangeListener(
+										FirePropertyConstants.ACQUISITIONDEVICE_EDIT,
+										selectedObject);
+
+					}
+				};
+				objectIndex.setText("修改设备(&E)");
+				menuMng.add(objectIndex);
+
+				// ===============删除设备(D)=======================
+				objectIndex = new Action() {
+					public void run() {
+						if (MessageDialog.openConfirm(treeViewer.getTree()
+								.getShell(), "删除", "确认要删除吗？")) {
+							acquisitionDeviceService.deleteById(acquisitionDevice
+									.getId().intValue());
+
+							treeViewer.remove(acquisitionDevice);
+						}
+					}
+				};
+				objectIndex.setText("删除设备(&D)");
 				menuMng.add(objectIndex);
 			}
 		}
