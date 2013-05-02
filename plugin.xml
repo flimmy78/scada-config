@@ -101,6 +101,7 @@
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.ScadaDeviceTreeView"
+            icon="icons/major_tag.png"
             id="com.ht.scada.config.view.ScadaDeviceTreeView"
             name="监控设备导航树">
       </view>
