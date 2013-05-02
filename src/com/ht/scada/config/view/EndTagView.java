@@ -28,12 +28,12 @@ import org.slf4j.LoggerFactory;
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.EndTagService;
-import com.ht.scada.common.tag.well.consts.EndTagSubType;
-import com.ht.scada.common.tag.well.consts.EndTagType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.ViewPropertyChange;
+import com.ht.scada.oildata.tag.EndTagSubType;
+import com.ht.scada.oildata.tag.EndTagType;
 
 public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private static final Logger log = LoggerFactory.getLogger(EndTagView.class);

@@ -1,38 +1,41 @@
 package com.ht.scada.config.view;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
+import org.eclipse.nebula.widgets.grid.GridColumnGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.ui.part.ViewPart;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.nebula.widgets.grid.Grid;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.nebula.widgets.grid.GridColumn;
-import org.eclipse.nebula.widgets.grid.GridItem;
-import org.eclipse.nebula.widgets.grid.GridColumnGroup;
+import org.eclipse.ui.part.ViewPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.ht.scada.common.tag.service.MajorTagService;
+import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.config.scadaconfig.Activator;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * 变量模板配置
@@ -40,6 +43,37 @@ import org.eclipse.swt.graphics.Image;
  *
  */
 public class VariableTemplateConfigView extends ViewPart {
+	private static final Logger log = LoggerFactory.getLogger(VariableTemplateConfigView.class);
+	
+	private static class ViewerLabelProvider_1 extends LabelProvider implements ITableLabelProvider{
+		@Override
+		public Image getColumnImage(Object element, int columnIndex) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public String getColumnText(Object element, int columnIndex) {
+			TagCfgTpl tagCfgTpl = (TagCfgTpl)element;
+//			log.debug("列数:" + columnIndex);
+			
+			switch (columnIndex) {
+			case 0://变量名
+				return tagCfgTpl.getTplName();
+			case 1://变量类型
+				return tagCfgTpl.getVarType() == null?null:tagCfgTpl.getVarType().toString();
+			case 2://变量子类型
+				return tagCfgTpl.getSubType();
+			case 3://变量分组
+				return tagCfgTpl.getVarGroup()==null?null:tagCfgTpl.getVarGroup().getValue();
+			case 4://变量key
+				return null;
+			default:
+				break;
+			}
+			
+			return null;
+		}
+	}
 	private static class ViewerLabelProvider extends LabelProvider {
 		public Image getImage(Object element) {
 			return super.getImage(element);
@@ -62,9 +96,12 @@ public class VariableTemplateConfigView extends ViewPart {
 	private MenuManager menuMng;
 
 	public static final String ID = "com.ht.scada.config.view.VariableTemplateConfigView";
-	private Text text_muban_name;
+	private Text text_tpl_name;
 	private ListViewer listViewer_1;
-	private java.util.List<String> tplNameList;
+	private List<String> tplNameList;	//所有变量模板名字
+	private List<TagCfgTpl> tagCfgTplList = new ArrayList<>();	//当前模板所有变量
+	private GridTableViewer gridTableViewer;
+	
 
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -83,7 +120,17 @@ public class VariableTemplateConfigView extends ViewPart {
 		group.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		listViewer_1 = new ListViewer(group, SWT.BORDER | SWT.V_SCROLL);
-		List list = listViewer_1.getList();
+		listViewer_1.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				if(!selection.isEmpty()) {
+					String tplName = (String) selection.getFirstElement();
+					initTplInfo(tplName);
+				}
+				
+			}
+		});
+		org.eclipse.swt.widgets.List list = listViewer_1.getList();
 		menuMng.addMenuListener(new MenuListener(listViewer_1));
 		
 				list.setMenu(menuMng.createContextMenu(list)); // 添加菜单
@@ -104,8 +151,8 @@ public class VariableTemplateConfigView extends ViewPart {
 		label.setBounds(10, 24, 56, 17);
 		label.setText("模板名：");
 		
-		text_muban_name = new Text(group_2, SWT.BORDER);
-		text_muban_name.setBounds(79, 21, 96, 23);
+		text_tpl_name = new Text(group_2, SWT.BORDER);
+		text_tpl_name.setBounds(79, 21, 96, 23);
 		
 		Group group_1 = new Group(composite_1, SWT.NONE);
 		group_1.setLayout(new GridLayout(1, false));
@@ -116,7 +163,9 @@ public class VariableTemplateConfigView extends ViewPart {
 		composite_4.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_4.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Grid grid = new Grid(composite_4, SWT.BORDER);
+		gridTableViewer = new GridTableViewer(composite_4, SWT.BORDER
+				| SWT.V_SCROLL | SWT.H_SCROLL);
+		Grid grid = gridTableViewer.getGrid();
 		grid.setHeaderVisible(true);
 		grid.setColumnScrolling(true);
 		grid.setCellSelectionEnabled(true);
@@ -204,6 +253,10 @@ public class VariableTemplateConfigView extends ViewPart {
 		gridColumn_17.setWidth(65);
 		gridColumn_17.setText("脉冲单位");
 		
+		gridTableViewer.setContentProvider(ArrayContentProvider.getInstance());
+		gridTableViewer.setLabelProvider(new ViewerLabelProvider_1());
+		gridTableViewer.setInput(tagCfgTplList);
+		
 		Composite composite_3 = new Composite(group_1, SWT.NONE);
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -263,23 +316,54 @@ public class VariableTemplateConfigView extends ViewPart {
 		 */
 		private void createContextMenu(final Object selectedObject) {
 			if (selectedObject instanceof String) {
+				Action action = new Action() {
+					public void run() {
+					}
+				};
+				action.setText("新建变量模板");
+				menuMng.add(action);
 				
-				
+				action = new Action() {
+					public void run() {
+					}
+				};
+				action.setText("删除变量模板");
+				menuMng.add(action);
 
 			}
 		}
 
 	}
 
-
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
 	}
 
-
 	@Override
 	public void dispose() {
 		super.dispose();
+	}
+	
+	/**
+	 * 初始化模板信息
+	 * @param tplName
+	 */
+	private void initTplInfo(String tplName) {
+		text_tpl_name.setText(tplName);
+		if(!"".equals(tplName)) {
+			initVariableByTplName(tplName);
+		}
+	}
+	
+	private void initVariableByTplName(String tplName) {
+		tagCfgTplList.clear();
+		
+		tagCfgTplList = tagCfgTplService.findVariablesByTplName(tplName);
+		log.debug("变量个数：" + tagCfgTplList.size());
+		
+		gridTableViewer.setInput(tagCfgTplList);
+		gridTableViewer.refresh();
+		
 	}
 }

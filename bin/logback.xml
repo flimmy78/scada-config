@@ -50,6 +50,7 @@
   <logger name="com.htong.util" level="WARN"/>
   <logger name="com.ht.ui" level="DEBUG"/>
   <logger name="com.ht.view" level="DEBUG"/>
+  <logger name="com.ht.scada.config" level="DEBUG"/>
   
   <root level="ERROR">
     <appender-ref ref="stdout"/>

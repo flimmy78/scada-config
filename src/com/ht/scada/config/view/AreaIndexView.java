@@ -19,16 +19,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.AreaMinorTag;
-import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.AreaMinorTagService;
-import com.ht.scada.common.tag.service.TagService;
-import com.ht.scada.common.tag.well.consts.EndTagType;
-import com.ht.scada.common.tag.well.consts.MajorTagType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.RootTreeModel;
-import org.eclipse.swt.widgets.Combo;
 
 public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 

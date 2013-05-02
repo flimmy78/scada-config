@@ -21,12 +21,12 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.MajorTagService;
-import com.ht.scada.common.tag.well.consts.MajorTagType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.RootTreeModel;
+import com.ht.scada.oildata.tag.MajorTagType;
 
 public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 
