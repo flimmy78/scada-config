@@ -39,9 +39,11 @@ public class MainTreeLabelProvider implements ILabelProvider {
 	@Override
 	public Image getImage(Object object) {
 		if(object instanceof MajorTag) {
-			return Activator.getDefault().getImageDescriptor(ImagePath.MAJOR_TAG_IMAGE).createImage();
+			return Activator.getDefault().getImageDescriptor(ImagePath.END_TAG_IMAGE).createImage();
 		} else if(object instanceof EndTag) {
 			return Activator.getDefault().getImageDescriptor(ImagePath.END_TAG_IMAGE).createImage();
+		} else if (object instanceof String){
+			return Activator.getDefault().getImageDescriptor(ImagePath.MAJOR_TAG_IMAGE).createImage();
 		}
 		
 		return null;

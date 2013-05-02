@@ -33,4 +33,8 @@ public class FirePropertyConstants {
 	
 	public static final String ACQUISITIONDEVICE_EDIT = "acquisitiondevice_edit";
 	
+	public static final String SENSORDEVICE_ADD = "sensordevice_add";
+	
+	public static final String SENSORDEVICE_EDIT = "sensordevice_edit";
+	
 }

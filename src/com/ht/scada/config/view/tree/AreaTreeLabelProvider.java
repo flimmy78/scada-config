@@ -5,6 +5,9 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
 import com.ht.scada.common.tag.entity.AreaMinorTag;
+import com.ht.scada.common.tag.entity.EndTag;
+import com.ht.scada.config.scadaconfig.Activator;
+import com.ht.scada.config.util.ImagePath;
 /**
  * 分区树标签提供者
  * @author 陈志强
@@ -39,6 +42,13 @@ public class AreaTreeLabelProvider implements ILabelProvider {
 
 	@Override
 	public Image getImage(Object object) {
+		if(object instanceof String) {
+			return Activator.getDefault().getImageDescriptor(ImagePath.AREA_INDEX_IMAGE).createImage();
+		}else if (object instanceof AreaMinorTag) {
+			return Activator.getDefault().getImageDescriptor(ImagePath.AREA_MINOR_IMAGE).createImage();
+		} else if (object instanceof EndTag) {
+			return Activator.getDefault().getImageDescriptor(ImagePath.AREA_MINOR_IMAGE).createImage();
+		} 
 		return null;
 	}
 

@@ -84,7 +84,7 @@ public class EnergyIndexView extends ViewPart implements IPropertyChangeListener
 
 					Object parentObject;
 					if (energyMinorTag.getParent() == null) {
-						parentObject = RootTreeModel.instanse.labelIndex;
+						parentObject = RootTreeModel.instanse.energyIndex;
 					} else {
 						parentObject = energyMinorTag.getParent();
 					}

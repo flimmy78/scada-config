@@ -6,6 +6,7 @@ import java.util.Date;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,10 +33,8 @@ import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.util.CommunicationProtocal;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
+import com.ht.scada.config.util.Utils;
 import com.ht.scada.config.util.ViewPropertyChange;
-import com.ht.scada.config.view.tree.RootTreeModel;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 
 public class ScadaChannelIndexView extends ViewPart implements
 		IPropertyChangeListener {
@@ -44,6 +43,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 	}
 
 	public static final String ID = "com.ht.scada.config.view.ScadaChannelIndexView";
+	public static TreeViewer treeViewer;
 	private AcquisitionChannel acquisitionChannel;
 
 	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator
@@ -219,6 +219,32 @@ public class ScadaChannelIndexView extends ViewPart implements
 								"通道名称不能为空！");
 						return;
 					}
+//					else if ("".equals(textIdx.getText().trim())) {
+//						MessageDialog.openError(getSite().getShell(), "错误",
+//								"序号不能为空！");
+//						return;
+//					}else if ("".equals(textOffline.getText().trim())) {
+//						MessageDialog.openError(getSite().getShell(), "错误",
+//								"通讯离线不能为空！");
+//						return;
+//					}else if ("".equals(textInterval.getText().trim())) {
+//						MessageDialog.openError(getSite().getShell(), "错误",
+//								"采样间隔不能为空！");
+//						return;
+//					}else if ("".equals(textSchedule.getText().trim())) {
+//						MessageDialog.openError(getSite().getShell(), "错误",
+//								"任务调度不能为空！");
+//						return;
+//					}else if ("".equals(textPortInfo.getText().trim())) {
+//						MessageDialog.openError(getSite().getShell(), "错误",
+//								"端口信息不能为空！");
+//						return;
+//					}else if ("".equals(textFrames.getText().trim())) {
+//						MessageDialog.openError(getSite().getShell(), "错误",
+//								"通讯帧不能为空！");
+//						return;
+//					}
+					
 
 					acquisitionChannel.setName(textChannelName.getText().trim());
 					// TODO
@@ -237,7 +263,10 @@ public class ScadaChannelIndexView extends ViewPart implements
 					
 					// 更新数据库
 					acquisitionChannelService.create(acquisitionChannel);
-
+					
+					ScadaDeviceTreeView.treeViewer.add("采集通道", acquisitionChannel);
+					ScadaDeviceTreeView.treeViewer.setExpandedState("采集通道", true);
+					
 				}
 //				else {// 编辑
 //					if ("".equals(textIndex.getText().trim())) {
@@ -309,7 +338,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 			textPortInfo.setText("");
 			textFrames.setText("");
 			Date nowDate = new Date();
-			Calendar nowCalendar = date2Calendar(nowDate);
+			Calendar nowCalendar = Utils.date2CalendarUtil(nowDate);
 			dateTimeUpdateTime.setDate(nowCalendar.get(Calendar.YEAR),
 					nowCalendar.get(Calendar.MONTH),
 					nowCalendar.get(Calendar.DAY_OF_MONTH));
@@ -329,28 +358,14 @@ public class ScadaChannelIndexView extends ViewPart implements
 			textFrames.setText(acquisitionChannel.getFrames());
 
 			Date updateTime = acquisitionChannel.getUpdateTime();
-			Calendar updateTimeCalendar = date2Calendar(updateTime);
+			Calendar updateTimeCalendar = Utils.date2CalendarUtil(updateTime);
 			int year = updateTimeCalendar.get(Calendar.YEAR);
 			int month = updateTimeCalendar.get(Calendar.MONTH);
 			int day = updateTimeCalendar.get((Calendar.DAY_OF_MONTH));
 			dateTimeUpdateTime.setDate(year, month, day);
 			// ====================================
-			//
-			// String typeStr = areaMinorTag.getType();
-			// if(typeStr == null){
-			// typeStr = "";
-			// } else {
-			// textType.setText(areaMinorTag.getType());
-			// }
 
 		}
-	}
-
-	// Date转Calendar
-	private static Calendar date2Calendar(Date date) {
-		Calendar calendar = Calendar.getInstance(); // create Calendar Instance
-		calendar.setTime(date); // 将刚才取得Date object 设给Calendar object
-		return calendar;
 	}
 
 	@Override

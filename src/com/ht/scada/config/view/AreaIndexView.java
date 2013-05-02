@@ -84,7 +84,7 @@ public class AreaIndexView extends ViewPart implements IPropertyChangeListener {
 
 					Object parentObject;
 					if (areaMinorTag.getParent() == null) {
-						parentObject = RootTreeModel.instanse.labelIndex;
+						parentObject = RootTreeModel.instanse.normalIndex;
 					} else {
 						parentObject = areaMinorTag.getParent();
 					}

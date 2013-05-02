@@ -20,6 +20,8 @@
       </perspective>
       <perspective
             class="com.ht.scada.config.perspective.ScadaDevicePerspective"
+            fixed="true"
+            icon="icons/acquisition_channel.png"
             id="com.ht.scada.config.perspective.ScadaDevicePerspective"
             name="监控设备透视图">
       </perspective>
@@ -36,101 +38,93 @@
    </extension>
    <extension
          point="org.eclipse.ui.views">
-      <view
-            name="监控对象导航树"
-            allowMultiple="true"
-            icon="icons/sample2.gif"
-            class="com.ht.scada.config.view.ScadaObjectTreeView"
-            id="com.ht.scada.config.view.ScadaObjectTreeView">
-      </view>
+     
       <view
             name="采集设备配置索引"
             allowMultiple="true"
-            icon="icons/sample3.gif"
             class="com.ht.scada.config.view.ScadaDeviceIndexView"
             id="com.ht.scada.config.view.ScadaDeviceIndexView">
       </view>
       <view
             name="采集通道配置索引"
             allowMultiple="true"
-            icon="icons/sample3.gif"
             class="com.ht.scada.config.view.ScadaChannelIndexView"
             id="com.ht.scada.config.view.ScadaChannelIndexView">
       </view>
       <view
             name="配置索引"
             allowMultiple="true"
-            icon="icons/sample3.gif"
             class="com.ht.scada.config.view.MainIndexView"
             id="com.ht.scada.config.view.MainIndexView">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.EndTagView"
-            icon="icons/sample3.gif"
             id="com.ht.scada.config.view.EndTagView"
             name="配置监控对象">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.AreaIndexView"
-            icon="icons/sample3.gif"
+            icon="icons/index_area_node.gif"
             id="com.ht.scada.config.view.AreaIndexView"
             name="配置常规分类">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.EnergyIndexView"
-            icon="icons/sample3.gif"
+            icon="icons/index_energy_node.gif"
             id="com.ht.scada.config.view.EnergyIndexView"
             name="配置能耗分类">
+      </view>
+      <!-- -->
+      <view
+            allowMultiple="true"
+            class="com.ht.scada.config.view.ScadaObjectTreeView"
+            id="com.ht.scada.config.view.ScadaObjectTreeView"
+            name="监控对象导航树">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.AreaTreeView"
-            icon="icons/sample2.gif"
+            icon="icons/area_index.gif"
             id="com.ht.scada.config.view.AreaTreeView"
             name="常规分类导航树">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.EnergyTreeView"
-            icon="icons/sample2.gif"
+            icon="icons/energy_index.gif"
             id="com.ht.scada.config.view.EnergyTreeView"
             name="能耗分类导航树">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.ScadaDeviceTreeView"
-            icon="icons/sample2.gif"
             id="com.ht.scada.config.view.ScadaDeviceTreeView"
             name="监控设备导航树">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.AquisitionChannelView"
-            icon="icons/sample3.gif"
             id="com.ht.scada.config.view.AquisitionChannelView"
             name="配置采集通道">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.AquisitionDeviceView"
-            icon="icons/sample3.gif"
             id="com.ht.scada.config.view.AquisitionDeviceView"
             name="配置采集设备">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.VariableGroupConfigView"
-            icon="icons/sample3.gif"
             id="com.ht.scada.config.view.VariableGroupConfigView"
             name="变量分组配置">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.VariableTemplateConfigView"
-            icon="icons/sample3.gif"
             id="com.ht.scada.config.view.VariableTemplateConfigView"
             name="变量模板配置">
       </view>
@@ -155,8 +149,9 @@
          </property>
          <property
                name="windowImages"
-               value="icons/sample.gif">
+               value="icons/huatong.ico">
          </property>
+         
       </product>
    </extension>
 
