@@ -285,7 +285,7 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 			Object object = event.getNewValue();
 			if (object instanceof AcquisitionChannel) {
 				acquisitionDevice.setChannel((AcquisitionChannel) object);
-				System.out.println(((AcquisitionDevice) object).getName());
+//				System.out.println(((AcquisitionDevice) object).getName());
 			} else {
 				acquisitionDevice.setChannel(null);
 			}
