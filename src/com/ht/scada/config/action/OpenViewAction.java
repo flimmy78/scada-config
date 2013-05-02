@@ -26,7 +26,7 @@ public class OpenViewAction extends Action {
         // The id is used to refer to the action in a menu or toolbar
 		setId(viewId);
         // Associate the action with a pre-defined command, to allow key bindings.
-		setImageDescriptor(test.Activator.getImageDescriptor("/icons/sample2.gif"));
+		//setImageDescriptor(test.Activator.getImageDescriptor("/icons/sample2.gif"));
 	}
 	
 	public void run() {

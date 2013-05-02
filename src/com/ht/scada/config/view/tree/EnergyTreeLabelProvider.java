@@ -4,7 +4,12 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
+import com.ht.scada.common.tag.entity.AcquisitionChannel;
+import com.ht.scada.common.tag.entity.AcquisitionDevice;
+import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.EnergyMinorTag;
+import com.ht.scada.config.scadaconfig.Activator;
+import com.ht.scada.config.util.ImagePath;
 /**
  * 能耗标签提供者
  * @author 陈志强
@@ -39,6 +44,11 @@ public class EnergyTreeLabelProvider implements ILabelProvider {
 
 	@Override
 	public Image getImage(Object object) {
+		if(object instanceof EnergyMinorTag) {
+			return Activator.getDefault().getImageDescriptor(ImagePath.ENERGY_MINOR_IMAGE).createImage();
+		} else if(object instanceof String) {
+			return Activator.getDefault().getImageDescriptor(ImagePath.ENERGY_INDEX_IMAGE).createImage();
+		}
 		return null;
 	}
 
