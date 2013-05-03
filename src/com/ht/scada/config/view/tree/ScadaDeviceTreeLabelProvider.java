@@ -6,8 +6,6 @@ import org.eclipse.swt.graphics.Image;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
-import com.ht.scada.common.tag.entity.EndTag;
-import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.entity.SensorDevice;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.ImagePath;

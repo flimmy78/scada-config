@@ -4,9 +4,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
-import com.ht.scada.common.tag.entity.AcquisitionChannel;
-import com.ht.scada.common.tag.entity.AcquisitionDevice;
-import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.EnergyMinorTag;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.ImagePath;

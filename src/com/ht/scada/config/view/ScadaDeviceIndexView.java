@@ -3,6 +3,7 @@ package com.ht.scada.config.view;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -24,7 +25,6 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
-import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.service.AcquisitionDeviceService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
@@ -39,8 +39,6 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 	public static final String ID = "com.ht.scada.config.view.ScadaDeviceIndexView";
 	private AcquisitionDevice acquisitionDevice = new AcquisitionDevice();
 
-	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator.getDefault()
-			.getApplicationContext().getBean("acquisitionChannelService");
 	private AcquisitionDeviceService acquisitionDeviceService = (AcquisitionDeviceService) Activator.getDefault()
 			.getApplicationContext().getBean("acquisitionDeviceService");
 	
@@ -194,7 +192,7 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 				if (acquisitionDevice.getId() == null) {// 新建
 //					if ("".equals(acquisitionDevice.getName().trim())) {
 //						MessageDialog.openError(getSite().getShell(), "错误",
-//								"设备名称不能为空！");
+//								"设备名不能为空！");
 //						return;
 //					}
 
@@ -220,11 +218,11 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 
 				}
 				else {// 编辑
-//					if ("".equals(textIndex.getText().trim())) {
-//						MessageDialog.openError(getSite().getShell(), "错误",
-//								"索引名字不能为空！");
-//						return;
-//					}
+					if ("".equals(textDeviceName.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"设备名不能为空！");
+						return;
+					}
 					acquisitionDevice.setName(textDeviceName.getText().trim());
 					acquisitionDevice.setManufacture(textManufacture.getText().trim());
 					acquisitionDevice.setType(textType.getText().trim());
@@ -285,13 +283,25 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 			Object object = event.getNewValue();
 			if (object instanceof AcquisitionChannel) {
 				acquisitionDevice.setChannel((AcquisitionChannel) object);
-//				System.out.println(((AcquisitionDevice) object).getName());
 			} else {
 				acquisitionDevice.setChannel(null);
 			}
 //			// 初始化控件值
-//			textIndex.setText("");
-//			textType.setText("");
+			textDeviceName.setText("");
+			textManufacture.setText("");
+			textType.setText("");
+			Date fixTime = new Date();
+			Calendar fixTimeCalendar = Utils.date2CalendarUtil(fixTime);
+			int year = fixTimeCalendar.get(Calendar.YEAR);
+			int month = fixTimeCalendar.get(Calendar.MONTH);
+			int day = fixTimeCalendar.get((Calendar.DAY_OF_MONTH));
+			dateTimeFixTime.setDate(year, month, day);
+			textFixPositin.setText("");
+			textRemark.setText("");
+			textAddress.setText("");
+			textTimeout.setText("");
+			textRetry.setText("");
+			btnUsed.setSelection(false);
 			
 		} else if (event.getProperty().equals(
 				FirePropertyConstants.ACQUISITIONDEVICE_EDIT)) {
@@ -313,7 +323,6 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 			textTimeout.setText(acquisitionDevice.getTimeout() + "");
 			textRetry.setText(acquisitionDevice.getRetry() + "");
 			btnUsed.setSelection(btnUsed.getSelection());
-
 		}
 	}
 

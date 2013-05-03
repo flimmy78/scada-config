@@ -268,20 +268,26 @@ public class ScadaChannelIndexView extends ViewPart implements
 					ScadaDeviceTreeView.treeViewer.setExpandedState("采集通道", true);
 					
 				}
-//				else {// 编辑
-//					if ("".equals(textIndex.getText().trim())) {
-//						MessageDialog.openError(getSite().getShell(), "错误",
-//								"索引名字不能为空！");
-//						return;
-//					}
-//					areaMinorTag.setName(textIndex.getText().trim());
-//					areaMinorTag.setType(textType.getText().trim());
-//				
-//					areaMinorTagService.update(areaMinorTag);
-//
-//					AreaTreeView.treeViewer.update(areaMinorTag, null);
-//
-//				}
+				else {// 编辑
+					acquisitionChannel.setName(textChannelName.getText().trim());
+					// TODO
+					acquisitionChannel.setProtocal(CommunicationProtocal.ModbusRTU);
+					
+					acquisitionChannel.setIdx(Integer.valueOf(textIdx.getText().trim()));
+					acquisitionChannel.setOffline(Integer.valueOf(textOffline.getText()));
+					acquisitionChannel.setInterval(Integer.valueOf(textInterval.getText()));
+					acquisitionChannel.setSchedule(textSchedule.getText().trim());
+					acquisitionChannel.setPortInfo(textPortInfo.getText().trim());
+					acquisitionChannel.setFrames(textFrames.getText().trim());
+					
+					Date nowDate = new Date();
+
+					acquisitionChannel.setUpdateTime(nowDate);
+					
+					// 更新数据库
+					acquisitionChannelService.update(acquisitionChannel);
+					ScadaDeviceTreeView.treeViewer.update(acquisitionChannel,null);
+				}
 
 				IWorkbenchPage page = PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getActivePage();

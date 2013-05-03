@@ -16,8 +16,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.EnergyMinorTag;
@@ -31,8 +29,8 @@ import com.ht.scada.config.view.tree.RootTreeModel;
 
 public class EnergyTreeView extends ViewPart {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(EnergyTreeView.class);
+//	private static final Logger log = LoggerFactory
+//			.getLogger(EnergyTreeView.class);
 
 	private EnergyMinorTagService energyMinorTagService = (EnergyMinorTagService) Activator.getDefault()
 			.getApplicationContext().getBean("energyMinorTagService");

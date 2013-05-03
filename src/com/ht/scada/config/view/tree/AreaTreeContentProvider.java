@@ -7,9 +7,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.ht.scada.common.tag.entity.AreaMinorTag;
-import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.AreaMinorTagService;
-import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.config.scadaconfig.Activator;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

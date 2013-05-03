@@ -40,26 +40,30 @@
          point="org.eclipse.ui.views">
      
       <view
-            name="采集设备配置索引"
             allowMultiple="true"
             class="com.ht.scada.config.view.ScadaDeviceIndexView"
-            id="com.ht.scada.config.view.ScadaDeviceIndexView">
+            icon="icons/acquisition_device.png"
+            id="com.ht.scada.config.view.ScadaDeviceIndexView"
+            name="采集设备配置索引">
       </view>
       <view
-            name="采集通道配置索引"
             allowMultiple="true"
             class="com.ht.scada.config.view.ScadaChannelIndexView"
-            id="com.ht.scada.config.view.ScadaChannelIndexView">
+            icon="icons/acquisition_device.png"
+            id="com.ht.scada.config.view.ScadaChannelIndexView"
+            name="采集通道配置索引">
       </view>
       <view
-            name="配置索引"
             allowMultiple="true"
             class="com.ht.scada.config.view.MainIndexView"
-            id="com.ht.scada.config.view.MainIndexView">
+            icon="icons/end_tag.gif"
+            id="com.ht.scada.config.view.MainIndexView"
+            name="配置索引">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.EndTagView"
+            icon="icons/end_tag.gif"
             id="com.ht.scada.config.view.EndTagView"
             name="配置监控对象">
       </view>
@@ -81,6 +85,7 @@
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.ScadaObjectTreeView"
+            icon="icons/major_tag.png"
             id="com.ht.scada.config.view.ScadaObjectTreeView"
             name="监控对象导航树">
       </view>

@@ -22,8 +22,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
@@ -37,7 +35,7 @@ import com.ht.scada.config.view.tree.ScadaDeviceTreeLabelProvider;
 
 public class ScadaDeviceTreeView extends ViewPart {
 	
-	private static final Logger log = LoggerFactory.getLogger(ScadaDeviceTreeView.class);
+	//private static final Logger log = LoggerFactory.getLogger(ScadaDeviceTreeView.class);
 	
 	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator.getDefault()
 			.getApplicationContext().getBean("acquisitionChannelService");
