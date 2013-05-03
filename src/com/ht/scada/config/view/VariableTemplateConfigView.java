@@ -7,27 +7,37 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
+import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
-import org.eclipse.nebula.widgets.grid.GridColumnGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
@@ -36,9 +46,8 @@ import org.slf4j.LoggerFactory;
 import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.config.scadaconfig.Activator;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
+import com.ht.scada.config.util.GridViewerColumnSorter;
+import com.ht.scada.config.util.PinyinComparator;
 
 /**
  * 变量模板配置
@@ -47,6 +56,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * 
  */
 public class VariableTemplateConfigView extends ViewPart {
+
 	private static final Logger log = LoggerFactory
 			.getLogger(VariableTemplateConfigView.class);
 
@@ -69,7 +79,7 @@ public class VariableTemplateConfigView extends ViewPart {
 				return tagCfgTpl.getVarType() == null ? null : tagCfgTpl
 						.getVarType().getValue();
 			case 2:// 变量子类型
-				return tagCfgTpl.getSubType();
+				return tagCfgTpl.getSubType() == null? null : tagCfgTpl.getSubType().getValue();
 			case 3:// 变量分组
 				return tagCfgTpl.getVarGroup() == null ? null : tagCfgTpl
 						.getVarGroup().getValue();
@@ -144,6 +154,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private List<String> tplNameList; // 所有变量模板名字
 	private List<TagCfgTpl> tagCfgTplList = new ArrayList<>(); // 当前模板所有变量
 	private GridTableViewer gridTableViewer;
+//	private List<TagCfgTpl> addedTagTplList = new ArrayList<>();	//新增的变量模板
 
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -238,92 +249,132 @@ public class VariableTemplateConfigView extends ViewPart {
 
 		gridTableViewer = new GridTableViewer(composite_4, SWT.BORDER
 				| SWT.V_SCROLL | SWT.H_SCROLL);
-		Grid grid = gridTableViewer.getGrid();
+		
+		final Grid grid = gridTableViewer.getGrid();
 		grid.setHeaderVisible(true);
 		grid.setColumnScrolling(true);
 		grid.setCellSelectionEnabled(true);
 		grid.setRowHeaderVisible(true);
 
-		GridColumn gridColumn = new GridColumn(grid, SWT.NONE);
+		GridViewerColumn gridViewerColumn = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		gridViewerColumn.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl)element;
+				return tct.getTagName();
+			}
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tct = (TagCfgTpl)element;
+				tct.setTagName((String)value);
+				gridTableViewer.update(tct, null);
+			}
+		});
+		GridColumn gridColumn = gridViewerColumn.getColumn();
 		gridColumn.setText("变量名");
 		gridColumn.setWidth(70);
+		new GridViewerColumnSorter(gridViewerColumn) {
+			@Override
+			protected int doCompare(Viewer viewer, Object e1, Object e2) {
+				TagCfgTpl v1 = (TagCfgTpl) e1;
+				TagCfgTpl v2 = (TagCfgTpl) e2;
 
-		GridColumnGroup gridColumnGroup = new GridColumnGroup(grid, SWT.TOGGLE);
-		gridColumnGroup.setText("变量属性");
+				return PinyinComparator.INSTANCE.compare(v1.getTagName(),
+						v2.getTagName());
+			}
+		};
 
-		GridColumn gridColumn_6 = new GridColumn(gridColumnGroup, SWT.NONE);
+		GridViewerColumn gridViererColumn_6 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_6 = gridViererColumn_6.getColumn();
 		gridColumn_6.setText("变量类型");
 		gridColumn_6.setWidth(60);
 
-		GridColumn gridColumn_1 = new GridColumn(gridColumnGroup, SWT.NONE);
+		GridViewerColumn gridViererColumn_1 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_1 = gridViererColumn_1.getColumn();
 		gridColumn_1.setText("子类型");
 		gridColumn_1.setWidth(70);
 
-		GridColumn gridColumn_2 = new GridColumn(gridColumnGroup, SWT.NONE);
+		GridViewerColumn gridViererColumn_2 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_2 = gridViererColumn_2.getColumn();
 		gridColumn_2.setText("变量分组");
 		gridColumn_2.setWidth(70);
 
-		GridColumn gridColumn_3 = new GridColumn(gridColumnGroup, SWT.NONE);
+		GridViewerColumn gridViererColumn_3 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_3 = gridViererColumn_3.getColumn();
 		gridColumn_3.setText("变量标志");
 		gridColumn_3.setWidth(70);
 
-		GridColumnGroup gridColumnGroup_1 = new GridColumnGroup(grid,
-				SWT.TOGGLE);
-		gridColumnGroup_1.setText("IO信息");
-
-		GridColumn gridColumn_5 = new GridColumn(gridColumnGroup_1, SWT.NONE);
+		GridViewerColumn gridViewerColumn_5 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_5 = gridViewerColumn_5.getColumn();
 		gridColumn_5.setText("功能码");
 		gridColumn_5.setWidth(50);
 
-		GridColumn gridColumn_7 = new GridColumn(gridColumnGroup_1, SWT.NONE);
+		GridViewerColumn gridViewerColumn_7 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_7 = gridViewerColumn_7.getColumn();
 		gridColumn_7.setText("数据地址");
 		gridColumn_7.setWidth(60);
 
-		GridColumn gridColumn_8 = new GridColumn(gridColumnGroup_1, SWT.NONE);
+		GridViewerColumn gridViewerColumn_8 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_8 = gridViewerColumn_8.getColumn();
 		gridColumn_8.setText("字节长度");
 		gridColumn_8.setWidth(60);
 
-		GridColumn gridColumn_9 = new GridColumn(gridColumnGroup_1, SWT.NONE);
+		GridViewerColumn gridViewerColumn_9 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_9 = gridViewerColumn_9.getColumn();
 		gridColumn_9.setText("字节偏移量");
 		gridColumn_9.setWidth(75);
 
-		GridColumn gridColumn_10 = new GridColumn(gridColumnGroup_1, SWT.NONE);
+		GridViewerColumn gridViewerColumn_10 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_10 = gridViewerColumn_10.getColumn();
 		gridColumn_10.setText("位偏移量");
 		gridColumn_10.setWidth(70);
 
-		GridColumn gridColumn_4 = new GridColumn(gridColumnGroup_1, SWT.NONE);
+		GridViewerColumn gridViewerColumn_4 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_4 = gridViewerColumn_4.getColumn();
 		gridColumn_4.setText("值类型");
 		gridColumn_4.setWidth(70);
 
-		GridColumn gridColumn_11 = new GridColumn(gridColumnGroup_1, SWT.NONE);
+		GridViewerColumn gridViewerColumn_11 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_11 = gridViewerColumn_11.getColumn();
 		gridColumn_11.setText("基数");
 		gridColumn_11.setWidth(40);
 
-		GridColumn gridColumn_12 = new GridColumn(gridColumnGroup_1, SWT.NONE);
+		GridViewerColumn gridViewerColumn_12 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_12 = gridViewerColumn_12.getColumn();
 		gridColumn_12.setText("系数");
 		gridColumn_12.setWidth(40);
 
-		GridColumnGroup gridColumnGroup_2 = new GridColumnGroup(grid,
-				SWT.TOGGLE);
-		gridColumnGroup_2.setText("扩展信息");
+//		GridColumnGroup gridColumnGroup_2 = new GridColumnGroup(grid,
+//				SWT.TOGGLE);
+//		gridColumnGroup_2.setText("扩展信息");
 
-		GridColumn gridColumn_13 = new GridColumn(gridColumnGroup_2, SWT.NONE);
+		GridViewerColumn gridViewerColumn_13 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_13 = gridViewerColumn_13.getColumn();
 		gridColumn_13.setText("存储规则");
 		gridColumn_13.setWidth(65);
 
-		GridColumn gridColumn_14 = new GridColumn(gridColumnGroup_2, SWT.NONE);
+		GridViewerColumn gridViewerColumn_14 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_14 = gridViewerColumn_14.getColumn();
 		gridColumn_14.setText("触发规则");
 		gridColumn_14.setWidth(65);
 
-		GridColumn gridColumn_15 = new GridColumn(gridColumnGroup_2, SWT.NONE);
+		GridViewerColumn gridViewerColumn_15 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_15 = gridViewerColumn_15.getColumn();
 		gridColumn_15.setText("最大值");
 		gridColumn_15.setWidth(60);
 
-		GridColumn gridColumn_16 = new GridColumn(gridColumnGroup_2, SWT.NONE);
+		GridViewerColumn gridViewerColumn_16 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_16 = gridViewerColumn_16.getColumn();
 		gridColumn_16.setWidth(60);
 		gridColumn_16.setText("最小值");
 
-		GridColumn gridColumn_17 = new GridColumn(gridColumnGroup_2, SWT.NONE);
+		GridViewerColumn gridViewerColumn_17 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_17 = gridViewerColumn_17.getColumn();
 		gridColumn_17.setWidth(65);
 		gridColumn_17.setText("脉冲单位");
 		
@@ -331,9 +382,43 @@ public class VariableTemplateConfigView extends ViewPart {
 		grid.setMenu(menu);
 		
 		MenuItem menuItem = new MenuItem(menu, SWT.NONE);
+		menuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selection = (IStructuredSelection) listViewer_1.getSelection();
+				if(selection.isEmpty()) {
+					MessageDialog.openWarning(grid.getShell(), "提示", "未选择模板！");
+					return;
+				}
+				
+				TagCfgTpl tagCfgTpl = new TagCfgTpl();
+				tagCfgTpl.setTagName("新增的变量");
+				
+				tagCfgTplList.add(tagCfgTpl);
+				
+				gridTableViewer.setInput(tagCfgTplList);
+				gridTableViewer.refresh();
+//				gridTableViewer.setSelection(selection);
+			}
+		});
 		menuItem.setText("添加变量");
 		
 		MenuItem menuItem_1 = new MenuItem(menu, SWT.NONE);
+		menuItem_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selection = (IStructuredSelection) gridTableViewer.getSelection();
+				if(!selection.isEmpty()) {
+					int[] selectedIndex = grid.getSelectionIndices();
+					for(int i : selectedIndex) {
+						log.debug("选择列数：" + i + tagCfgTplList.get(i).getTagName());
+						tagCfgTplList.remove(i);
+					}
+					gridTableViewer.refresh();
+				}
+				
+			}
+		});
 		menuItem_1.setText("删除变量");
 
 		gridTableViewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -345,16 +430,17 @@ public class VariableTemplateConfigView extends ViewPart {
 				false, 1, 1));
 		composite_2.setBounds(0, 0, 64, 64);
 
-		Button button = new Button(composite_2, SWT.NONE);
-		button.setBounds(0, 10, 80, 27);
-		button.setText("新建模板");
-
-		Button btnNewButton = new Button(composite_2, SWT.NONE);
-		btnNewButton.setBounds(96, 10, 80, 27);
-		btnNewButton.setText("删除模板");
-
 		Button button_1 = new Button(composite_2, SWT.NONE);
-		button_1.setBounds(194, 10, 80, 27);
+		button_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				for(TagCfgTpl tct : tagCfgTplList) {
+					tagCfgTplService.update(tct);
+				}
+				
+			}
+		});
+		button_1.setBounds(796, 10, 80, 27);
 		button_1.setText("保存模板");
 		sashForm.setWeights(new int[] { 78, 953 });
 
