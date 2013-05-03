@@ -21,7 +21,7 @@
       <perspective
             class="com.ht.scada.config.perspective.ScadaDevicePerspective"
             fixed="true"
-            icon="icons/acquisition_channel.png"
+            icon="icons/acquisition_channel_index.png"
             id="com.ht.scada.config.perspective.ScadaDevicePerspective"
             name="监控设备透视图">
       </perspective>
@@ -49,14 +49,14 @@
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.ScadaChannelIndexView"
-            icon="icons/acquisition_device.png"
+            icon="icons/acquisition_channel.png"
             id="com.ht.scada.config.view.ScadaChannelIndexView"
             name="采集通道配置索引">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.MainIndexView"
-            icon="icons/end_tag.gif"
+            icon="icons/major_tag.png"
             id="com.ht.scada.config.view.MainIndexView"
             name="配置索引">
       </view>
@@ -85,7 +85,7 @@
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.ScadaObjectTreeView"
-            icon="icons/major_tag.png"
+            icon="icons/major_tag_index.png"
             id="com.ht.scada.config.view.ScadaObjectTreeView"
             name="监控对象导航树">
       </view>
@@ -106,7 +106,7 @@
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.ScadaDeviceTreeView"
-            icon="icons/major_tag.png"
+            icon="icons/major_tag_index.png"
             id="com.ht.scada.config.view.ScadaDeviceTreeView"
             name="监控设备导航树">
       </view>

@@ -45,11 +45,11 @@ public class ScadaDeviceTreeLabelProvider implements ILabelProvider {
 	@Override
 	public Image getImage(Object object) {
 		if(object instanceof AcquisitionChannel) {
-			return Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_DEVICE_IMAGE).createImage();
+			return Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_CHANNEL_IMAGE).createImage();
 		} else if(object instanceof AcquisitionDevice) {
 			return Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_DEVICE_IMAGE).createImage();
 		} else if(object instanceof String) {
-			return Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_CHANNEL_IMAGE).createImage();
+			return Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_CHANNEL_INDEX_IMAGE).createImage();
 		}
 		return null;
 	}
