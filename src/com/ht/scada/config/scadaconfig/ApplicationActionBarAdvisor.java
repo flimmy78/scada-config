@@ -15,6 +15,7 @@ import com.ht.scada.config.perspective.RTURemotePerspective;
 import com.ht.scada.config.perspective.ScadaDevicePerspective;
 import com.ht.scada.config.perspective.ScadaObjectPerspective;
 import com.ht.scada.config.perspective.VariableConfigPerspective;
+import com.ht.scada.config.util.ImagePath;
 import com.ht.scada.config.view.AreaTreeView;
 import com.ht.scada.config.view.EnergyTreeView;
 import com.ht.scada.config.view.ScadaObjectTreeView;
@@ -76,12 +77,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        perspectivesMenu = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
         
         scadaObjectChangeAction = new OpenViewAction(window, ScadaObjectPerspective.ID, ScadaObjectTreeView.ID, "监控对象配置");
+        scadaObjectChangeAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.MAJOR_TAG_INDEX_IMAGE));
         register(scadaObjectChangeAction);
         
         areaViewShowAction = new OpenViewAction(window, ScadaObjectPerspective.ID, AreaTreeView.ID, "常规分类配置");
+        areaViewShowAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.AREA_INDEX_IMAGE));
         register(areaViewShowAction);
         
         energyViewShowAction = new OpenViewAction(window, ScadaObjectPerspective.ID, EnergyTreeView.ID, "能耗分类分项");
+        energyViewShowAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.ENERGY_INDEX_IMAGE));
         register(energyViewShowAction);
         
         varGroupShowAction = new OpenViewAction(window, VariableConfigPerspective.ID, VariableGroupConfigView.ID, "变量分组配置");
@@ -91,6 +95,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         register(varTemplateShowAction);
         
         scadaDeviceChangeAction = new PerspectiveChangeAction("监控设备配置",ScadaDevicePerspective.ID, window);
+        scadaDeviceChangeAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_CHANNEL_INDEX_IMAGE));
         register(scadaDeviceChangeAction);
         
         rtuRemoteChangeAction = new PerspectiveChangeAction("RTU远程配置",RTURemotePerspective.ID, window);

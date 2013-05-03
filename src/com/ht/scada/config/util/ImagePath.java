@@ -8,6 +8,10 @@ package com.ht.scada.config.util;
 public interface ImagePath {
 	/********监控对象配置************/
 	/**
+	 * 监控对象主索引标签
+	 */
+	public static final String MAJOR_TAG_INDEX_IMAGE = "icons/major_tag_index.png";
+	/**
 	 * 监控对象主索引
 	 */
 	public static final String MAJOR_TAG_IMAGE = "icons/major_tag.png";
@@ -34,6 +38,10 @@ public interface ImagePath {
 	 */
 	public static final String ENERGY_MINOR_IMAGE = "icons/index_energy_node.gif";
 	/********采集通道配置************/
+	/**
+	 * 采集通道标签
+	 */
+	public static final String ACQUISITION_CHANNEL_INDEX_IMAGE = "icons/acquisition_channel_index.png";
 	/**
 	 * 采集通道
 	 */
