@@ -124,10 +124,7 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				IWorkbenchPart part = page.getActivePart();
-				if (part instanceof IViewPart)
-					page.hideView((IViewPart) part);
+				LayoutUtil.hideViewPart();
 			}
 		});
 		btnNewButton_1.setText(" 取  消 ");
