@@ -113,14 +113,14 @@ public class EnergyTreeView extends ViewPart {
 			if (selectedObject instanceof String) {
 				final String str = (String) selectedObject;
 
-				if (str.equals(RootTreeModel.instanse.normalIndex)) {// 常规分类索引
+				if (str.equals(RootTreeModel.instanse.energyIndex)) {// 能耗分项索引
 					Action objectIndex = new Action() {
 						public void run() {
 							try {
 								PlatformUI.getWorkbench()
 										.getActiveWorkbenchWindow()
 										.getActivePage()
-										.showView(EnergyTreeView.ID);
+										.showView(EnergyIndexView.ID);
 							} catch (PartInitException e) {
 								e.printStackTrace();
 							}

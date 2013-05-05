@@ -287,8 +287,8 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 				acquisitionDevice.setChannel(null);
 			}
 //			// 初始化控件值
-			textDeviceName.setText("");
-			textManufacture.setText("");
+			textDeviceName.setText("PDM");
+			textManufacture.setText("丹东华通测控有限公司");
 			textType.setText("");
 			Date fixTime = new Date();
 			Calendar fixTimeCalendar = Utils.date2CalendarUtil(fixTime);
@@ -299,8 +299,8 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 			textFixPositin.setText("");
 			textRemark.setText("");
 			textAddress.setText("");
-			textTimeout.setText("");
-			textRetry.setText("");
+			textTimeout.setText("500");
+			textRetry.setText("2");
 			btnUsed.setSelection(false);
 			
 		} else if (event.getProperty().equals(

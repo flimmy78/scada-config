@@ -92,7 +92,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 				false, 1, 1);
 		gd_textChannelName.widthHint = 120;
 		textChannelName.setLayoutData(gd_textChannelName);
-		textChannelName.setText("<dynamic>");
+		textChannelName.setText("通道名称");
 
 		Label labelProtocal = new Label(groupBasicInfo, SWT.NONE);
 		labelProtocal.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
@@ -114,7 +114,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 		labelIdx.setText("序      号：");
 
 		textIdx = new Text(groupBasicInfo, SWT.BORDER);
-		textIdx.setText("<dynamic>");
+		textIdx.setText("序号");
 		GridData gd_textIdx = new GridData(SWT.LEFT, SWT.CENTER, true, false,
 				1, 1);
 		gd_textIdx.widthHint = 120;
@@ -122,7 +122,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 
 		Group groupCommuInfo = new Group(composite, SWT.NONE);
 		groupCommuInfo.setText("通讯信息");
-		groupCommuInfo.setLayout(new GridLayout(2, false));
+		groupCommuInfo.setLayout(new GridLayout(3, false));
 		FormData fd_groupCommuInfo = new FormData();
 		fd_groupCommuInfo.bottom = new FormAttachment(groupBasicInfo, 209,
 				SWT.BOTTOM);
@@ -138,11 +138,12 @@ public class ScadaChannelIndexView extends ViewPart implements
 		labelOffline.setText("通讯离线：");
 
 		textOffline = new Text(groupCommuInfo, SWT.BORDER);
-		textOffline.setText("<dynamic>");
+		textOffline.setText("通讯离线");
 		GridData gd_textOffline = new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1);
 		gd_textOffline.widthHint = 120;
 		textOffline.setLayoutData(gd_textOffline);
+		new Label(groupCommuInfo, SWT.NONE);
 
 		Label labelInterval = new Label(groupCommuInfo, SWT.NONE);
 		labelInterval.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
@@ -150,11 +151,14 @@ public class ScadaChannelIndexView extends ViewPart implements
 		labelInterval.setText("采样间隔：");
 
 		textInterval = new Text(groupCommuInfo, SWT.BORDER);
-		textInterval.setText("<dynamic>");
+		textInterval.setText("采样间隔");
 		GridData gd_textInterval = new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1);
 		gd_textInterval.widthHint = 120;
 		textInterval.setLayoutData(gd_textInterval);
+		
+		Label lblMs = new Label(groupCommuInfo, SWT.NONE);
+		lblMs.setText("ms");
 
 		Label labelSchedule = new Label(groupCommuInfo, SWT.NONE);
 		labelSchedule.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
@@ -162,11 +166,12 @@ public class ScadaChannelIndexView extends ViewPart implements
 		labelSchedule.setText("任务调度：");
 
 		textSchedule = new Text(groupCommuInfo, SWT.BORDER);
-		textSchedule.setText("<dynamic>");
+		textSchedule.setText("任务调度");
 		GridData gd_textSchedule = new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1);
 		gd_textSchedule.widthHint = 120;
 		textSchedule.setLayoutData(gd_textSchedule);
+		new Label(groupCommuInfo, SWT.NONE);
 
 		Label labelPortInfo = new Label(groupCommuInfo, SWT.NONE);
 		labelPortInfo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
@@ -174,11 +179,12 @@ public class ScadaChannelIndexView extends ViewPart implements
 		labelPortInfo.setText("端口信息：");
 
 		textPortInfo = new Text(groupCommuInfo, SWT.BORDER);
-		textPortInfo.setText("<dynamic>");
+		textPortInfo.setText("端口");
 		GridData gd_textPortInfo = new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1);
 		gd_textPortInfo.widthHint = 120;
 		textPortInfo.setLayoutData(gd_textPortInfo);
+		new Label(groupCommuInfo, SWT.NONE);
 
 		Label labelFrames = new Label(groupCommuInfo, SWT.NONE);
 		labelFrames.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
@@ -186,11 +192,12 @@ public class ScadaChannelIndexView extends ViewPart implements
 		labelFrames.setText("通 讯 帧：");
 
 		textFrames = new Text(groupCommuInfo, SWT.BORDER);
-		textFrames.setText("<dynamic>");
+		textFrames.setText("通讯帧");
 		GridData gd_textFrames = new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1);
 		gd_textFrames.widthHint = 120;
 		textFrames.setLayoutData(gd_textFrames);
+		new Label(groupCommuInfo, SWT.NONE);
 
 		Label labelUpdateTime = new Label(groupCommuInfo, SWT.NONE);
 		labelUpdateTime.setText("上次更新：");
@@ -206,6 +213,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 		FormData fd_composite_1 = new FormData();
 		fd_composite_1.right = new FormAttachment(groupBasicInfo, 0, SWT.RIGHT);
 		fd_composite_1.top = new FormAttachment(groupCommuInfo, 8);
+		new Label(groupCommuInfo, SWT.NONE);
 		fd_composite_1.left = new FormAttachment(groupBasicInfo, 0, SWT.LEFT);
 		composite_1.setLayoutData(fd_composite_1);
 
@@ -219,33 +227,32 @@ public class ScadaChannelIndexView extends ViewPart implements
 								"通道名称不能为空！");
 						return;
 					}
-//					else if ("".equals(textIdx.getText().trim())) {
-//						MessageDialog.openError(getSite().getShell(), "错误",
-//								"序号不能为空！");
-//						return;
-//					}else if ("".equals(textOffline.getText().trim())) {
-//						MessageDialog.openError(getSite().getShell(), "错误",
-//								"通讯离线不能为空！");
-//						return;
-//					}else if ("".equals(textInterval.getText().trim())) {
-//						MessageDialog.openError(getSite().getShell(), "错误",
-//								"采样间隔不能为空！");
-//						return;
-//					}else if ("".equals(textSchedule.getText().trim())) {
-//						MessageDialog.openError(getSite().getShell(), "错误",
-//								"任务调度不能为空！");
-//						return;
-//					}else if ("".equals(textPortInfo.getText().trim())) {
-//						MessageDialog.openError(getSite().getShell(), "错误",
-//								"端口信息不能为空！");
-//						return;
-//					}else if ("".equals(textFrames.getText().trim())) {
-//						MessageDialog.openError(getSite().getShell(), "错误",
-//								"通讯帧不能为空！");
-//						return;
-//					}
+					else if ("".equals(textIdx.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"序号不能为空！");
+						return;
+					}else if ("".equals(textOffline.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"通讯离线不能为空！");
+						return;
+					}else if ("".equals(textInterval.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"采样间隔不能为空！");
+						return;
+					}else if ("".equals(textSchedule.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"任务调度不能为空！");
+						return;
+					}else if ("".equals(textPortInfo.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"端口信息不能为空！");
+						return;
+					}else if ("".equals(textFrames.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"通讯帧不能为空！");
+						return;
+					}
 					
-
 					acquisitionChannel.setName(textChannelName.getText().trim());
 					// TODO
 					acquisitionChannel.setProtocal(CommunicationProtocal.ModbusRTU);
@@ -335,7 +342,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 				// acquisitionChannel.(null);
 			}
 			// ============初始化控件值============
-			textChannelName.setText("");
+			textChannelName.setText("RTU");
 			comboProtocal.setText("");
 			textIdx.setText("");
 			textOffline.setText("");

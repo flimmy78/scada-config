@@ -120,7 +120,7 @@ public class AreaTreeView extends ViewPart {
 								PlatformUI.getWorkbench()
 										.getActiveWorkbenchWindow()
 										.getActivePage()
-										.showView(AreaTreeView.ID);
+										.showView(AreaIndexView.ID);
 							} catch (PartInitException e) {
 								e.printStackTrace();
 							}
