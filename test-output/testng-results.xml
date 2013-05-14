@@ -2,20 +2,16 @@
 <testng-results skipped="0" failed="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="2134" started-at="2013-04-28T12:33:58Z" finished-at="2013-04-28T12:34:00Z">
+  <suite name="Default suite" duration-ms="16" started-at="2013-05-14T02:51:38Z" finished-at="2013-05-14T02:51:38Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="2134" started-at="2013-04-28T12:33:58Z" finished-at="2013-04-28T12:34:00Z">
-      <class name="com.ht.scada.common.tag.service.impl.AcquisitionChannelServiceImplTest">
-        <test-method status="PASS" signature="beforeTest()[pri:0, instance:com.ht.scada.common.tag.service.impl.AcquisitionChannelServiceImplTest@3bdd7752]" name="beforeTest" is-config="true" duration-ms="2045" started-at="2013-04-28T20:33:58Z" finished-at="2013-04-28T20:34:00Z">
+    <test name="Default test" duration-ms="16" started-at="2013-05-14T02:51:38Z" finished-at="2013-05-14T02:51:38Z">
+      <class name="com.ht.scada.common.tag.service.impl.VarGroupCfgServiceImplTest">
+        <test-method status="PASS" signature="getAllVarGroupCfg()[pri:0, instance:com.ht.scada.common.tag.service.impl.VarGroupCfgServiceImplTest@64bf091d]" name="getAllVarGroupCfg" duration-ms="8" started-at="2013-05-14T10:51:38Z" finished-at="2013-05-14T10:51:38Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- beforeTest -->
-        <test-method status="PASS" signature="create()[pri:0, instance:com.ht.scada.common.tag.service.impl.AcquisitionChannelServiceImplTest@3bdd7752]" name="create" duration-ms="82" started-at="2013-04-28T20:34:00Z" finished-at="2013-04-28T20:34:00Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- create -->
-      </class> <!-- com.ht.scada.common.tag.service.impl.AcquisitionChannelServiceImplTest -->
+        </test-method> <!-- getAllVarGroupCfg -->
+      </class> <!-- com.ht.scada.common.tag.service.impl.VarGroupCfgServiceImplTest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>

@@ -155,9 +155,13 @@
          </property>
          <property
                name="windowImages"
-               value="icons/sample.gif">
+               value="icons/huatong.ico">
          </property>
-         
+         <property 
+         		name="preferenceCustomization" 
+         		value="plugin_customization.ini">
+         </property>
+          
       </product>
    </extension>
 

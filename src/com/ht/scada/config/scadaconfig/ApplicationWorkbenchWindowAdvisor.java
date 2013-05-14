@@ -24,5 +24,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         
         configurer.setShowPerspectiveBar(true);//是否显示透视图栏
     }
+
+	@Override
+	public void postWindowOpen() {
+		super.postWindowOpen();
+		// 使得窗口最大化
+		// this.getWindowConfigurer().getWindow().getShell().setMaximized(true);
+	}
+    
+    
     
 }
