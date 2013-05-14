@@ -10,6 +10,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.service.TagCfgTplService;
+import com.ht.scada.common.tag.util.VarType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
 import com.ht.scada.config.util.PinyinComparator;
@@ -64,9 +66,19 @@ public class VariableTemplateConfigView extends ViewPart {
 //	private boolean isAdded = false; // 是否是新增变量标志
 	private String selectedTplName = null;	//选定的变量模板名字
 	private String addedTplName = null;		//新增的变量模板名字
+	private String[] varTypeArray;		//变量类型
 
 	public VariableTemplateConfigView() {
 		tplNameList = tagCfgTplService.findAllTplName();
+		
+		int length = VarType.values().length;
+		varTypeArray = new String[length+1];
+		
+		varTypeArray[0] = "";
+		for(int i=1;i<=length;i++) {
+			varTypeArray[i] = VarType.values()[i-1].getValue();
+		}
+		
 	}
 
 	private TagCfgTplService tagCfgTplService = (TagCfgTplService) Activator
@@ -229,6 +241,34 @@ public class VariableTemplateConfigView extends ViewPart {
 		GridColumn gridColumn_6 = gridViererColumn_6.getColumn();
 		gridColumn_6.setText("变量类型");
 		gridColumn_6.setWidth(60);
+		gridViererColumn_6.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new ComboBoxCellEditor(grid, varTypeArray);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+//				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+//				return tagCfgTpl.getVarType() == null ? "" : tagCfgTpl
+//						.getVarType().getValue();
+				return 1;
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				if("".equals(value)) {
+					tagCfgTpl.setVarType(null);
+				} else {
+					tagCfgTpl.setVarType(VarType.getByValue((String) value));
+				}
+				
+				gridTableViewer.update(tagCfgTpl, null);
+			}
+		});
 
 		GridViewerColumn gridViererColumn_1 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
