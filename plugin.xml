@@ -125,12 +125,14 @@
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.VariableGroupConfigView"
+            icon="icons/menu_variable_group.png"
             id="com.ht.scada.config.view.VariableGroupConfigView"
             name="变量分组配置">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.VariableTemplateConfigView"
+            icon="icons/menu_variable_template.png"
             id="com.ht.scada.config.view.VariableTemplateConfigView"
             name="变量模板配置">
       </view>

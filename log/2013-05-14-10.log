@@ -1,0 +1,56 @@
+2013-05-14 10:34:31,249 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_Acquisition_Channel  (id int identity not null, frames varchar(255), idx int, interval int not null, name varchar(255), offline int not null, portInfo varchar(255), protocal varchar(255), schedule varchar(255), update_time datetime, primary key (id))
+2013-05-14 10:34:31,253 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_Acquisition_Channel' 的对象。
+2013-05-14 10:34:31,255 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Tag_Cfg_Tpl add var_storage  varchar(255)
+2013-05-14 10:34:31,256 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 各表中的列名必须唯一。在表 'T_Tag_Cfg_Tpl' 中多次指定了列名 'var_storage'。
+2013-05-14 10:34:31,258 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_User_Role  (id int identity not null, description varchar(255) not null, name varchar(100) not null, primary key (id))
+2013-05-14 10:34:31,259 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_User_Role' 的对象。
+2013-05-14 10:34:31,261 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Acquisition_Device add constraint FKB2D8A953A01B1A96 foreign key (channel_id) references T_Acquisition_Channel 
+2013-05-14 10:34:31,262 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKB2D8A953A01B1A96' 的对象。
+2013-05-14 10:34:31,264 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Roles_Permissions add constraint FKBE8992975A0066EC foreign key (UserRole_id) references T_User_Role 
+2013-05-14 10:34:31,265 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKBE8992975A0066EC' 的对象。
+2013-05-14 10:34:31,303 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create index idx_roles_name on T_User_Role  (name)
+2013-05-14 10:34:31,303 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 操作失败，因为在 表 'T_User_Role' 上已存在名称为 'idx_roles_name' 的索引或统计信息。
+2013-05-14 10:34:31,306 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Users add constraint FK28B723DCF371D17 foreign key (role_id) references T_User_Role 
+2013-05-14 10:34:31,306 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FK28B723DCF371D17' 的对象。
+2013-05-14 10:36:31,014 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_Acquisition_Channel  (id int identity not null, frames varchar(255), idx int, interval int not null, name varchar(255), offline int not null, portInfo varchar(255), protocal varchar(255), schedule varchar(255), update_time datetime, primary key (id))
+2013-05-14 10:36:31,019 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_Acquisition_Channel' 的对象。
+2013-05-14 10:36:31,021 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Tag_Cfg_Tpl add var_storage  varchar(255)
+2013-05-14 10:36:31,022 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 各表中的列名必须唯一。在表 'T_Tag_Cfg_Tpl' 中多次指定了列名 'var_storage'。
+2013-05-14 10:36:31,024 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_User_Role  (id int identity not null, description varchar(255) not null, name varchar(100) not null, primary key (id))
+2013-05-14 10:36:31,024 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_User_Role' 的对象。
+2013-05-14 10:36:31,027 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Acquisition_Device add constraint FKB2D8A953A01B1A96 foreign key (channel_id) references T_Acquisition_Channel 
+2013-05-14 10:36:31,027 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKB2D8A953A01B1A96' 的对象。
+2013-05-14 10:36:31,030 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Roles_Permissions add constraint FKBE8992975A0066EC foreign key (UserRole_id) references T_User_Role 
+2013-05-14 10:36:31,030 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKBE8992975A0066EC' 的对象。
+2013-05-14 10:36:31,032 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create index idx_roles_name on T_User_Role  (name)
+2013-05-14 10:36:31,033 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 操作失败，因为在 表 'T_User_Role' 上已存在名称为 'idx_roles_name' 的索引或统计信息。
+2013-05-14 10:36:31,035 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Users add constraint FK28B723DCF371D17 foreign key (role_id) references T_User_Role 
+2013-05-14 10:36:31,036 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FK28B723DCF371D17' 的对象。
+2013-05-14 10:37:03,520 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_Acquisition_Channel  (id int identity not null, frames varchar(255), idx int, interval int not null, name varchar(255), offline int not null, portInfo varchar(255), protocal varchar(255), schedule varchar(255), update_time datetime, primary key (id))
+2013-05-14 10:37:03,524 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_Acquisition_Channel' 的对象。
+2013-05-14 10:37:03,526 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Tag_Cfg_Tpl add var_storage  varchar(255)
+2013-05-14 10:37:03,527 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 各表中的列名必须唯一。在表 'T_Tag_Cfg_Tpl' 中多次指定了列名 'var_storage'。
+2013-05-14 10:37:03,529 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_User_Role  (id int identity not null, description varchar(255) not null, name varchar(100) not null, primary key (id))
+2013-05-14 10:37:03,529 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_User_Role' 的对象。
+2013-05-14 10:37:03,532 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Acquisition_Device add constraint FKB2D8A953A01B1A96 foreign key (channel_id) references T_Acquisition_Channel 
+2013-05-14 10:37:03,532 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKB2D8A953A01B1A96' 的对象。
+2013-05-14 10:37:03,534 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Roles_Permissions add constraint FKBE8992975A0066EC foreign key (UserRole_id) references T_User_Role 
+2013-05-14 10:37:03,535 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKBE8992975A0066EC' 的对象。
+2013-05-14 10:37:03,537 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create index idx_roles_name on T_User_Role  (name)
+2013-05-14 10:37:03,537 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 操作失败，因为在 表 'T_User_Role' 上已存在名称为 'idx_roles_name' 的索引或统计信息。
+2013-05-14 10:37:03,540 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Users add constraint FK28B723DCF371D17 foreign key (role_id) references T_User_Role 
+2013-05-14 10:37:03,540 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FK28B723DCF371D17' 的对象。
+2013-05-14 10:40:17,607 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_Acquisition_Channel  (id int identity not null, frames varchar(255), idx int, interval int not null, name varchar(255), offline int not null, portInfo varchar(255), protocal varchar(255), schedule varchar(255), update_time datetime, primary key (id))
+2013-05-14 10:40:17,612 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_Acquisition_Channel' 的对象。
+2013-05-14 10:40:17,614 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Tag_Cfg_Tpl add var_storage  varchar(255)
+2013-05-14 10:40:17,614 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 各表中的列名必须唯一。在表 'T_Tag_Cfg_Tpl' 中多次指定了列名 'var_storage'。
+2013-05-14 10:40:17,616 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create table T_User_Role  (id int identity not null, description varchar(255) not null, name varchar(100) not null, primary key (id))
+2013-05-14 10:40:17,617 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'T_User_Role' 的对象。
+2013-05-14 10:40:17,619 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Acquisition_Device add constraint FKB2D8A953A01B1A96 foreign key (channel_id) references T_Acquisition_Channel 
+2013-05-14 10:40:17,620 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKB2D8A953A01B1A96' 的对象。
+2013-05-14 10:40:17,622 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Roles_Permissions add constraint FKBE8992975A0066EC foreign key (UserRole_id) references T_User_Role 
+2013-05-14 10:40:17,623 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FKBE8992975A0066EC' 的对象。
+2013-05-14 10:40:17,625 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: create index idx_roles_name on T_User_Role  (name)
+2013-05-14 10:40:17,625 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 操作失败，因为在 表 'T_User_Role' 上已存在名称为 'idx_roles_name' 的索引或统计信息。
+2013-05-14 10:40:17,628 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:235 - HHH000388: Unsuccessful: alter table T_Users add constraint FK28B723DCF371D17 foreign key (role_id) references T_User_Role 
+2013-05-14 10:40:17,628 ERROR [main] [org.hibernate.tool.hbm2ddl.SchemaUpdate]:236 - 数据库中已存在名为 'FK28B723DCF371D17' 的对象。

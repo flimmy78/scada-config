@@ -50,6 +50,14 @@ public interface ImagePath {
 	 * 采集设备
 	 */
 	public static final String ACQUISITION_DEVICE_IMAGE = "icons/acquisition_device.png";
+	/**
+	 * 变量分组
+	 */
+	public static final String VARIABLE_GROUP_IMAGE = "icons/menu_variable_group.png";
+	/**
+	 * 变量模板
+	 */
+	public static final String VARIABLE_TEMPLATE_IMAGE = "icons/menu_variable_template.png";
 	
 
 }
