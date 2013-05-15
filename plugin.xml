@@ -142,24 +142,8 @@
             application="scada-config.application"
             name="SCADA配置软件">
          <property
-               name="appName"
-               value="SCADA配置软件">
-         </property>
-         <property
-               name="aboutImage"
-               value="product_lg.gif">
-         </property>
-         <property
-               name="aboutText"
-               value="RCP Mail template created by PDE">
-         </property>
-         <property
                name="windowImages"
                value="icons/huatong.ico">
-         </property>
-         <property 
-         		name="preferenceCustomization" 
-         		value="plugin_customization.ini">
          </property>
           
       </product>
