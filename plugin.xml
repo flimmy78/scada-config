@@ -142,7 +142,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="scada-config.application"
-            name="SCADA配置软件">
+            name="丹东华通SCADA系统通用配置软件">
          <property
                name="windowImages"
                value="icons/huatong.ico">

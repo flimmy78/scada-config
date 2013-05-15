@@ -492,7 +492,7 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return String.valueOf(tct.getByteLen());
+				return String.valueOf(tct.getByteOffset());
 			}
 
 			protected void setValue(Object element, Object value) {
@@ -509,7 +509,7 @@ public class VariableTemplateConfigView extends ViewPart {
 					return;
 				}
 				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setByteLen(myValue);
+				tct.setByteOffset(myValue);
 				gridTableViewer.update(tct, null);
 			}
 		});
