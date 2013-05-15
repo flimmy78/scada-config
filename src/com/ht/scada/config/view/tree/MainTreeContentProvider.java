@@ -90,7 +90,8 @@ public class MainTreeContentProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof Enum) {
-			return ((RootTreeModel) inputElement).getRoottree();
+//			return ((RootTreeModel) inputElement).getRoottree();
+			return new String[]{RootTreeModel.instanse.labelIndex, RootTreeModel.instanse.otherConfig};
 		}
 		return null;
 	}

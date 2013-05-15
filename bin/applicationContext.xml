@@ -44,7 +44,7 @@
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="showSql" value="true" />
 				<property name="generateDdl" value="true" />
-				<property name="database" value="SQL_SERVER" />
+				<property name="database" value="MYSQL" />
 			</bean>
 		</property>
 		<property name="persistenceXmlLocation" value="classpath*:META-INF/persistence.xml" />

@@ -47,6 +47,8 @@ import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.service.TagCfgTplService;
+import com.ht.scada.common.tag.util.DataType;
+import com.ht.scada.common.tag.util.VarSubType;
 import com.ht.scada.common.tag.util.VarType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
@@ -63,22 +65,37 @@ public class VariableTemplateConfigView extends ViewPart {
 	private static final Logger log = LoggerFactory
 			.getLogger(VariableTemplateConfigView.class);
 
-//	private boolean isAdded = false; // 是否是新增变量标志
-	private String selectedTplName = null;	//选定的变量模板名字
-	private String addedTplName = null;		//新增的变量模板名字
-	private String[] varTypeArray;		//变量类型
+	// private boolean isAdded = false; // 是否是新增变量标志
+	private String selectedTplName = null; // 选定的变量模板名字
+	private String addedTplName = null; // 新增的变量模板名字
+	private String[] varTypeArray; // 变量类型
+	private String[] varSubTypeArray;	//变量子类型
+	private String[] varDataTypeArray;	//值类型	
 
 	public VariableTemplateConfigView() {
 		tplNameList = tagCfgTplService.findAllTplName();
-		
+
 		int length = VarType.values().length;
-		varTypeArray = new String[length+1];
-		
+		varTypeArray = new String[length + 1];
 		varTypeArray[0] = "";
-		for(int i=1;i<=length;i++) {
-			varTypeArray[i] = VarType.values()[i-1].getValue();
+		for (int i = 1; i <= length; i++) {
+			varTypeArray[i] = VarType.values()[i - 1].getValue();
 		}
 		
+		int len = VarSubType.values().length;
+		varSubTypeArray = new String[len + 1];
+		varSubTypeArray[0] = "";
+		for (int i = 1; i <= len; i++) {
+			varSubTypeArray[i] = VarSubType.values()[i - 1].getValue();
+		}
+		
+		int len1 = DataType.values().length;
+		varDataTypeArray = new String[len1 + 1];
+		varDataTypeArray[0] = "";
+		for (int i = 1; i <= len1; i++) {
+			varDataTypeArray[i] = DataType.values()[i - 1].getValue();
+		}
+
 	}
 
 	private TagCfgTplService tagCfgTplService = (TagCfgTplService) Activator
@@ -90,9 +107,9 @@ public class VariableTemplateConfigView extends ViewPart {
 	private Text text_tpl_name;
 	private ListViewer listViewer_1;
 	private List<String> tplNameList; // 所有变量模板名字
-	private List<TagCfgTpl> tagCfgTplList = new ArrayList<>(); 	//当前模板所有变量
+	private List<TagCfgTpl> tagCfgTplList = new ArrayList<>(); // 当前模板所有变量
 	private GridTableViewer gridTableViewer;
-	private List<TagCfgTpl> deletedTplList = new ArrayList<>();	//要删除的变量模板
+	private List<TagCfgTpl> deletedTplList = new ArrayList<>(); // 要删除的变量模板
 
 	// private List<TagCfgTpl> addedTagTplList = new ArrayList<>(); //新增的变量模板
 
@@ -112,7 +129,8 @@ public class VariableTemplateConfigView extends ViewPart {
 		group.setText("变量模板");
 		group.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		listViewer_1 = new ListViewer(group, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+		listViewer_1 = new ListViewer(group, SWT.BORDER | SWT.V_SCROLL
+				| SWT.MULTI);
 		listViewer_1
 				.addSelectionChangedListener(new ISelectionChangedListener() {
 					public void selectionChanged(SelectionChangedEvent event) {
@@ -142,7 +160,7 @@ public class VariableTemplateConfigView extends ViewPart {
 		composite_1.setLayout(new GridLayout(1, false));
 
 		Group group_2 = new Group(composite_1, SWT.NONE);
-		group_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false,
+		group_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		group_2.setText("模板信息");
 		group_2.setBounds(0, 0, 70, 84);
@@ -160,30 +178,27 @@ public class VariableTemplateConfigView extends ViewPart {
 		group_1.setText("变量信息");
 
 		Composite composite_3 = new Composite(group_1, SWT.NONE);
+		composite_3.setLayout(new GridLayout(6, false));
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
+								
+										Label lblNewLabel = new Label(composite_3, SWT.NONE);
+										lblNewLabel.setText("变量类型：");
+						
+								Combo combo = new Combo(composite_3, SWT.NONE);
+				
+						Label label_1 = new Label(composite_3, SWT.NONE);
+						label_1.setText("变量分组：");
+		
+				Combo combo_1 = new Combo(composite_3, SWT.NONE);
 
 		Button btnNewButton_1 = new Button(composite_3, SWT.NONE);
-		btnNewButton_1.setBounds(668, 0, 80, 27);
-		btnNewButton_1.setText(" 导入变量词典 ");
+		btnNewButton_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		btnNewButton_1.setText("  导入变量词典  ");
 
 		Button button_2 = new Button(composite_3, SWT.NONE);
+		button_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		button_2.setText("导出变量词典 ");
-		button_2.setBounds(765, 0, 80, 27);
-
-		Label lblNewLabel = new Label(composite_3, SWT.NONE);
-		lblNewLabel.setBounds(10, 8, 61, 17);
-		lblNewLabel.setText("变量类型：");
-
-		Combo combo = new Combo(composite_3, SWT.NONE);
-		combo.setBounds(77, 2, 71, 25);
-
-		Label label_1 = new Label(composite_3, SWT.NONE);
-		label_1.setBounds(177, 8, 61, 17);
-		label_1.setText("变量分组：");
-
-		Combo combo_1 = new Combo(composite_3, SWT.NONE);
-		combo_1.setBounds(241, 2, 88, 25);
 
 		Composite composite_4 = new Composite(group_1, SWT.NONE);
 		composite_4.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -217,6 +232,10 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 
 			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {
+					MessageDialog.openError(grid.getShell(), "错误", "变量名不能为空！");
+					return;
+				}
 				TagCfgTpl tct = (TagCfgTpl) element;
 				tct.setTagName((String) value);
 				gridTableViewer.update(tct, null);
@@ -241,40 +260,88 @@ public class VariableTemplateConfigView extends ViewPart {
 		GridColumn gridColumn_6 = gridViererColumn_6.getColumn();
 		gridColumn_6.setText("变量类型");
 		gridColumn_6.setWidth(60);
-		gridViererColumn_6.setEditingSupport(new EditingSupport(gridTableViewer) {
-			protected boolean canEdit(Object element) {
-				return true;
-			}
+		gridViererColumn_6
+				.setEditingSupport(new EditingSupport(gridTableViewer) {
+					protected boolean canEdit(Object element) {
+						return true;
+					}
 
-			protected CellEditor getCellEditor(Object element) {
-				CellEditor ce = new ComboBoxCellEditor(grid, varTypeArray);
-				return ce;
-			}
+					protected CellEditor getCellEditor(Object element) {
+						CellEditor ce = new ComboBoxCellEditor(grid,
+								varTypeArray);
+						return ce;
+					}
 
-			protected Object getValue(Object element) {
-//				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
-//				return tagCfgTpl.getVarType() == null ? "" : tagCfgTpl
-//						.getVarType().getValue();
-				return 1;
-			}
+					protected Object getValue(Object element) {
+						TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+						if (tagCfgTpl.getVarType() != null) {
+							for (int i = 1; i < varTypeArray.length; i++) {
+								if (tagCfgTpl.getVarType().equals(
+										VarType.getByValue(varTypeArray[i]))) {
+									return i;
+								}
+							}
+						}
+						return 0;
+					}
 
-			protected void setValue(Object element, Object value) {
-				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
-				if("".equals(value)) {
-					tagCfgTpl.setVarType(null);
-				} else {
-					tagCfgTpl.setVarType(VarType.getByValue((String) value));
-				}
-				
-				gridTableViewer.update(tagCfgTpl, null);
-			}
-		});
+					protected void setValue(Object element, Object value) {
+						TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+						int index = (int)value;
+						if (index<=0) {
+							tagCfgTpl.setVarType(null);
+						} else {
+							tagCfgTpl.setVarType(VarType
+									.getByValue(varTypeArray[index]));
+						}
+
+						gridTableViewer.update(tagCfgTpl, null);
+					}
+				});
 
 		GridViewerColumn gridViererColumn_1 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_1 = gridViererColumn_1.getColumn();
 		gridColumn_1.setText("子类型");
 		gridColumn_1.setWidth(70);
+		gridViererColumn_1
+		.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new ComboBoxCellEditor(grid,
+						varSubTypeArray);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				if (tagCfgTpl.getSubType() != null) {
+					for (int i = 1; i < varSubTypeArray.length; i++) {
+						if (tagCfgTpl.getSubType().equals(
+								VarSubType.getByValue(varSubTypeArray[i]))) {
+							return i;
+						}
+					}
+				}
+				return 0;
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				int index = (int)value;
+				if (index<=0) {
+					tagCfgTpl.setSubType(null);
+				} else {
+					tagCfgTpl.setSubType(VarSubType
+							.getByValue(varSubTypeArray[index]));
+				}
+
+				gridTableViewer.update(tagCfgTpl, null);
+			}
+		});
 
 		GridViewerColumn gridViererColumn_2 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
@@ -293,48 +360,299 @@ public class VariableTemplateConfigView extends ViewPart {
 		GridColumn gridColumn_5 = gridViewerColumn_5.getColumn();
 		gridColumn_5.setText("功能码");
 		gridColumn_5.setWidth(50);
+		gridViewerColumn_5.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return String.valueOf(tct.getFunCode());
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {
+					MessageDialog.openError(grid.getShell(), "错误", "功能码不能为空！");
+					return;
+				}
+				int myValue;
+				try {
+					myValue = Integer.valueOf((String)value);
+				} catch (NumberFormatException e) {
+					MessageDialog.openError(grid.getShell(), "错误", "功能码应该为整形！");
+					e.printStackTrace();
+					return;
+				}
+				
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setFunCode(myValue);
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_7 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_7 = gridViewerColumn_7.getColumn();
 		gridColumn_7.setText("数据地址");
 		gridColumn_7.setWidth(60);
+		gridViewerColumn_7.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return String.valueOf(tct.getDataID());
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {
+					MessageDialog.openError(grid.getShell(), "错误", "数据地址不能为空！");
+					return;
+				}
+				int myValue;
+				try {
+					myValue = Integer.valueOf((String)value);
+				} catch (NumberFormatException e) {
+					MessageDialog.openError(grid.getShell(), "错误", "数据地址应该为整形！");
+					e.printStackTrace();
+					return;
+				}
+				
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setDataID(myValue);
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_8 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_8 = gridViewerColumn_8.getColumn();
 		gridColumn_8.setText("字节长度");
 		gridColumn_8.setWidth(60);
+		gridViewerColumn_8.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return String.valueOf(tct.getByteLen());
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {
+					MessageDialog.openError(grid.getShell(), "错误", "字节长度不能为空！");
+					return;
+				}
+				int myValue;
+				try {
+					myValue = Integer.valueOf((String)value);
+				} catch (NumberFormatException e) {
+					MessageDialog.openError(grid.getShell(), "错误", "字节长度应该为整形！");
+					e.printStackTrace();
+					return;
+				}
+				
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setByteLen(myValue);
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_9 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_9 = gridViewerColumn_9.getColumn();
 		gridColumn_9.setText("字节偏移量");
 		gridColumn_9.setWidth(75);
+		gridViewerColumn_9.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return String.valueOf(tct.getByteLen());
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {
+					MessageDialog.openError(grid.getShell(), "错误", "字节偏移量不能为空！");
+					return;
+				}
+				int myValue;
+				try {
+					myValue = Integer.valueOf((String)value);
+				} catch (NumberFormatException e) {
+					MessageDialog.openError(grid.getShell(), "错误", "字节偏移量应该为整形！");
+					e.printStackTrace();
+					return;
+				}
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setByteLen(myValue);
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_10 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_10 = gridViewerColumn_10.getColumn();
 		gridColumn_10.setText("位偏移量");
 		gridColumn_10.setWidth(70);
+		gridViewerColumn_10.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return String.valueOf(tct.getBitOffset());
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {
+					MessageDialog.openError(grid.getShell(), "错误", "位偏移量不能为空！");
+					return;
+				}
+				int myValue;
+				try {
+					myValue = Integer.valueOf((String)value);
+				} catch (NumberFormatException e) {
+					MessageDialog.openError(grid.getShell(), "错误", "位偏移量应该为整形！");
+					e.printStackTrace();
+					return;
+				}
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setBitOffset(myValue);
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_4 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_4 = gridViewerColumn_4.getColumn();
 		gridColumn_4.setText("值类型");
 		gridColumn_4.setWidth(70);
+		gridViewerColumn_4
+		.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new ComboBoxCellEditor(grid,
+						varDataTypeArray);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				if (tagCfgTpl.getDataType() != null) {
+					for (int i = 1; i < varDataTypeArray.length; i++) {
+						if (tagCfgTpl.getDataType().equals(
+								DataType.getByValue(varDataTypeArray[i]))) {
+							return i;
+						}
+					}
+				}
+				return 0;
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				int index = (int)value;
+				if (index<=0) {
+					tagCfgTpl.setDataType(null);
+				} else {
+					tagCfgTpl.setDataType(DataType
+							.getByValue(varDataTypeArray[index]));
+				}
+
+				gridTableViewer.update(tagCfgTpl, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_11 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_11 = gridViewerColumn_11.getColumn();
 		gridColumn_11.setText("基数");
 		gridColumn_11.setWidth(40);
+		gridViewerColumn_11.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getBaseValue()==null?"":String.valueOf(tct.getBaseValue());
+			}
+
+			protected void setValue(Object element, Object value) {
+				
+				TagCfgTpl tct = (TagCfgTpl) element;
+				String myValue = (String)value;
+				tct.setBaseValue("".equals(myValue)?null:Float.valueOf(myValue));
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_12 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_12 = gridViewerColumn_12.getColumn();
 		gridColumn_12.setText("系数");
 		gridColumn_12.setWidth(40);
+		gridViewerColumn_12.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getCoefValue()==null?"":String.valueOf(tct.getCoefValue());
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				String myValue = (String)value;
+				tct.setCoefValue("".equals(myValue)?null:Float.valueOf(myValue));
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		// GridColumnGroup gridColumnGroup_2 = new GridColumnGroup(grid,
 		// SWT.TOGGLE);
@@ -345,30 +663,135 @@ public class VariableTemplateConfigView extends ViewPart {
 		GridColumn gridColumn_13 = gridViewerColumn_13.getColumn();
 		gridColumn_13.setText("存储规则");
 		gridColumn_13.setWidth(65);
+		gridViewerColumn_13.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getStorage()==null?"":tct.getStorage();
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setStorage("".equals((String)value)?null:(String)value);
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_14 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_14 = gridViewerColumn_14.getColumn();
 		gridColumn_14.setText("触发规则");
 		gridColumn_14.setWidth(65);
+		gridViewerColumn_14.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getTrigger()==null?"":tct.getTrigger();
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setTrigger("".equals((String)value)?null:(String)value);
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_15 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_15 = gridViewerColumn_15.getColumn();
 		gridColumn_15.setText("最大值");
 		gridColumn_15.setWidth(60);
+		gridViewerColumn_15.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getMax()==null?"":String.valueOf(tct.getMax());
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setMax("".equals((String)value)?null:Double.valueOf((String)value));
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_16 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_16 = gridViewerColumn_16.getColumn();
 		gridColumn_16.setWidth(60);
 		gridColumn_16.setText("最小值");
+		gridViewerColumn_16.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getMin()==null?"":String.valueOf(tct.getMin());
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setMin("".equals((String)value)?null:Double.valueOf((String)value));
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_17 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_17 = gridViewerColumn_17.getColumn();
 		gridColumn_17.setWidth(65);
 		gridColumn_17.setText("脉冲单位");
+		gridViewerColumn_17.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getUnit()==null?"":String.valueOf(tct.getUnit());
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setUnit("".equals((String)value)?null:Integer.valueOf((String)value));
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		Menu menu = new Menu(grid);
 		grid.setMenu(menu);
@@ -379,7 +802,7 @@ public class VariableTemplateConfigView extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) listViewer_1
 						.getSelection();
-				if (addedTplName==null && selection.isEmpty()) {//非新增变量且未选择
+				if (addedTplName == null && selection.isEmpty()) {// 非新增变量且未选择
 					MessageDialog.openWarning(grid.getShell(), "提示", "未选择模板！");
 					return;
 				}
@@ -402,17 +825,17 @@ public class VariableTemplateConfigView extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) gridTableViewer
 						.getSelection();
-				if(selection.isEmpty()) {
+				if (selection.isEmpty()) {
 					MessageDialog.openWarning(grid.getShell(), "提示", "未选择变量！");
 					return;
 				}
-				
+
 				GridItem gridItems[] = grid.getSelection();
-				for(GridItem gi : gridItems) {
-					TagCfgTpl selectedTpl = (TagCfgTpl)gi.getData();
+				for (GridItem gi : gridItems) {
+					TagCfgTpl selectedTpl = (TagCfgTpl) gi.getData();
 					tagCfgTplList.remove(selectedTpl);
-					
-					if(selectedTpl.getId() != null) {
+
+					if (selectedTpl.getId() != null) {
 						deletedTplList.add(selectedTpl);
 					}
 				}
@@ -427,41 +850,55 @@ public class VariableTemplateConfigView extends ViewPart {
 		gridTableViewer.setInput(tagCfgTplList);
 
 		Composite composite_2 = new Composite(composite_1, SWT.NONE);
-		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
+		composite_2.setLayout(new GridLayout(1, false));
+		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
 		composite_2.setBounds(0, 0, 64, 64);
 
 		Button button_1 = new Button(composite_2, SWT.NONE);
+		button_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		button_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if("".equals(text_tpl_name.getText().trim())) {
+				if ("".equals(text_tpl_name.getText().trim())) {
 					MessageDialog.openError(grid.getShell(), "错误", "模板名不能为空！");
 					return;
 				}
-				
-				if(tagCfgTplList == null || tagCfgTplList.isEmpty()) {
-					MessageDialog.openError(grid.getShell(), "错误", "模板无变量，无法保存！");
+
+				if (tagCfgTplList == null || tagCfgTplList.isEmpty()) {
+					MessageDialog.openError(grid.getShell(), "错误",
+							"模板无变量，无法保存！");
 					return;
 				}
-				
-				for(TagCfgTpl tct : deletedTplList) {
+
+				for (TagCfgTpl tct : deletedTplList) {
 					tagCfgTplService.deleteById(tct.getId());
 				}
-				
+
 				for (TagCfgTpl tct : tagCfgTplList) {
-					tct.setTplName(text_tpl_name.getText().trim());
+					tct.setTplName(text_tpl_name.getText().trim());//更新模板名字
+					//更新变量分组与变量Key
+					if(tct.getSubType() == null) {
+						tct.setVarGroup(null);
+						tct.setVarName(null);
+					} else {
+						tct.setVarGroup(tct.getSubType().getVarGroup());
+						tct.setVarName(tct.getSubType().toString().toLowerCase());
+					}
+					
+					
 					tagCfgTplService.update(tct);
 				}
-				
+
 				tplNameList = tagCfgTplService.findAllTplName();
 				listViewer_1.setInput(tplNameList);
 				listViewer_1.refresh();
 				deletedTplList.clear();
+				
+				gridTableViewer.refresh();
 			}
 		});
-		button_1.setBounds(796, 10, 80, 27);
-		button_1.setText("保存模板");
+		button_1.setText("  保 存 模 板  ");
 		sashForm.setWeights(new int[] { 78, 953 });
 
 	}
@@ -507,20 +944,21 @@ public class VariableTemplateConfigView extends ViewPart {
 
 				action = new Action() {
 					public void run() {
-						String tplNames[] = listViewer_1.getList().getSelection();
-						for(String name : tplNames) {
+						String tplNames[] = listViewer_1.getList()
+								.getSelection();
+						for (String name : tplNames) {
 							tagCfgTplService.deleteAllVariablesByTplName(name);
 						}
-						
+
 						tplNameList = tagCfgTplService.findAllTplName();
 						listViewer_1.setInput(tplNameList);
 						listViewer_1.refresh();
-						
+
 						tagCfgTplList.clear();
 						deletedTplList.clear();
 						gridTableViewer.setInput(tagCfgTplList);
 						gridTableViewer.refresh();
-						
+
 					}
 				};
 				action.setText("删除变量模板");
@@ -651,7 +1089,7 @@ public class VariableTemplateConfigView extends ViewPart {
 		text_tpl_name.setText("新增变量模板");
 		addedTplName = text_tpl_name.getText();
 		selectedTplName = null;
-		
+
 		listViewer_1.setSelection(null);
 
 		tagCfgTplList.clear();

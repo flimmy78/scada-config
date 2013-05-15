@@ -74,4 +74,5 @@ Bundle-ClassPath: lib/antlr-2.7.7.jar,
  lib/org.eclipse.nebula.widgets.tablecombo.source_1.0.0.201304181950.jar,
  lib/org.eclipse.nebula.widgets.grid_1.0.0.201304181950.jar,
  lib/org.eclipse.nebula.widgets.grid.source_1.0.0.201304181950.jar,
- lib/pinyin4j-2.5.0.jar
+ lib/pinyin4j-2.5.0.jar,
+ lib/mysql-connector-java-5.1.25-bin.jar
