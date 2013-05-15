@@ -89,9 +89,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         register(energyViewShowAction);
         
         varGroupShowAction = new OpenViewAction(window, VariableConfigPerspective.ID, VariableGroupConfigView.ID, "变量分组配置");
+        varGroupShowAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.VARIABLE_GROUP_IMAGE));
         register(varGroupShowAction);
         
         varTemplateShowAction = new OpenViewAction(window, VariableConfigPerspective.ID, VariableTemplateConfigView.ID, "变量模板配置");
+        varTemplateShowAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.VARIABLE_TEMPLATE_IMAGE));
         register(varTemplateShowAction);
         
         scadaDeviceChangeAction = new PerspectiveChangeAction("监控设备配置",ScadaDevicePerspective.ID, window);
