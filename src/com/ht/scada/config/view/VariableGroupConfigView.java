@@ -74,17 +74,17 @@ public class VariableGroupConfigView extends ViewPart implements
 		grid.setRowHeaderVisible(true);
 		grid.setHeaderVisible(true);
 
-		GridViewerColumn gridViewerColumn = new GridViewerColumn(
+		GridViewerColumn nameGridViewerColumn = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
-		GridColumn nameGridColumn = gridViewerColumn.getColumn();
+		GridColumn nameGridColumn = nameGridViewerColumn.getColumn();
 		nameGridColumn.setAlignment(SWT.CENTER);
 		nameGridColumn.setWidth(100);
 		nameGridColumn.setText("名字");
 
-		GridViewerColumn gridViewerColumn_1 = new GridViewerColumn(
+		GridViewerColumn intervalGridViewerColumn = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		
-		gridViewerColumn_1.setEditingSupport(new EditingSupport(gridTableViewer) {
+		intervalGridViewerColumn.setEditingSupport(new EditingSupport(gridTableViewer) {
 			protected boolean canEdit(Object element) {
 				return true;
 			}
@@ -106,7 +106,7 @@ public class VariableGroupConfigView extends ViewPart implements
 			}
 		});
 		
-		GridColumn intervalGridColumn = gridViewerColumn_1.getColumn();
+		GridColumn intervalGridColumn = intervalGridViewerColumn.getColumn();
 		intervalGridColumn.setAlignment(SWT.CENTER);
 		intervalGridColumn.setWidth(100);
 		intervalGridColumn.setText("存储间隔");
