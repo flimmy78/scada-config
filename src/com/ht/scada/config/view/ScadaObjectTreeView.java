@@ -4,6 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -27,6 +28,8 @@ import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.MainTreeContentProvider;
 import com.ht.scada.config.view.tree.MainTreeLabelProvider;
 import com.ht.scada.config.view.tree.RootTreeModel;
+import com.ht.scada.config.window.EndTagDeviceConfigWindow;
+import com.ht.scada.config.window.EndTagIOConfigWindow;
 
 public class ScadaObjectTreeView extends ViewPart {
 	
@@ -178,22 +181,7 @@ public class ScadaObjectTreeView extends ViewPart {
 				objectIndex.setText("添加索引(&A)");
 				menuMng.add(objectIndex);
 				
-				objectIndex = new Action() {
-					public void run() {
-						try {
-							PlatformUI.getWorkbench()
-									.getActiveWorkbenchWindow()
-									.getActivePage()
-									.showView(EndTagView.ID);
-						} catch (PartInitException e) {
-							e.printStackTrace();
-						}
-						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.ENDTAG_ADD, selectedObject);
-						
-					}
-				};
-				objectIndex.setText("添加监控对象(&M)");
-				menuMng.add(objectIndex);
+				
 				
 				objectIndex = new Action() {
 					public void run() {
@@ -215,6 +203,62 @@ public class ScadaObjectTreeView extends ViewPart {
 				};
 				objectIndex.setText("删除索引(&D)");
 				menuMng.add(objectIndex);
+				
+				menuMng.add(new Separator());
+				
+				objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getActivePage()
+									.showView(EndTagView.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.ENDTAG_ADD, selectedObject);
+						
+					}
+				};
+				objectIndex.setText("添加监控对象(&M)");
+				menuMng.add(objectIndex);
+				
+				menuMng.add(new Separator());
+				
+				objectIndex = new Action() {
+					public void run() {
+						new EndTagDeviceConfigWindow().open();
+					}
+				};
+				objectIndex.setText("关联变量模板与设备(&G)");
+				menuMng.add(objectIndex);
+				
+				objectIndex = new Action() {
+					public void run() {
+						
+					}
+				};
+				objectIndex.setText("关联所有变量模板与设备(&S)");
+				menuMng.add(objectIndex);
+				
+				menuMng.add(new Separator());
+				
+				objectIndex = new Action() {
+					public void run() {
+						new EndTagIOConfigWindow().open();
+					}
+				};
+				objectIndex.setText("监控对象IO设置(&J)");
+				menuMng.add(objectIndex);
+				
+				objectIndex = new Action() {
+					public void run() {
+						
+					}
+				};
+				objectIndex.setText("所有监控对象IO设置(&K)");
+				menuMng.add(objectIndex);
+				
 			}  else if(selectedObject instanceof EndTag) {
 				final EndTag endTag = (EndTag)selectedObject;
 				
