@@ -227,7 +227,7 @@ public class ScadaObjectTreeView extends ViewPart {
 				
 				objectIndex = new Action() {
 					public void run() {
-						new EndTagDeviceConfigWindow().open();
+						new EndTagDeviceConfigWindow(majorTag).open();
 					}
 				};
 				objectIndex.setText("关联变量模板与设备(&G)");
