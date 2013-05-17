@@ -13,10 +13,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.MajorTag;
@@ -26,7 +22,7 @@ import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.RootTreeModel;
-import com.ht.scada.oildata.tag.MajorTagType;
+import com.ht.scada.oildata.type.MajorTagType;
 
 public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 
@@ -57,7 +53,8 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 		parent.setLayout(gl_parent);
 
 		Label label = new Label(parent, SWT.NONE);
-		label.setText("索引名：");
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setText("名称：");
 
 		text = new Text(parent, SWT.BORDER);
 		GridData gd_text = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);

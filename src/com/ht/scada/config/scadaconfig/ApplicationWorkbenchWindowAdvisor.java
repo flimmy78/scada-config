@@ -1,6 +1,8 @@
 package com.ht.scada.config.scadaconfig;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -23,13 +25,15 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowStatusLine(false);	
         
         configurer.setShowPerspectiveBar(true);//是否显示透视图栏
+        
+		MessageDialog.openWarning(Display.getDefault().getActiveShell().getShell(), "", "");        
     }
 
 	@Override
 	public void postWindowOpen() {
 		super.postWindowOpen();
 		// 使得窗口最大化
-		// this.getWindowConfigurer().getWindow().getShell().setMaximized(true);
+		 this.getWindowConfigurer().getWindow().getShell().setMaximized(true);
 	}
     
     

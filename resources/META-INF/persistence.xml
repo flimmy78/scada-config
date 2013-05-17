@@ -17,6 +17,15 @@
 		<class>com.ht.scada.common.tag.entity.TagCfgTpl</class>
 		<class>com.ht.scada.common.tag.entity.VarGroupCfg</class>
 		<class>com.ht.scada.common.tag.entity.VarIOInfo</class>
+		
+		<class>com.ht.scada.common.tag.type.VarType</class>
+		<class>com.ht.scada.common.tag.type.VarSubType</class>
+		<class>com.ht.scada.common.tag.type.VarGroupType</class>
+		<class>com.ht.scada.common.tag.type.MajorTayType</class>
+		<class>com.ht.scada.common.tag.type.EndTagType</class>
+		<class>com.ht.scada.common.tag.type.EndTagSubType</class>
+		<class>com.ht.scada.common.tag.type.EndTagExtInfoValue</class>
+		<class>com.ht.scada.common.tag.type.EndTagExtInfoName</class>
 <!-- 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="hibernate.show_sql" value="true" />

@@ -49,8 +49,8 @@ import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
-import com.ht.scada.oildata.tag.EndTagSubType;
-import com.ht.scada.oildata.tag.EndTagType;
+import com.ht.scada.oildata.type.EndTagSubType;
+import com.ht.scada.oildata.type.EndTagType;
 
 public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
