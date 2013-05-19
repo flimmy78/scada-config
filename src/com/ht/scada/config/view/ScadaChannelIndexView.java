@@ -259,7 +259,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 					
 					acquisitionChannel.setIdx(Integer.valueOf(textIdx.getText().trim()));
 					acquisitionChannel.setOffline(Integer.valueOf(textOffline.getText()));
-					acquisitionChannel.setInterval(Integer.valueOf(textInterval.getText()));
+					acquisitionChannel.setIntvl(Integer.valueOf(textInterval.getText()));
 					acquisitionChannel.setSchedule(textSchedule.getText().trim());
 					acquisitionChannel.setPortInfo(textPortInfo.getText().trim());
 					acquisitionChannel.setFrames(textFrames.getText().trim());
@@ -282,7 +282,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 					
 					acquisitionChannel.setIdx(Integer.valueOf(textIdx.getText().trim()));
 					acquisitionChannel.setOffline(Integer.valueOf(textOffline.getText()));
-					acquisitionChannel.setInterval(Integer.valueOf(textInterval.getText()));
+					acquisitionChannel.setIntvl(Integer.valueOf(textInterval.getText()));
 					acquisitionChannel.setSchedule(textSchedule.getText().trim());
 					acquisitionChannel.setPortInfo(textPortInfo.getText().trim());
 					acquisitionChannel.setFrames(textFrames.getText().trim());
@@ -365,7 +365,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 			textIdx.setText(acquisitionChannel.getIdx().toString());
 			textOffline.setText(acquisitionChannel.getOffline() + "");
 			textInterval.setText(String.valueOf(acquisitionChannel
-					.getInterval()));
+					.getIntvl()));
 			textSchedule.setText(acquisitionChannel.getSchedule());
 			textPortInfo.setText(acquisitionChannel.getPortInfo());
 			textFrames.setText(acquisitionChannel.getFrames());

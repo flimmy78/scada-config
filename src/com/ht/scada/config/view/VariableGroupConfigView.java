@@ -50,17 +50,17 @@ public class VariableGroupConfigView extends ViewPart implements
 	public VariableGroupConfigView() {
 		varGroupCfgList = varGroupCfgService.getAllVarGroupCfg();
 		
-		if (varGroupCfgList.size() == 0 || varGroupCfgList.isEmpty()) {
-			for (int i = 0; i < VarGroup.values().length; i++) {
-				VarGroupCfg varGroupCfg = new VarGroupCfg();
-				VarGroup value = VarGroup.values()[i];
-				varGroupCfg.setInterval(-1);
-				varGroupCfg.setName(value.getValue());
-				varGroupCfg.setVarGroup(value);
-				varGroupCfgList.add(varGroupCfg);
-			}
-
-		}
+//		if (varGroupCfgList == null || varGroupCfgList.isEmpty()) {
+//			for (int i = 0; i < VarGroup.values().length; i++) {
+//				VarGroupCfg varGroupCfg = new VarGroupCfg();
+//				VarGroup value = VarGroup.values()[i];
+//				varGroupCfg.setIntvl(-1);
+//				varGroupCfg.setName(value.getValue());
+//				varGroupCfg.setVarGroup(value);
+//				varGroupCfgList.add(varGroupCfg);
+//			}
+//
+//		}
 	}
 
 	public static final String ID = "com.ht.scada.config.view.VariableGroupConfigView";
@@ -96,12 +96,12 @@ public class VariableGroupConfigView extends ViewPart implements
 
 			protected Object getValue(Object element) {
 				VarGroupCfg vgc = (VarGroupCfg) element;
-				return String.valueOf(vgc.getInterval());
+				return String.valueOf(vgc.getIntvl());
 			}
 
 			protected void setValue(Object element, Object value) {
 				VarGroupCfg vgc = (VarGroupCfg) element;
-				vgc.setInterval(Integer.valueOf((String) value));
+				vgc.setIntvl(Integer.valueOf((String) value));
 				gridTableViewer.update(vgc, null);
 			}
 		});
@@ -170,7 +170,7 @@ public class VariableGroupConfigView extends ViewPart implements
 				return varGroupCfg.getName() == null ? null : varGroupCfg
 						.getName();
 			case 1:// 存储间隔
-				return varGroupCfg.getInterval() + "";
+				return varGroupCfg.getIntvl() + "";
 
 			default:
 				break;

@@ -412,7 +412,7 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return String.valueOf(tct.getDataID());
+				return String.valueOf(tct.getDataId());
 			}
 
 			protected void setValue(Object element, Object value) {
@@ -430,7 +430,7 @@ public class VariableTemplateConfigView extends ViewPart {
 				}
 				
 				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setDataID(myValue);
+				tct.setDataId(myValue);
 				gridTableViewer.update(tct, null);
 			}
 		});
@@ -702,12 +702,12 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return tct.getTrigger()==null?"":tct.getTrigger();
+				return tct.getTriggerName()==null?"":tct.getTriggerName();
 			}
 
 			protected void setValue(Object element, Object value) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setTrigger("".equals((String)value)?null:(String)value);
+				tct.setTriggerName("".equals((String)value)?null:(String)value);
 				gridTableViewer.update(tct, null);
 			}
 		});
@@ -729,12 +729,12 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return tct.getMax()==null?"":String.valueOf(tct.getMax());
+				return tct.getMaxValue()==null?"":String.valueOf(tct.getMaxValue());
 			}
 
 			protected void setValue(Object element, Object value) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setMax("".equals((String)value)?null:Double.valueOf((String)value));
+				tct.setMaxValue("".equals((String)value)?null:Double.valueOf((String)value));
 				gridTableViewer.update(tct, null);
 			}
 		});
@@ -756,12 +756,12 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return tct.getMin()==null?"":String.valueOf(tct.getMin());
+				return tct.getMinValue()==null?"":String.valueOf(tct.getMinValue());
 			}
 
 			protected void setValue(Object element, Object value) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setMin("".equals((String)value)?null:Double.valueOf((String)value));
+				tct.setMinValue("".equals((String)value)?null:Double.valueOf((String)value));
 				gridTableViewer.update(tct, null);
 			}
 		});
@@ -783,12 +783,12 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return tct.getUnit()==null?"":String.valueOf(tct.getUnit());
+				return tct.getUnitValue()==null?"":String.valueOf(tct.getUnitValue());
 			}
 
 			protected void setValue(Object element, Object value) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setUnit("".equals((String)value)?null:Integer.valueOf((String)value));
+				tct.setUnitValue("".equals((String)value)?null:Integer.valueOf((String)value));
 				gridTableViewer.update(tct, null);
 			}
 		});
@@ -1008,7 +1008,7 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 5:// 功能码
 				return String.valueOf(tagCfgTpl.getFunCode());
 			case 6:// 数据地址
-				return String.valueOf(tagCfgTpl.getDataID());
+				return String.valueOf(tagCfgTpl.getDataId());
 			case 7:// 字节长度
 				return String.valueOf(tagCfgTpl.getByteLen());
 			case 8:// 字节偏移量
@@ -1027,16 +1027,16 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 13:// 存储规则
 				return tagCfgTpl.getStorage();
 			case 14:// 触发规则
-				return tagCfgTpl.getTrigger();
+				return tagCfgTpl.getTriggerName();
 			case 15:// 最大值
-				return tagCfgTpl.getMax() == null ? "" : String
-						.valueOf(tagCfgTpl.getMax());
+				return tagCfgTpl.getMaxValue() == null ? "" : String
+						.valueOf(tagCfgTpl.getMaxValue());
 			case 16:// 最小值
-				return tagCfgTpl.getMin() == null ? "" : String
-						.valueOf(tagCfgTpl.getMin());
+				return tagCfgTpl.getMinValue() == null ? "" : String
+						.valueOf(tagCfgTpl.getMinValue());
 			case 17:// 脉冲单位
-				return tagCfgTpl.getUnit() == null ? "" : String
-						.valueOf(tagCfgTpl.getUnit());
+				return tagCfgTpl.getUnitValue() == null ? "" : String
+						.valueOf(tagCfgTpl.getUnitValue());
 
 			default:
 				break;

@@ -147,6 +147,10 @@
                name="windowImages"
                value="icons/huatong.ico">
          </property>
+         <property
+               name="appName"
+               value="丹东华通SCADA系统通用配置软件">
+         </property>
           
       </product>
    </extension>

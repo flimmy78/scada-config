@@ -20,8 +20,7 @@
 		
 		<class>com.ht.scada.common.tag.type.VarType</class>
 		<class>com.ht.scada.common.tag.type.VarSubType</class>
-		<class>com.ht.scada.common.tag.type.VarGroupType</class>
-		<class>com.ht.scada.common.tag.type.MajorTayType</class>
+		<class>com.ht.scada.common.tag.type.MajorTagType</class>
 		<class>com.ht.scada.common.tag.type.EndTagType</class>
 		<class>com.ht.scada.common.tag.type.EndTagSubType</class>
 		<class>com.ht.scada.common.tag.type.EndTagExtInfoValue</class>

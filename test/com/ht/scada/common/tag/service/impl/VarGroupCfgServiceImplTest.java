@@ -28,7 +28,7 @@ public class VarGroupCfgServiceImplTest {
 	  
 	  List<VarGroupCfg> varGroupCfgs = varGroupCfgService.getAllVarGroupCfg();
 	  for(VarGroupCfg varGroupCfg : varGroupCfgs){
-		  System.out.println(varGroupCfg.getId() + " "+ varGroupCfg.getInterval()+" "+ varGroupCfg.getName());
+		  System.out.println(varGroupCfg.getId() + " "+ varGroupCfg.getIntvl()+" "+ varGroupCfg.getName());
 	  }
 //	  
 	  VarGroup value = VarGroup.values()[1];

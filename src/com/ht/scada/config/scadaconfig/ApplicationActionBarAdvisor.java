@@ -4,12 +4,14 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
 import com.ht.scada.config.action.OpenViewAction;
+import com.ht.scada.config.action.OpenWindowAction;
 import com.ht.scada.config.action.PerspectiveChangeAction;
 import com.ht.scada.config.perspective.RTURemotePerspective;
 import com.ht.scada.config.perspective.ScadaDevicePerspective;
@@ -21,6 +23,8 @@ import com.ht.scada.config.view.EnergyTreeView;
 import com.ht.scada.config.view.ScadaObjectTreeView;
 import com.ht.scada.config.view.VariableGroupConfigView;
 import com.ht.scada.config.view.VariableTemplateConfigView;
+import com.ht.scada.config.window.DatabaseInitWindow;
+import com.ht.scada.config.window.ProjectInitWindow;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of the
@@ -48,6 +52,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private Action varGroupShowAction;
     private Action varTemplateShowAction;
     
+    private Action projectInitAction;	//工程初始化
+    private Action dataBaseInitAction;	//数据库初始化
+    
     
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -55,26 +62,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
     
     protected void makeActions(final IWorkbenchWindow window) {
-        // Creates the actions and registers them.
-        // Registering is needed to ensure that key bindings work.
-        // The corresponding commands keybindings are defined in the plugin.xml file.
-        // Registering also provides automatic disposal of the actions when
-        // the window is closed.
-
-//        exitAction = ActionFactory.QUIT.create(window);
-//        register(exitAction);
-//        
-//        aboutAction = ActionFactory.ABOUT.create(window);
-//        register(aboutAction);
-//        
-//        newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
-//        register(newWindowAction);
-        
-//        openViewAction = new OpenViewAction(window, "Open Another Message View", MainIndexView.ID);
-//        register(openViewAction);
-        
-        
-//        perspectivesMenu = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
         
         scadaObjectChangeAction = new OpenViewAction(window, ScadaObjectPerspective.ID, ScadaObjectTreeView.ID, "监控对象配置");
         scadaObjectChangeAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.MAJOR_TAG_INDEX_IMAGE));
@@ -102,12 +89,21 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         rtuRemoteChangeAction = new PerspectiveChangeAction("RTU远程配置",RTURemotePerspective.ID, window);
         register(rtuRemoteChangeAction);
+        
+        ApplicationWindow projectInitWindow = new ProjectInitWindow(null);
+        projectInitAction = new OpenWindowAction(window, "工程初始化", projectInitWindow);
+        register(projectInitAction);
+        
+        ApplicationWindow databaseInitWindow = new DatabaseInitWindow(null);
+        dataBaseInitAction = new OpenWindowAction(window, "数据源初始化", databaseInitWindow);
+        register(dataBaseInitAction);
     }
     
     protected void fillMenuBar(IMenuManager menuBar) {
         MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
         MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
         
+        MenuManager projectMenu = new MenuManager("工程");
         MenuManager variableConfigMenu = new MenuManager("变量配置");
         MenuManager scadaObjectMenu = new MenuManager("监控对象配置");
         MenuManager scadaDeviceMenu = new MenuManager("监控设备配置");
@@ -118,6 +114,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 //        menuBar.add(helpMenu);
         
+        menuBar.add(projectMenu);
         menuBar.add(variableConfigMenu);
         menuBar.add(scadaObjectMenu);
         menuBar.add(scadaDeviceMenu);
@@ -133,6 +130,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         // Help
 //        helpMenu.add(aboutAction);
+        
+        //工程
+        projectMenu.add(dataBaseInitAction);
+        projectMenu.add(projectInitAction);
         
         //变量配置
         variableConfigMenu.add(varGroupShowAction);

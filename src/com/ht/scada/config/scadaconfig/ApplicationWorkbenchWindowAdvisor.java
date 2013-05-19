@@ -26,7 +26,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         
         configurer.setShowPerspectiveBar(true);//是否显示透视图栏
         
-		MessageDialog.openWarning(Display.getDefault().getActiveShell().getShell(), "", "");        
+//		MessageDialog.openWarning(Display.getDefault().getActiveShell().getShell(), "", "");        
     }
 
 	@Override

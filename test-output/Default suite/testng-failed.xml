@@ -5,8 +5,8 @@
     <classes>
       <class name="com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest">
         <methods>
+          <include name="initOilProject"/>
           <include name="beforeTest"/>
-          <include name="insertVarGroupType"/>
         </methods>
       </class> <!-- com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest -->
     </classes>
