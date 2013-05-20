@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -23,6 +24,7 @@ import com.ht.scada.common.tag.entity.VarGroupCfg;
 import com.ht.scada.common.tag.type.EndTagSubType;
 import com.ht.scada.common.tag.type.EndTagType;
 import com.ht.scada.common.tag.type.MajorTagType;
+import com.ht.scada.common.tag.type.VarSubType;
 import com.ht.scada.common.tag.type.VarType;
 import com.ht.scada.common.tag.type.service.TypeService;
 import com.ht.scada.config.scadaconfig.Activator;
@@ -80,6 +82,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				initDataBase();
+				MessageDialog.openInformation(getShell(), "提示", "数据初始成功！");
 			}
 		});
 		button.setBounds(178, 228, 80, 27);
@@ -108,66 +111,27 @@ public class ProjectInitWindow extends ApplicationWindow {
 		List<EndTagSubType> endTagSubTypeList = new ArrayList<EndTagSubType>();
 		List<VarGroupCfg> varGroupCfgList = new ArrayList<VarGroupCfg>();
 		List<VarType> varTypeList = new ArrayList<VarType>();
+		List<VarSubType> varSubTypeList = new ArrayList<VarSubType>();
 
-		MajorTagType majorTagType = new MajorTagType();
-		majorTagType.setName("CHANG_LEVEL");
-		majorTagType.setValue("厂");
-		
-		MajorTagType majorTagType1 = new MajorTagType();
-		majorTagType1.setName("KUANG_LEVEL");
-		majorTagType1.setValue("矿");
-		
-		MajorTagType majorTagType2 = new MajorTagType();
-		majorTagType2.setName("DUI_LEVEL");
-		majorTagType2.setValue("队");
+		MajorTagType majorTagType = new MajorTagType("CHANG_LEVEL","厂");
+		MajorTagType majorTagType1 = new MajorTagType("KUANG_LEVEL","矿");
+		MajorTagType majorTagType2 = new MajorTagType("DUI_LEVEL","队");
 		
 		majorTagTypeList.add(majorTagType);
 		majorTagTypeList.add(majorTagType1);
 		majorTagTypeList.add(majorTagType2);
 
-		EndTagType endTagType = new EndTagType();
-		endTagType.setName("YOU_JING");
-		endTagType.setValue("油井");
-		
-		EndTagType endTagType1 = new EndTagType();
-		endTagType1.setName("SHUI_YUAN_JING");
-		endTagType1.setValue("水源井");
-		
-		EndTagType endTagType2 = new EndTagType();
-		endTagType2.setName("ZHU_SHUI_JING");
-		endTagType2.setValue("注水井");
-		
-		EndTagType endTagType3 = new EndTagType();
-		endTagType3.setName("ZENG_YA_ZHAN");
-		endTagType3.setValue("增压站");
-		
-		EndTagType endTagType4 = new EndTagType();
-		endTagType4.setName("ZHU_QI_ZHAN");
-		endTagType4.setValue("注汽站");
-		
-		EndTagType endTagType5 = new EndTagType();
-		endTagType5.setName("LIAN_HE_ZHAN");
-		endTagType5.setValue("联合站");
-		
-		EndTagType endTagType6 = new EndTagType();
-		endTagType6.setName("JIE_ZHUAN_ZHAN");
-		endTagType6.setValue("接转站");
-		
-		EndTagType endTagType7 = new EndTagType();
-		endTagType7.setName("ZHU_SHUI_ZHAN");
-		endTagType7.setValue("注水站");
-		
-		EndTagType endTagType8 = new EndTagType();
-		endTagType8.setName("JI_LIANG_ZHAN");
-		endTagType8.setValue("计量站");
-		
-		EndTagType endTagType9 = new EndTagType();
-		endTagType9.setName("PEI_SHUI_JIAN");
-		endTagType9.setValue("配水间");
-		
-		EndTagType endTagType10 = new EndTagType();
-		endTagType10.setName("JI_LIANG_CHE");
-		endTagType10.setValue("计量车");
+		EndTagType endTagType = new EndTagType("YOU_JING","油井");
+		EndTagType endTagType1 = new EndTagType("SHUI_YUAN_JING","水源井");
+		EndTagType endTagType2 = new EndTagType("ZHU_SHUI_JING","注水井");
+		EndTagType endTagType3 = new EndTagType("ZENG_YA_ZHAN","增压站");
+		EndTagType endTagType4 = new EndTagType("ZHU_QI_ZHAN","注汽站");
+		EndTagType endTagType5 = new EndTagType("LIAN_HE_ZHAN","联合站");
+		EndTagType endTagType6 = new EndTagType("JIE_ZHUAN_ZHAN","接转站");
+		EndTagType endTagType7 = new EndTagType("ZHU_SHUI_ZHAN","注水站");
+		EndTagType endTagType8 = new EndTagType("JI_LIANG_ZHAN","计量站");
+		EndTagType endTagType9 = new EndTagType("PEI_SHUI_JIAN","配水间");
+		EndTagType endTagType10 = new EndTagType("JI_LIANG_CHE","计量车");
 		
 		endTagTypeList.add(endTagType);
 		endTagTypeList.add(endTagType1);
@@ -181,30 +145,16 @@ public class ProjectInitWindow extends ApplicationWindow {
 		endTagTypeList.add(endTagType9);
 		endTagTypeList.add(endTagType10);
 
-		EndTagSubType endTagSubType = new EndTagSubType();
+		EndTagSubType endTagSubType = new EndTagSubType("YOU_LIANG_SHI","油梁式");
 		endTagSubType.setEndTagType(endTagType);
-		endTagSubType.setName("YOU_LIANG_SHI");
-		endTagSubType.setValue("油梁式");
-		
-		EndTagSubType endTagSubType1 = new EndTagSubType();
+		EndTagSubType endTagSubType1 = new EndTagSubType("DIAN_GUN_TONG","电滚筒");
 		endTagSubType1.setEndTagType(endTagType);
-		endTagSubType1.setName("DIAN_GUN_TONG");
-		endTagSubType1.setValue("电滚筒");
-		
-		EndTagSubType endTagSubType2 = new EndTagSubType();
+		EndTagSubType endTagSubType2 = new EndTagSubType("GAO_YUAN_JI","高原机");
 		endTagSubType2.setEndTagType(endTagType);
-		endTagSubType2.setName("GAO_YUAN_JI");
-		endTagSubType2.setValue("高原机");
-		
-		EndTagSubType endTagSubType3 = new EndTagSubType();
+		EndTagSubType endTagSubType3 = new EndTagSubType("LUO_GAN_BENG","螺杆泵");
 		endTagSubType3.setEndTagType(endTagType);
-		endTagSubType3.setName("LUO_GAN_BENG");
-		endTagSubType3.setValue("螺杆泵");
-		
-		EndTagSubType endTagSubType4 = new EndTagSubType();
+		EndTagSubType endTagSubType4 = new EndTagSubType("DIAN_QIAN_BENG","电潜泵");
 		endTagSubType4.setEndTagType(endTagType);
-		endTagSubType4.setName("DIAN_QIAN_BENG");
-		endTagSubType4.setValue("电潜泵");
 		
 		endTagSubTypeList.add(endTagSubType);
 		endTagSubTypeList.add(endTagSubType1);
@@ -212,101 +162,230 @@ public class ProjectInitWindow extends ApplicationWindow {
 		endTagSubTypeList.add(endTagSubType3);
 		endTagSubTypeList.add(endTagSubType4);
 		
-		VarGroupCfg varGroupCfg = new VarGroupCfg();
-		varGroupCfg.setName("DIAN_YC");
-		varGroupCfg.setValue("电力数据");
+		VarGroupCfg varGroupCfgDianYC = new VarGroupCfg("DIAN_YC","电力数据");
+		VarGroupCfg varGroupCfgDianYM = new VarGroupCfg("DIAN_YM","电能数据");
+		VarGroupCfg varGroupCfgDianXB = new VarGroupCfg("DIAN_XB","谐波");
+		VarGroupCfg varGroupCfgYouJing = new VarGroupCfg("YOU_JING","油井");
+		VarGroupCfg varGroupCfgSGT = new VarGroupCfg("YOU_JING_SGT","示功图");
+		VarGroupCfg varGroupCfgDGT = new VarGroupCfg("YOU_JING_DGT","电功图");
+		VarGroupCfg varGroupCfgShuiJing = new VarGroupCfg("SHUI_JING","水井");
+		VarGroupCfg varGroupCfgJiLiangChe = new VarGroupCfg("JI_LIANG","计量车");
+		VarGroupCfg varGroupCfgZhuCai = new VarGroupCfg("ZHU_CAI","注采");
 		
-		VarGroupCfg varGroupCfg1 = new VarGroupCfg();
-		varGroupCfg1.setName("DIAN_YM");
-		varGroupCfg1.setValue("电能数据");
-		
-		VarGroupCfg varGroupCfg2 = new VarGroupCfg();
-		varGroupCfg2.setName("DIAN_XB");
-		varGroupCfg2.setValue("谐波");
-		
-		VarGroupCfg varGroupCfg3 = new VarGroupCfg();
-		varGroupCfg3.setName("YOU_JING");
-		varGroupCfg3.setValue("油井");
-		
-		VarGroupCfg varGroupCfg4 = new VarGroupCfg();
-		varGroupCfg4.setName("YOU_JING_SGT");
-		varGroupCfg4.setValue("示功图");
-		
-		VarGroupCfg varGroupCfg5 = new VarGroupCfg();
-		varGroupCfg5.setName("YOU_JING_DGT");
-		varGroupCfg5.setValue("电功图");
-		
-		VarGroupCfg varGroupCfg6 = new VarGroupCfg();
-		varGroupCfg6.setName("SHUI_JING");
-		varGroupCfg6.setValue("水井");
-		
-		VarGroupCfg varGroupCfg7 = new VarGroupCfg();
-		varGroupCfg7.setName("JI_LIANG");
-		varGroupCfg7.setValue("计量车");
-		
-		VarGroupCfg varGroupCfg8 = new VarGroupCfg();
-		varGroupCfg8.setName("ZHU_CAI");
-		varGroupCfg8.setValue("注采");
-		
-		varGroupCfgList.add(varGroupCfg);
-		varGroupCfgList.add(varGroupCfg1);
-		varGroupCfgList.add(varGroupCfg2);
-		varGroupCfgList.add(varGroupCfg3);
-		varGroupCfgList.add(varGroupCfg4);
-		varGroupCfgList.add(varGroupCfg5);
-		varGroupCfgList.add(varGroupCfg6);
-		varGroupCfgList.add(varGroupCfg7);
-		varGroupCfgList.add(varGroupCfg8);
+		varGroupCfgList.add(varGroupCfgDianYC);
+		varGroupCfgList.add(varGroupCfgDianYM);
+		varGroupCfgList.add(varGroupCfgDianXB);
+		varGroupCfgList.add(varGroupCfgYouJing);
+		varGroupCfgList.add(varGroupCfgSGT);
+		varGroupCfgList.add(varGroupCfgDGT);
+		varGroupCfgList.add(varGroupCfgShuiJing);
+		varGroupCfgList.add(varGroupCfgJiLiangChe);
+		varGroupCfgList.add(varGroupCfgZhuCai);
 		
 		Set<VarGroupCfg> varGroupCfgSet = new HashSet<VarGroupCfg>();
-		varGroupCfgSet.add(varGroupCfg);
-		varGroupCfgSet.add(varGroupCfg1);
-		varGroupCfgSet.add(varGroupCfg2);
-		varGroupCfgSet.add(varGroupCfg3);
-		varGroupCfgSet.add(varGroupCfg4);
-		varGroupCfgSet.add(varGroupCfg5);
-		varGroupCfgSet.add(varGroupCfg6);
-		varGroupCfgSet.add(varGroupCfg7);
-		varGroupCfgSet.add(varGroupCfg8);
+		varGroupCfgSet.add(varGroupCfgDianYC);
+		varGroupCfgSet.add(varGroupCfgDianYM);
+		varGroupCfgSet.add(varGroupCfgDianXB);
+		varGroupCfgSet.add(varGroupCfgYouJing);
+		varGroupCfgSet.add(varGroupCfgSGT);
+		varGroupCfgSet.add(varGroupCfgDGT);
+		varGroupCfgSet.add(varGroupCfgShuiJing);
+		varGroupCfgSet.add(varGroupCfgJiLiangChe);
+		varGroupCfgSet.add(varGroupCfgZhuCai);
 		
 		endTagType.setVarGroupCfgSet(varGroupCfgSet);
 		
-		VarType varType = new VarType();
-		varType.setName("YC");
-		varType.setValue("遥测");
+		VarType varTypeYC = new VarType("YC","遥测");
+		VarType varTypeYX = new VarType("YX","遥信");
+		VarType varTypeYM = new VarType("YM","遥脉");
+		VarType varTypeYK = new VarType("YK","遥控");
+		VarType varTypeYT = new VarType("YT","遥调");
+		VarType varTypeQT = new VarType("QT","其他");
 		
-		VarType varType1 = new VarType();
-		varType1.setName("YX");
-		varType1.setValue("遥信");
+		varTypeList.add(varTypeYC);
+		varTypeList.add(varTypeYX);
+		varTypeList.add(varTypeYM);
+		varTypeList.add(varTypeYK);
+		varTypeList.add(varTypeYT);
+		varTypeList.add(varTypeQT);
 		
-		VarType varType2 = new VarType();
-		varType2.setName("YM");
-		varType2.setValue("遥脉");
+		VarSubType varSubType = new VarSubType("YOU_YA","油压",varGroupCfgYouJing,varTypeYC);
+		VarSubType varSubType1 = new VarSubType("TAO_YA","套压",varGroupCfgYouJing,varTypeYC);
+		VarSubType varSubType2 = new VarSubType("HUI_YA","回压",varGroupCfgYouJing,varTypeYC);
+		VarSubType varSubType3 = new VarSubType("JING_KOU_WEN_DU","井口温度",varGroupCfgYouJing,varTypeYC);
+		VarSubType varSubType4 = new VarSubType("HUI_GUAN_WEN_DU","汇管温度",varGroupCfgYouJing,varTypeYC);
+		VarSubType varSubType5 = new VarSubType("QI_QING_ZHUANG_TAI","启停状态",varGroupCfgYouJing,varTypeYX);
 		
-		VarType varType3 = new VarType();
-		varType3.setName("YK");
-		varType3.setValue("遥控");
+		VarSubType varSubType6 = new VarSubType("CHONG_CHENG","冲程",varGroupCfgSGT,varTypeYC);
+		VarSubType varSubType7 = new VarSubType("CHONG_CI","冲次",varGroupCfgSGT,varTypeYC);
+		VarSubType varSubType8 = new VarSubType("SHANG_XING_CHONG_CI","上行冲次",varGroupCfgSGT,varTypeYC);
+		VarSubType varSubType9 = new VarSubType("XIA_XING_CHONG_CI","下行冲次",varGroupCfgSGT,varTypeYC);
+		VarSubType varSubType10 = new VarSubType("ZUI_DA_ZAI_HE","最大载荷",varGroupCfgSGT,varTypeYC);
+		VarSubType varSubType11 = new VarSubType("ZUI_XIAO_ZAI_HE","最小载荷",varGroupCfgSGT,varTypeYC);
+		VarSubType varSubType12 = new VarSubType("WEI_YI_ARRAY","位移数组",varGroupCfgSGT,varTypeQT);
+		VarSubType varSubType13 = new VarSubType("ZAI_HE_ARRAY","载荷数组",varGroupCfgSGT,varTypeQT);
 		
-		VarType varType4 = new VarType();
-		varType4.setName("YT");
-		varType4.setValue("遥调");
+		VarSubType varSubType14 = new VarSubType("DIAN_LIU_ARRAY","电流数组",varGroupCfgDGT,varTypeQT);
+		VarSubType varSubType15 = new VarSubType("GONG_LV_ARRAY","功率数组",varGroupCfgDGT,varTypeQT);
+		VarSubType varSubType16 = new VarSubType("GONG_LV_YIN_SHU_ARRAY","功率因数数组",varGroupCfgDGT,varTypeQT);
+		VarSubType varSubType17 = new VarSubType("DIAN_GONG_TU_ARRAY","电功图数组",varGroupCfgDGT,varTypeQT);
 		
-		VarType varType5 = new VarType();
-		varType5.setName("QT");
-		varType5.setValue("其他");
+		VarSubType varSubType18 = new VarSubType("I_A","A相电流",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType19 = new VarSubType("I_B","B相电流",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType20 = new VarSubType("I_C","C相电流",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType21 = new VarSubType("U_A","A相电压",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType22 = new VarSubType("U_B","B相电压",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType23 = new VarSubType("U_C","C相电压",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType24 = new VarSubType("I_3XBPH","3相不平衡电流",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType25 = new VarSubType("U_AB","AB线电压",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType26 = new VarSubType("U_BC","BC线电压",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType27 = new VarSubType("U_CA","CA线电压",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType28 = new VarSubType("GV_YG","有功功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType29 = new VarSubType("GV_WG","无功功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType30 = new VarSubType("GV_SZ","视在功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType31 = new VarSubType("GV_ZB","周波",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType32 = new VarSubType("GV_YG_A","A相有功功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType33 = new VarSubType("GV_YG_B","B相有功功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType34 = new VarSubType("GV_YG_C","C相有功功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType35 = new VarSubType("GV_WG_A","A相无功功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType36 = new VarSubType("GV_WG_B","B相无功功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType37 = new VarSubType("GV_WG_C","C相无功功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType38 = new VarSubType("GV_SZ_A","A相视在功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType39 = new VarSubType("GV_SZ_B","B相视在功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType40 = new VarSubType("GV_SZ_C","C相视在功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType41 = new VarSubType("GV_GLYS_A","A相功率因数",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType42 = new VarSubType("GV_GLYS_B","B相功率因数",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType43 = new VarSubType("GV_GLYS_C","C相功率因数",varGroupCfgDianYC,varTypeYC);
 		
-		varTypeList.add(varType);
-		varTypeList.add(varType1);
-		varTypeList.add(varType2);
-		varTypeList.add(varType3);
-		varTypeList.add(varType4);
-		varTypeList.add(varType5);
-
+		VarSubType varSubType44 = new VarSubType("DL_ZX_Z","正向有功总电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType45 = new VarSubType("DL_ZX_J","正向有功尖时电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType46 = new VarSubType("DL_ZX_F","正向有功峰时电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType47 = new VarSubType("DL_ZX_P","正向有功平时电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType48 = new VarSubType("DL_ZX_G","正向有功谷时电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType49 = new VarSubType("DL_FX_Z","反向有功总电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType50 = new VarSubType("DL_FX_J","反向有功尖时电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType51 = new VarSubType("DL_FX_F","反向有功峰时电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType52 = new VarSubType("DL_FX_P","反向有功平时电能",varGroupCfgDianYM,varTypeYM);
+		VarSubType varSubType53 = new VarSubType("DL_FX_G","反向有功谷时电能",varGroupCfgDianYM,varTypeYM);
+		
+		VarSubType varSubType54 = new VarSubType("XB_IA","A相电流总谐波含量",varGroupCfgDianXB,varTypeYC);
+		VarSubType varSubType55 = new VarSubType("XB_IB","B相电流总谐波含量",varGroupCfgDianXB,varTypeYC);
+		VarSubType varSubType56 = new VarSubType("XB_IC","C相电流总谐波含量",varGroupCfgDianXB,varTypeYC);
+		VarSubType varSubType57 = new VarSubType("XB_UA","A相电压总谐波含量",varGroupCfgDianXB,varTypeYC);
+		VarSubType varSubType58 = new VarSubType("XB_UB","B相电压总谐波含量",varGroupCfgDianXB,varTypeYC);
+		VarSubType varSubType59 = new VarSubType("XB_UC","C相电压总谐波含量",varGroupCfgDianXB,varTypeYC);
+		VarSubType varSubType60 = new VarSubType("XB_IA_ARRAY","A相电流谐波数组",varGroupCfgDianXB,varTypeQT);
+		VarSubType varSubType61 = new VarSubType("XB_IB_ARRAY","B相电流谐波数组",varGroupCfgDianXB,varTypeQT);
+		VarSubType varSubType62 = new VarSubType("XB_IC_ARRAY","C相电流谐波数组",varGroupCfgDianXB,varTypeQT);
+		VarSubType varSubType63 = new VarSubType("XB_UA_ARRAY","A相电压谐波数组",varGroupCfgDianXB,varTypeQT);
+		VarSubType varSubType64 = new VarSubType("XB_UB_ARRAY","B相电压谐波数组",varGroupCfgDianXB,varTypeQT);
+		VarSubType varSubType65 = new VarSubType("XB_UC_ARRAY","C相电压谐波数组",varGroupCfgDianXB,varTypeQT);
+		
+		VarSubType varSubType66 = new VarSubType("JLC_QL_SH","气量瞬时流量",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType67 = new VarSubType("JLC_QL_LJ","气量累计流量",varGroupCfgJiLiangChe,varTypeYM);
+		VarSubType varSubType68 = new VarSubType("JLC_YL_SH","油量瞬时流量",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType69 = new VarSubType("JLC_YL_LJ","油量瞬时流量",varGroupCfgJiLiangChe,varTypeYM);
+		VarSubType varSubType70 = new VarSubType("JLC_SL_SH","水量瞬时流量",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType71 = new VarSubType("JLC_SL_LJ","水量瞬时流量",varGroupCfgJiLiangChe,varTypeYM);
+		VarSubType varSubType72 = new VarSubType("JLC_HSL_SH","瞬时含水率",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType73 = new VarSubType("JLC_WD_SH","温度",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType74 = new VarSubType("JLC_YL_SH","压力",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType75 = new VarSubType("JLC_MD_SH","密度",varGroupCfgJiLiangChe,varTypeYC);
+		
+		VarSubType varSubType76 = new VarSubType("ZC_ZQLL_SH","蒸汽流量瞬时值",varGroupCfgZhuCai,varTypeYC);
+		VarSubType varSubType77 = new VarSubType("ZC_ZQLL_LJ","蒸汽流量累计值",varGroupCfgZhuCai,varTypeYM);
+		VarSubType varSubType78 = new VarSubType("ZC_ZQYL","蒸汽压力",varGroupCfgZhuCai,varTypeYC);
+		VarSubType varSubType79 = new VarSubType("ZC_ZQWD","蒸汽温度",varGroupCfgZhuCai,varTypeYC);
+		VarSubType varSubType80 = new VarSubType("ZC_ZQGD","蒸汽干度",varGroupCfgZhuCai,varTypeYC);
+		
+		varSubTypeList.add(varSubType);
+		varSubTypeList.add(varSubType1);
+		varSubTypeList.add(varSubType2);
+		varSubTypeList.add(varSubType3);
+		varSubTypeList.add(varSubType4);
+		varSubTypeList.add(varSubType5);
+		varSubTypeList.add(varSubType6);
+		varSubTypeList.add(varSubType7);
+		varSubTypeList.add(varSubType8);
+		varSubTypeList.add(varSubType9);
+		varSubTypeList.add(varSubType10);
+		varSubTypeList.add(varSubType11);
+		varSubTypeList.add(varSubType12);
+		varSubTypeList.add(varSubType13);
+		varSubTypeList.add(varSubType14);
+		varSubTypeList.add(varSubType15);
+		varSubTypeList.add(varSubType16);
+		varSubTypeList.add(varSubType17);
+		varSubTypeList.add(varSubType18);
+		varSubTypeList.add(varSubType19);
+		varSubTypeList.add(varSubType20);
+		varSubTypeList.add(varSubType21);
+		varSubTypeList.add(varSubType22);
+		varSubTypeList.add(varSubType23);
+		varSubTypeList.add(varSubType24);
+		varSubTypeList.add(varSubType25);
+		varSubTypeList.add(varSubType26);
+		varSubTypeList.add(varSubType27);
+		varSubTypeList.add(varSubType28);
+		varSubTypeList.add(varSubType29);
+		varSubTypeList.add(varSubType30);
+		varSubTypeList.add(varSubType31);
+		varSubTypeList.add(varSubType32);
+		varSubTypeList.add(varSubType33);
+		varSubTypeList.add(varSubType34);
+		varSubTypeList.add(varSubType35);
+		varSubTypeList.add(varSubType36);
+		varSubTypeList.add(varSubType37);
+		varSubTypeList.add(varSubType38);
+		varSubTypeList.add(varSubType39);
+		varSubTypeList.add(varSubType40);
+		varSubTypeList.add(varSubType41);
+		varSubTypeList.add(varSubType42);
+		varSubTypeList.add(varSubType43);
+		varSubTypeList.add(varSubType44);
+		varSubTypeList.add(varSubType45);
+		varSubTypeList.add(varSubType46);
+		varSubTypeList.add(varSubType47);
+		varSubTypeList.add(varSubType48);
+		varSubTypeList.add(varSubType49);
+		varSubTypeList.add(varSubType50);
+		varSubTypeList.add(varSubType51);
+		varSubTypeList.add(varSubType52);
+		varSubTypeList.add(varSubType53);
+		varSubTypeList.add(varSubType54);
+		varSubTypeList.add(varSubType55);
+		varSubTypeList.add(varSubType56);
+		varSubTypeList.add(varSubType57);
+		varSubTypeList.add(varSubType58);
+		varSubTypeList.add(varSubType59);
+		varSubTypeList.add(varSubType60);
+		varSubTypeList.add(varSubType61);
+		varSubTypeList.add(varSubType62);
+		varSubTypeList.add(varSubType63);
+		varSubTypeList.add(varSubType64);
+		varSubTypeList.add(varSubType65);
+		varSubTypeList.add(varSubType66);
+		varSubTypeList.add(varSubType67);
+		varSubTypeList.add(varSubType68);
+		varSubTypeList.add(varSubType69);
+		varSubTypeList.add(varSubType70);
+		varSubTypeList.add(varSubType71);
+		varSubTypeList.add(varSubType72);
+		varSubTypeList.add(varSubType73);
+		varSubTypeList.add(varSubType74);
+		varSubTypeList.add(varSubType75);
+		varSubTypeList.add(varSubType76);
+		varSubTypeList.add(varSubType77);
+		varSubTypeList.add(varSubType78);
+		varSubTypeList.add(varSubType79);
+		varSubTypeList.add(varSubType80);
+		
 		typeService.insertMajorTagType(majorTagTypeList);
 		typeService.insertEndTagType(endTagTypeList);
 		typeService.insertEndTagSubType(endTagSubTypeList);
 		typeService.insertVarGroupCfg(varGroupCfgList);
 		typeService.insertVarType(varTypeList);
+		typeService.insertVarSubType(varSubTypeList);
 
 	}
 

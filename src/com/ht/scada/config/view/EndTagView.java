@@ -46,47 +46,73 @@ import com.ht.scada.common.tag.entity.EndTagExtInfo;
 import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.EndTagExtInfoService;
 import com.ht.scada.common.tag.service.EndTagService;
+import com.ht.scada.common.tag.type.EndTagSubType;
+import com.ht.scada.common.tag.type.EndTagType;
+import com.ht.scada.common.tag.type.service.TypeService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
-import com.ht.scada.oildata.type.EndTagSubType;
-import com.ht.scada.oildata.type.EndTagType;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 public class EndTagView extends ViewPart implements IPropertyChangeListener {
+	private static class ViewerLabelProvider_2 extends LabelProvider {
+		public Image getImage(Object element) {
+			return super.getImage(element);
+		}
+		public String getText(Object element) {
+			EndTagSubType endTagSubType = (EndTagSubType)element;
+			return endTagSubType.getValue();
+		}
+	}
+	private static class ViewerLabelProvider_1 extends LabelProvider {
+		public Image getImage(Object element) {
+			return super.getImage(element);
+		}
+		public String getText(Object element) {
+			EndTagType endTagType = (EndTagType)element;
+			return endTagType.getValue();
+		}
+	}
 
 	private static final Logger log = LoggerFactory.getLogger(EndTagView.class);
 
 	public EndTagView() {
 		// 初始化监控对象类型
-		int lenght = EndTagType.values().length;
-		endTagType = new String[lenght + 1];
-		endTagType[0] = "请选择";
-		for (int i = 1; i <= lenght; i++) {
-			endTagType[i] = EndTagType.values()[i - 1].getValue();
+		EndTagType endTagType = new EndTagType(null,"");
+		endTagTypeList.add(endTagType);
+		List<EndTagType> list = typeService.getAllEndTagType();
+		if(list != null && !list.isEmpty()) {
+			endTagTypeList.addAll(list);
 		}
+		
 		// 初始化监控对象子类型
-		endTagSubType = new String[1];
-		endTagSubType[0] = "请选择";
-
+		EndTagSubType endTagSubType = new EndTagSubType(null, "");
+		endTagSubTypeList.add(endTagSubType);
+		
 	}
 
 	public static final String ID = "com.ht.scada.config.view.EndTagView";
 	private Text text_name;
 	private EndTag endTag;
-	private String endTagType[];
-	private String endTagSubType[];
+	private List<EndTagType> endTagTypeList = new ArrayList<EndTagType>();
+	private List<EndTagSubType> endTagSubTypeList = new ArrayList<EndTagSubType>();
 
 	private EndTagService endTagService = (EndTagService) Activator
 			.getDefault().getApplicationContext().getBean("endTagService");
 	private EndTagExtInfoService endTagExtInfoService = (EndTagExtInfoService) Activator
 			.getDefault().getApplicationContext()
 			.getBean("endTagExtInfoService");
-
-	private Combo typeCombo;
-	private Combo subTypeCombo;
+	private TypeService typeService = (TypeService) Activator.getDefault()
+			.getApplicationContext().getBean("typeService");
 	private GridTableViewer gridTableViewer;
 	private List<EndTagExtInfo> endTagExtInfoList = new ArrayList<>(); // 末端节点扩展信息列表
 	private List<EndTagExtInfo> deletedExtInfoList = new ArrayList<>(); // 要删除的扩展信息列表
+	private ComboViewer comboViewer_endType;
+	private ComboViewer comboViewer_endSubType;
 
 	public void createPartControl(Composite parent) {
 
@@ -111,44 +137,44 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		typeLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
 		typeLabel.setText("监控对象类型：");
-
-		typeCombo = new Combo(parent, SWT.READ_ONLY);
-
-		GridData gd_typeCombo = new GridData(SWT.LEFT, SWT.CENTER, true, false,
-				1, 1);
-		gd_typeCombo.widthHint = 85;
-		typeCombo.setLayoutData(gd_typeCombo);
-		typeCombo.setItems(endTagType);
+		
+		comboViewer_endType = new ComboViewer(parent, SWT.READ_ONLY);
+		comboViewer_endType.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				endTagSubTypeList = new ArrayList<EndTagSubType>();
+				EndTagSubType endTagSubType = new EndTagSubType(null, "");
+				endTagSubTypeList.add(endTagSubType);
+				
+				List<EndTagSubType> list = typeService.getSubTypeByEndTagTypeValue(comboViewer_endType.getCombo().getText().trim());
+				if(list != null && !list.isEmpty()) {
+					endTagSubTypeList.addAll(list);
+				}
+				
+				comboViewer_endSubType.setInput(endTagSubTypeList);
+				comboViewer_endSubType.refresh();
+			}
+		});
+		Combo combo = comboViewer_endType.getCombo();
+		GridData gd_combo = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_combo.widthHint = 90;
+		combo.setLayoutData(gd_combo);
+		comboViewer_endType.setLabelProvider(new ViewerLabelProvider_1());
+		comboViewer_endType.setContentProvider(ArrayContentProvider.getInstance());
+		comboViewer_endType.setInput(endTagTypeList);
 
 		Label subTypeLabel = new Label(parent, SWT.NONE);
 		subTypeLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
 		subTypeLabel.setText("监控对象子类型：");
-
-		subTypeCombo = new Combo(parent, SWT.NONE);
-		GridData gd_subTypeCombo = new GridData(SWT.LEFT, SWT.CENTER, true,
-				false, 1, 1);
-		gd_subTypeCombo.widthHint = 85;
-		subTypeCombo.setLayoutData(gd_subTypeCombo);
-		subTypeCombo.setItems(endTagSubType);
-
-		typeCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (typeCombo.getText().equals(EndTagType.YOU_JING.getValue())) {// 油井
-					int len = EndTagSubType.values().length;
-					endTagSubType = new String[len + 1];
-					endTagSubType[0] = "";
-					for (int i = 1; i <= len; i++) {
-						endTagSubType[i] = EndTagSubType.values()[i - 1]
-								.getValue();
-					}
-				} else {
-					endTagSubType = new String[1];
-					endTagSubType[0] = "";
-				}
-				subTypeCombo.setItems(endTagSubType);
-			}
-		});
+		
+		comboViewer_endSubType = new ComboViewer(parent, SWT.READ_ONLY);
+		Combo combo_1 = comboViewer_endSubType.getCombo();
+		GridData gd_combo_1 = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_combo_1.widthHint = 90;
+		combo_1.setLayoutData(gd_combo_1);
+		comboViewer_endSubType.setLabelProvider(new ViewerLabelProvider_2());
+		comboViewer_endSubType.setContentProvider(ArrayContentProvider.getInstance());
+		comboViewer_endSubType.setInput(endTagSubTypeList);
 
 		gridTableViewer = new GridTableViewer(parent, SWT.BORDER);
 		final Grid grid = gridTableViewer.getGrid();
@@ -278,13 +304,14 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					}
 
 					endTag.setName(text_name.getText().trim());
-					endTag.setType(EndTagType.getByValue(typeCombo.getText()) == null ? null
-							: EndTagType.getByValue(typeCombo.getText())
-									.toString());
-					endTag.setSubType((EndTagSubType.getByValue(subTypeCombo
-							.getText().trim()) == null) ? subTypeCombo
-							.getText().trim() : EndTagSubType.getByValue(
-							subTypeCombo.getText().trim()).toString());
+					
+					IStructuredSelection iss = (IStructuredSelection) comboViewer_endType.getSelection();
+					EndTagType endTagType = (EndTagType) iss.getFirstElement();
+					endTag.setType(endTagType.getName());
+					
+					IStructuredSelection iss2 = (IStructuredSelection) comboViewer_endSubType.getSelection();
+					EndTagSubType endTagSubType = (EndTagSubType)iss2.getFirstElement();
+					endTag.setSubType(endTagSubType.getName());
 
 					endTagService.create(endTag);
 
@@ -305,13 +332,13 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					}
 
 					endTag.setName(text_name.getText().trim());
-					endTag.setType(EndTagType.getByValue(typeCombo.getText()) == null ? null
-							: EndTagType.getByValue(typeCombo.getText())
-									.toString());
-					endTag.setSubType((EndTagSubType.getByValue(subTypeCombo
-							.getText().trim()) == null) ? subTypeCombo
-							.getText().trim() : EndTagSubType.getByValue(
-							subTypeCombo.getText().trim()).toString());
+					IStructuredSelection iss = (IStructuredSelection) comboViewer_endType.getSelection();
+					EndTagType endTagType = (EndTagType) iss.getFirstElement();
+					endTag.setType(endTagType.getName());
+					
+					IStructuredSelection iss2 = (IStructuredSelection) comboViewer_endSubType.getSelection();
+					EndTagSubType endTagSubType = (EndTagSubType)iss2.getFirstElement();
+					endTag.setSubType(endTagSubType.getName());
 
 					// ===================================
 					editEndTagExtInfoList();
@@ -364,8 +391,6 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
 			// 初始化控件值
 			text_name.setText("");
-			typeCombo.select(0);
-			subTypeCombo.select(0);
 
 		} else if (event.getProperty()
 				.equals(FirePropertyConstants.ENDTAG_EDIT)) {
@@ -375,25 +400,34 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			text_name.setText(endTag.getName());
 
 			if (endTag.getType() != null) {
-				typeCombo.setText(EndTagType.valueOf(endTag.getType())
-						.getValue());
-			} else {
-				typeCombo.select(0);
-			}
-			if (endTag.getSubType() != null) {
-				EndTagSubType subType;
-				try {
-					subType = EndTagSubType.valueOf(endTag.getSubType());
-				} catch (Exception e) {
-					subType = null;
-					// e.printStackTrace();
-					log.error("无子类型" + endTag.getSubType());
+				for(EndTagType endTagType : endTagTypeList) {
+					if(endTagType.getName()!=null && endTagType.getName().equals(endTag.getType())) {
+						comboViewer_endType.getCombo().setText(endTagType.getValue());
+						break;
+					}
 				}
-
-				subTypeCombo.setText(subType == null ? endTag.getSubType()
-						: subType.getValue());
-			} else {
-				subTypeCombo.select(0);
+			} 
+			
+			if (endTag.getSubType() != null) {
+				endTagSubTypeList = new ArrayList<EndTagSubType>();
+				EndTagSubType endTagSubType = new EndTagSubType(null, "");
+				endTagSubTypeList.add(endTagSubType);
+				
+				List<EndTagSubType> list = typeService.getSubTypeByEndTagTypeValue(comboViewer_endType.getCombo().getText().trim());
+				if(list != null && !list.isEmpty()) {
+					endTagSubTypeList.addAll(list);
+				}
+				
+				comboViewer_endSubType.setInput(endTagSubTypeList);
+				comboViewer_endSubType.refresh();
+				
+				for(EndTagSubType sub : endTagSubTypeList) {
+					if(sub.getName()!=null && sub.getName().equals(endTag.getSubType())) {
+						comboViewer_endSubType.getCombo().setText(sub.getValue());
+						break;
+					}
+				}
+				
 			}
 
 			// 初始化末端节点扩展信息列表

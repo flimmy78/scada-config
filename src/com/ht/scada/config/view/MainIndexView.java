@@ -68,7 +68,6 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 	public static final String ID = "com.ht.scada.config.view.MainIndexView";
 	private Text text;
 	private MajorTag majorTag;
-	private String[] majorTagTypeArray;
 	private List<MajorTagType> majorTagTypeList = new ArrayList<MajorTagType>();
 
 	private MajorTagService majorTagService = (MajorTagService) Activator.getDefault()
@@ -95,7 +94,7 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 		label_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		label_1.setText("类型：");
 
-		comboViewer = new ComboViewer(parent, SWT.NONE);
+		comboViewer = new ComboViewer(parent, SWT.READ_ONLY);
 		Combo combo = comboViewer.getCombo();
 		GridData gd_combo = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_combo.widthHint = 90;
