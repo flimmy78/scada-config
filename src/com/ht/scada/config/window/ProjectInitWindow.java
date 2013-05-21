@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.ht.scada.common.tag.entity.VarGroupCfg;
+import com.ht.scada.common.tag.type.EndTagExtInfoName;
+import com.ht.scada.common.tag.type.EndTagExtInfoValue;
 import com.ht.scada.common.tag.type.EndTagSubType;
 import com.ht.scada.common.tag.type.EndTagType;
 import com.ht.scada.common.tag.type.MajorTagType;
@@ -81,6 +83,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				typeService.deleteAllType();
 				initDataBase();
 				MessageDialog.openInformation(getShell(), "提示", "数据初始成功！");
 			}
@@ -105,6 +108,8 @@ public class ProjectInitWindow extends ApplicationWindow {
 	}
 
 	private void initDataBase() {
+		
+		
 		
 		List<MajorTagType> majorTagTypeList = new ArrayList<MajorTagType>();
 		List<EndTagType> endTagTypeList = new ArrayList<EndTagType>();
@@ -380,12 +385,58 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varSubTypeList.add(varSubType79);
 		varSubTypeList.add(varSubType80);
 		
+		List<EndTagExtInfoName> endInfoNameList = new ArrayList<EndTagExtInfoName>();
+		List<EndTagExtInfoValue> endInfoValueList = new ArrayList<EndTagExtInfoValue>();
+		
+		EndTagExtInfoName endTagExtInfoName = new EndTagExtInfoName("STAGE", "油井阶段", endTagType);
+		EndTagExtInfoName endTagExtInfoName1 = new EndTagExtInfoName("TECHNOLOGY", "油井工艺", endTagType);
+		EndTagExtInfoName endTagExtInfoName2 = new EndTagExtInfoName("BENG_JING", "泵径", endTagType);
+		EndTagExtInfoName endTagExtInfoName3 = new EndTagExtInfoName("BENG_SHENG", "泵深", endTagType);
+		EndTagExtInfoName endTagExtInfoName4 = new EndTagExtInfoName("BENG_GUA_SHEN_DU", "泵挂深度", endTagType);
+		EndTagExtInfoName endTagExtInfoName5 = new EndTagExtInfoName("HAN_SHUI_LV", "含水率", endTagType);
+		EndTagExtInfoName endTagExtInfoName6 = new EndTagExtInfoName("YOU_QI_BI", "油气比", endTagType);
+		EndTagExtInfoName endTagExtInfoName7 = new EndTagExtInfoName("MI_DU", "原油密度", endTagType);
+		EndTagExtInfoName endTagExtInfoName8 = new EndTagExtInfoName("NIAN_DU", "粘度", endTagType);
+		EndTagExtInfoName endTagExtInfoName9 = new EndTagExtInfoName("KUANG_HUA_DU", "矿化度", endTagType);
+		EndTagExtInfoName endTagExtInfoName10 = new EndTagExtInfoName("YOU_GUAN_ZU_HE", "油管组合", endTagType);
+		EndTagExtInfoName endTagExtInfoName11 = new EndTagExtInfoName("CHOU_YOU_GAN_ZU_HE", "抽油杆组合", endTagType);
+		
+		EndTagExtInfoValue endTagExtInfoValue = new EndTagExtInfoValue("ZI_PEN","自喷",endTagExtInfoName);
+		EndTagExtInfoValue endTagExtInfoValue1 = new EndTagExtInfoValue("ZHU_QI","注汽",endTagExtInfoName);
+		EndTagExtInfoValue endTagExtInfoValue2 = new EndTagExtInfoValue("MEN_JING","焖井",endTagExtInfoName);
+		EndTagExtInfoValue endTagExtInfoValue3 = new EndTagExtInfoValue("CHOU_YOU","抽油",endTagExtInfoName);
+		
+		EndTagExtInfoValue endTagExtInfoValue4 = new EndTagExtInfoValue("XI_YOU","稀油",endTagExtInfoName1);
+		EndTagExtInfoValue endTagExtInfoValue5 = new EndTagExtInfoValue("CHOU_YOU","稠油",endTagExtInfoName1);
+		
+		endInfoNameList.add(endTagExtInfoName);
+		endInfoNameList.add(endTagExtInfoName1);
+		endInfoNameList.add(endTagExtInfoName2);
+		endInfoNameList.add(endTagExtInfoName3);
+		endInfoNameList.add(endTagExtInfoName4);
+		endInfoNameList.add(endTagExtInfoName5);
+		endInfoNameList.add(endTagExtInfoName6);
+		endInfoNameList.add(endTagExtInfoName7);
+		endInfoNameList.add(endTagExtInfoName8);
+		endInfoNameList.add(endTagExtInfoName9);
+		endInfoNameList.add(endTagExtInfoName10);
+		endInfoNameList.add(endTagExtInfoName11);
+		
+		endInfoValueList.add(endTagExtInfoValue);
+		endInfoValueList.add(endTagExtInfoValue1);
+		endInfoValueList.add(endTagExtInfoValue2);
+		endInfoValueList.add(endTagExtInfoValue3);
+		endInfoValueList.add(endTagExtInfoValue4);
+		endInfoValueList.add(endTagExtInfoValue5);
+		
 		typeService.insertMajorTagType(majorTagTypeList);
 		typeService.insertEndTagType(endTagTypeList);
 		typeService.insertEndTagSubType(endTagSubTypeList);
 		typeService.insertVarGroupCfg(varGroupCfgList);
 		typeService.insertVarType(varTypeList);
 		typeService.insertVarSubType(varSubTypeList);
+		typeService.insertEndTagExtInfoName(endInfoNameList);
+		typeService.insertEndTagExtInfoValue(endInfoValueList);
 
 	}
 

@@ -30,7 +30,7 @@ public class ScadaDevicePerspective implements IPerspectiveFactory {
 //		leftFolder.addView(ScadaObjectTreeView.ID);
 		
 		
-		IFolderLayout folder = layout.createFolder("device_messages", IPageLayout.LEFT, 0.8f, editorArea);
+		IFolderLayout folder = layout.createFolder("device_messages", IPageLayout.LEFT, 1f, editorArea);
 		folder.addPlaceholder(AquisitionChannelView.ID);
 		folder.addPlaceholder(AquisitionDeviceView.ID);
 	}
