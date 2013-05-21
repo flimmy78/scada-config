@@ -167,8 +167,8 @@ public class VariableGroupConfigView extends ViewPart implements
 
 			switch (columnIndex) {
 			case 0:// 名字
-				return varGroupCfg.getName() == null ? null : varGroupCfg
-						.getName();
+				return varGroupCfg.getValue() == null ? null : varGroupCfg
+						.getValue();
 			case 1:// 存储间隔
 				return varGroupCfg.getIntvl() + "";
 
