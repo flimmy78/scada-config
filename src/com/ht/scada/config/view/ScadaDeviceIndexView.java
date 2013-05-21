@@ -226,7 +226,13 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 					acquisitionDevice.setName(textDeviceName.getText().trim());
 					acquisitionDevice.setManufacture(textManufacture.getText().trim());
 					acquisitionDevice.setType(textType.getText().trim());
-					acquisitionDevice.setFixTime(new Date());
+					// 
+					int year = dateTimeFixTime.getYear();
+					int month = dateTimeFixTime.getMonth();
+					int day = dateTimeFixTime.getDay();
+					Date fixTime = new Date(year-1900,month,day);
+					acquisitionDevice.setFixTime(fixTime);
+					
 					acquisitionDevice.setFixPositin(textFixPositin.getText().trim());
 					acquisitionDevice.setRemark(textRemark.getText().trim());
 					acquisitionDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
