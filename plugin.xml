@@ -143,6 +143,10 @@
       <product
             application="scada-config.application"
             name="丹东华通SCADA系统通用配置软件">
+           <property 
+	            name="preferenceCustomization" 
+	            value="plugin_customization.ini">
+         </property>
          <property
                name="windowImages"
                value="icons/huatong.ico">
@@ -151,7 +155,6 @@
                name="appName"
                value="丹东华通SCADA系统通用配置软件">
          </property>
-          
       </product>
    </extension>
 

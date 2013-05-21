@@ -58,6 +58,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 	private Text textPortInfo;
 	private Text textFrames;
 	private DateTime dateTimeUpdateTime;
+	private Label labelProtocal;
 
 	public void createPartControl(Composite parent) {
 		GridLayout gl_parent = new GridLayout(1, false);
@@ -94,7 +95,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 		textChannelName.setLayoutData(gd_textChannelName);
 		textChannelName.setText("通道名称");
 
-		Label labelProtocal = new Label(groupBasicInfo, SWT.NONE);
+		labelProtocal = new Label(groupBasicInfo, SWT.NONE);
 		labelProtocal.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
 		labelProtocal.setText("通信规约：");
@@ -148,10 +149,10 @@ public class ScadaChannelIndexView extends ViewPart implements
 		Label labelInterval = new Label(groupCommuInfo, SWT.NONE);
 		labelInterval.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		labelInterval.setText("采样间隔：");
+		labelInterval.setText("帧 间 隔：");
 
 		textInterval = new Text(groupCommuInfo, SWT.BORDER);
-		textInterval.setText("采样间隔");
+		textInterval.setText("帧间隔");
 		GridData gd_textInterval = new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1);
 		gd_textInterval.widthHint = 120;
@@ -237,7 +238,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 						return;
 					}else if ("".equals(textInterval.getText().trim())) {
 						MessageDialog.openError(getSite().getShell(), "错误",
-								"采样间隔不能为空！");
+								"帧间隔不能为空！");
 						return;
 					}else if ("".equals(textSchedule.getText().trim())) {
 						MessageDialog.openError(getSite().getShell(), "错误",
@@ -254,9 +255,7 @@ public class ScadaChannelIndexView extends ViewPart implements
 					}
 					
 					acquisitionChannel.setName(textChannelName.getText().trim());
-					// TODO
-					acquisitionChannel.setProtocal(CommunicationProtocal.ModbusRTU);
-					
+					acquisitionChannel.setProtocal(CommunicationProtocal.valueOf(comboProtocal.getText()));
 					acquisitionChannel.setIdx(Integer.valueOf(textIdx.getText().trim()));
 					acquisitionChannel.setOffline(Integer.valueOf(textOffline.getText()));
 					acquisitionChannel.setIntvl(Integer.valueOf(textInterval.getText()));
@@ -265,7 +264,6 @@ public class ScadaChannelIndexView extends ViewPart implements
 					acquisitionChannel.setFrames(textFrames.getText().trim());
 					
 					Date nowDate = new Date();
-
 					acquisitionChannel.setUpdateTime(nowDate);
 					
 					// 更新数据库
@@ -276,10 +274,39 @@ public class ScadaChannelIndexView extends ViewPart implements
 					
 				}
 				else {// 编辑
-					acquisitionChannel.setName(textChannelName.getText().trim());
-					// TODO
-					acquisitionChannel.setProtocal(CommunicationProtocal.ModbusRTU);
+					if ("".equals(textChannelName.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"通道名称不能为空！");
+						return;
+					}
+					else if ("".equals(textIdx.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"序号不能为空！");
+						return;
+					}else if ("".equals(textOffline.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"通讯离线不能为空！");
+						return;
+					}else if ("".equals(textInterval.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"帧间隔不能为空！");
+						return;
+					}else if ("".equals(textSchedule.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"任务调度不能为空！");
+						return;
+					}else if ("".equals(textPortInfo.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"端口信息不能为空！");
+						return;
+					}else if ("".equals(textFrames.getText().trim())) {
+						MessageDialog.openError(getSite().getShell(), "错误",
+								"通讯帧不能为空！");
+						return;
+					}
 					
+					acquisitionChannel.setName(textChannelName.getText().trim());
+					acquisitionChannel.setProtocal(CommunicationProtocal.valueOf(comboProtocal.getText()));
 					acquisitionChannel.setIdx(Integer.valueOf(textIdx.getText().trim()));
 					acquisitionChannel.setOffline(Integer.valueOf(textOffline.getText()));
 					acquisitionChannel.setIntvl(Integer.valueOf(textInterval.getText()));
@@ -287,9 +314,12 @@ public class ScadaChannelIndexView extends ViewPart implements
 					acquisitionChannel.setPortInfo(textPortInfo.getText().trim());
 					acquisitionChannel.setFrames(textFrames.getText().trim());
 					
-					Date nowDate = new Date();
+					int year = dateTimeUpdateTime.getYear();
+					int month = dateTimeUpdateTime.getMonth();
+					int day = dateTimeUpdateTime.getDay();
+					Date updateTime = new Date(year-1900,month,day);
 
-					acquisitionChannel.setUpdateTime(nowDate);
+					acquisitionChannel.setUpdateTime(updateTime);
 					
 					// 更新数据库
 					acquisitionChannelService.update(acquisitionChannel);
