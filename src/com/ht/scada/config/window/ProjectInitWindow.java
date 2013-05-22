@@ -220,6 +220,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType3 = new VarSubType("JING_KOU_WEN_DU","井口温度",varGroupCfgYouJing,varTypeYC);
 		VarSubType varSubType4 = new VarSubType("HUI_GUAN_WEN_DU","汇管温度",varGroupCfgYouJing,varTypeYC);
 		VarSubType varSubType5 = new VarSubType("QI_QING_ZHUANG_TAI","启停状态",varGroupCfgYouJing,varTypeYX);
+		varSubType5.setRemark("0为停，1为启（运行）");
 		
 		VarSubType varSubType6 = new VarSubType("CHONG_CHENG","冲程",varGroupCfgSGT,varTypeYC);
 		VarSubType varSubType7 = new VarSubType("CHONG_CI","冲次",varGroupCfgSGT,varTypeYC);

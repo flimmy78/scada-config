@@ -109,6 +109,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private List<EndTagExtInfo> deletedExtInfoList = new ArrayList<>(); // 要删除的扩展信息列表
 	private ComboViewer comboViewer_endType;
 	private ComboViewer comboViewer_endSubType;
+	private Text text_code;
 
 	public void createPartControl(Composite parent) {
 
@@ -128,6 +129,15 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 				false, 1, 1);
 		gd_text_name.widthHint = 100;
 		text_name.setLayoutData(gd_text_name);
+		
+		Label label_1 = new Label(parent, SWT.NONE);
+		label_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label_1.setText("编号：");
+		
+		text_code = new Text(parent, SWT.BORDER);
+		GridData gd_text_code = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_text_code.widthHint = 100;
+		text_code.setLayoutData(gd_text_code);
 
 		Label typeLabel = new Label(parent, SWT.NONE);
 		typeLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
@@ -300,6 +310,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					}
 
 					endTag.setName(text_name.getText().trim());
+					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
 					
 					IStructuredSelection iss = (IStructuredSelection) comboViewer_endType.getSelection();
 					EndTagType endTagType = (EndTagType) iss.getFirstElement();
@@ -328,6 +339,8 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					}
 
 					endTag.setName(text_name.getText().trim());
+					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
+					
 					IStructuredSelection iss = (IStructuredSelection) comboViewer_endType.getSelection();
 					EndTagType endTagType = (EndTagType) iss.getFirstElement();
 					endTag.setType(endTagType.getName());
@@ -387,6 +400,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
 			// 初始化控件值
 			text_name.setText("");
+			text_code.setText("");
 
 		} else if (event.getProperty()
 				.equals(FirePropertyConstants.ENDTAG_EDIT)) {
@@ -394,6 +408,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
 			// 初始化控件值
 			text_name.setText(endTag.getName());
+			text_code.setText(endTag.getCode()==null?"":endTag.getCode());
 
 			if (endTag.getType() != null) {
 				for(EndTagType endTagType : endTagTypeList) {
