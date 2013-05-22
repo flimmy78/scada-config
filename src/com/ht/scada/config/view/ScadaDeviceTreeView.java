@@ -19,6 +19,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -226,7 +229,6 @@ public class ScadaDeviceTreeView extends ViewPart {
 								.getShell(), "删除", "确认要删除吗？")) {
 							acquisitionChannelService.deleteById(acquisitionChannel
 									.getId().intValue());
-
 							treeViewer.remove(acquisitionChannel);
 						}
 					}
@@ -234,7 +236,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 				objectIndex.setText("删除采集通道(&D)");
 				menuMng.add(objectIndex);
 			}
-			else if (selectedObject instanceof AcquisitionDevice) { // 采集通道
+			else if (selectedObject instanceof AcquisitionDevice) { // 采集设备
 				final AcquisitionDevice acquisitionDevice = (AcquisitionDevice) selectedObject;
 
 				// ===============添加传感器=======================
