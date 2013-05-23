@@ -26,9 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.VarGroupCfg;
-import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.common.tag.service.VarGroupCfgService;
-import com.ht.scada.common.tag.util.VarGroup;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.LayoutUtil;
 

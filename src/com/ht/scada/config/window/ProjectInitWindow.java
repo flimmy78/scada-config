@@ -138,6 +138,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		EndTagType endTagType9 = new EndTagType("PEI_SHUI_JIAN","配水间");
 		EndTagType endTagType10 = new EndTagType("JI_LIANG_CHE","计量车");
 		
+		
 		endTagTypeList.add(endTagType);
 		endTagTypeList.add(endTagType1);
 		endTagTypeList.add(endTagType2);
@@ -176,6 +177,12 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarGroupCfg varGroupCfgShuiJing = new VarGroupCfg("SHUI_JING","水井");
 		VarGroupCfg varGroupCfgJiLiangChe = new VarGroupCfg("JI_LIANG","计量车");
 		VarGroupCfg varGroupCfgZhuCai = new VarGroupCfg("ZHU_CAI","注采");
+		VarGroupCfg varGroupCfgRTUStatus = new VarGroupCfg("RTU_ZHUANG_TAI", "RTU状态");
+		VarGroupCfg varGroupCfgSensorRun = new VarGroupCfg("SENSOR_RUN", "传感器运行");
+		VarGroupCfg varGroupCfgZYZYC = new VarGroupCfg("ZYZ_YC", "增压站遥测量");
+		VarGroupCfg varGroupCfgZSZYC = new VarGroupCfg("ZSZ_YC", "注水站遥测量");
+		VarGroupCfg varGroupCfgJZZYC = new VarGroupCfg("JZZ_YC", "接转站遥测量");
+		VarGroupCfg varGroupCfgLHZYC = new VarGroupCfg("LHZ_YC", "联合站遥测量");
 		
 		varGroupCfgList.add(varGroupCfgDianYC);
 		varGroupCfgList.add(varGroupCfgDianYM);
@@ -186,6 +193,12 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varGroupCfgList.add(varGroupCfgShuiJing);
 		varGroupCfgList.add(varGroupCfgJiLiangChe);
 		varGroupCfgList.add(varGroupCfgZhuCai);
+		varGroupCfgList.add(varGroupCfgRTUStatus);
+		varGroupCfgList.add(varGroupCfgSensorRun);
+		varGroupCfgList.add(varGroupCfgZYZYC);
+		varGroupCfgList.add(varGroupCfgZSZYC);
+		varGroupCfgList.add(varGroupCfgJZZYC);
+		varGroupCfgList.add(varGroupCfgLHZYC);
 		
 		Set<VarGroupCfg> varGroupCfgSet = new HashSet<VarGroupCfg>();
 		varGroupCfgSet.add(varGroupCfgDianYC);
@@ -197,6 +210,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varGroupCfgSet.add(varGroupCfgShuiJing);
 		varGroupCfgSet.add(varGroupCfgJiLiangChe);
 		varGroupCfgSet.add(varGroupCfgZhuCai);
+		varGroupCfgSet.add(varGroupCfgRTUStatus);
 		
 		endTagType.setVarGroupCfgSet(varGroupCfgSet);
 		
@@ -219,7 +233,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType2 = new VarSubType("HUI_YA","回压",varGroupCfgYouJing,varTypeYC);
 		VarSubType varSubType3 = new VarSubType("JING_KOU_WEN_DU","井口温度",varGroupCfgYouJing,varTypeYC);
 		VarSubType varSubType4 = new VarSubType("HUI_GUAN_WEN_DU","汇管温度",varGroupCfgYouJing,varTypeYC);
-		VarSubType varSubType5 = new VarSubType("QI_QING_ZHUANG_TAI","启停状态",varGroupCfgYouJing,varTypeYX);
+		VarSubType varSubType5 = new VarSubType("QI_TING_ZHUANG_TAI","启停状态",varGroupCfgYouJing,varTypeYX);
 		varSubType5.setRemark("0为停，1为启（运行）");
 		
 		VarSubType varSubType6 = new VarSubType("CHONG_CHENG","冲程",varGroupCfgSGT,varTypeYC);
@@ -304,6 +318,18 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType79 = new VarSubType("ZC_ZQWD","蒸汽温度",varGroupCfgZhuCai,varTypeYC);
 		VarSubType varSubType80 = new VarSubType("ZC_ZQGD","蒸汽干度",varGroupCfgZhuCai,varTypeYC);
 		
+		VarSubType varSubType81 = new VarSubType("RTU_RJ45_STATUS","以太网通讯状态",varGroupCfgRTUStatus,varTypeYX);
+		VarSubType varSubType82 = new VarSubType("RTU_COM1_STATUS","COM1通讯状态",varGroupCfgRTUStatus,varTypeYX);
+		VarSubType varSubType83 = new VarSubType("RTU_COM2_STATUS","COM2通讯状态",varGroupCfgRTUStatus,varTypeYX);
+		VarSubType varSubType84 = new VarSubType("RTU_COM3_STATUS","COM3通讯状态",varGroupCfgRTUStatus,varTypeYX);
+		VarSubType varSubType85 = new VarSubType("RTU_COM4_STATUS","COM4通讯状态",varGroupCfgRTUStatus,varTypeYX);
+		VarSubType varSubType86 = new VarSubType("RTU_ZIGBEE_STATUS","ZigBee通讯状态",varGroupCfgRTUStatus,varTypeYX);
+		
+		VarSubType varSubType87 = new VarSubType("CGQ_RTU_STATUS","传感器通讯状态",varGroupCfgSensorRun,varTypeYX);
+		VarSubType varSubType88 = new VarSubType("CGQ_RTU_TIME","传感器运行时间",varGroupCfgSensorRun,varTypeYC);
+		VarSubType varSubType89 = new VarSubType("CGQ_REMAINED_TIME","剩余工作时间",varGroupCfgSensorRun,varTypeYC);
+		VarSubType varSubType90 = new VarSubType("CGQ_REMAINED_DIANLIANG","剩余电量",varGroupCfgSensorRun,varTypeYC);
+		
 		varSubTypeList.add(varSubType);
 		varSubTypeList.add(varSubType1);
 		varSubTypeList.add(varSubType2);
@@ -385,6 +411,16 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varSubTypeList.add(varSubType78);
 		varSubTypeList.add(varSubType79);
 		varSubTypeList.add(varSubType80);
+		varSubTypeList.add(varSubType81);
+		varSubTypeList.add(varSubType82);
+		varSubTypeList.add(varSubType83);
+		varSubTypeList.add(varSubType84);
+		varSubTypeList.add(varSubType85);
+		varSubTypeList.add(varSubType86);
+		varSubTypeList.add(varSubType87);
+		varSubTypeList.add(varSubType88);
+		varSubTypeList.add(varSubType89);
+		varSubTypeList.add(varSubType90);
 		
 		List<EndTagExtInfoName> endInfoNameList = new ArrayList<EndTagExtInfoName>();
 		List<EndTagExtInfoValue> endInfoValueList = new ArrayList<EndTagExtInfoValue>();
@@ -408,7 +444,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		EndTagExtInfoValue endTagExtInfoValue3 = new EndTagExtInfoValue("CHOU_YOU","抽油",endTagExtInfoName);
 		
 		EndTagExtInfoValue endTagExtInfoValue4 = new EndTagExtInfoValue("XI_YOU","稀油",endTagExtInfoName1);
-		EndTagExtInfoValue endTagExtInfoValue5 = new EndTagExtInfoValue("CHOU_YOU","稠油",endTagExtInfoName1);
+		EndTagExtInfoValue endTagExtInfoValue5 = new EndTagExtInfoValue("CHOU_YOU_JING","稠油",endTagExtInfoName1);
 		
 		endInfoNameList.add(endTagExtInfoName);
 		endInfoNameList.add(endTagExtInfoName1);

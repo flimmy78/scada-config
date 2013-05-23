@@ -47,9 +47,10 @@ import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.service.TagCfgTplService;
+import com.ht.scada.common.tag.type.entity.VarSubType;
+import com.ht.scada.common.tag.type.entity.VarType;
+import com.ht.scada.common.tag.type.service.TypeService;
 import com.ht.scada.common.tag.util.DataType;
-import com.ht.scada.common.tag.util.VarSubType;
-import com.ht.scada.common.tag.util.VarType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
 import com.ht.scada.config.util.PinyinComparator;
@@ -74,19 +75,22 @@ public class VariableTemplateConfigView extends ViewPart {
 
 	public VariableTemplateConfigView() {
 		tplNameList = tagCfgTplService.findAllTplName();
+		
+		List<VarType> varTypeList = typeService.getAllVarType();
+		List<VarSubType> varSubTypeList = typeService.getAllVarSubType();
 
-		int length = VarType.values().length;
+		int length = varTypeList.size();
 		varTypeArray = new String[length + 1];
 		varTypeArray[0] = "";
 		for (int i = 1; i <= length; i++) {
-			varTypeArray[i] = VarType.values()[i - 1].getValue();
+			varTypeArray[i] = varTypeList.get(i - 1).getValue();
 		}
 		
-		int len = VarSubType.values().length;
+		int len = varSubTypeList.size();
 		varSubTypeArray = new String[len + 1];
 		varSubTypeArray[0] = "";
 		for (int i = 1; i <= len; i++) {
-			varSubTypeArray[i] = VarSubType.values()[i - 1].getValue();
+			varSubTypeArray[i] = varSubTypeList.get(i - 1).getValue();
 		}
 		
 		int len1 = DataType.values().length;
@@ -100,6 +104,8 @@ public class VariableTemplateConfigView extends ViewPart {
 
 	private TagCfgTplService tagCfgTplService = (TagCfgTplService) Activator
 			.getDefault().getApplicationContext().getBean("tagCfgTplService");
+	private TypeService typeService = (TypeService) Activator.getDefault()
+			.getApplicationContext().getBean("typeService");
 
 	private MenuManager menuMng;
 
