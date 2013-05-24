@@ -330,6 +330,17 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType89 = new VarSubType("CGQ_REMAINED_TIME","剩余工作时间",varGroupCfgSensorRun,varTypeYC);
 		VarSubType varSubType90 = new VarSubType("CGQ_REMAINED_DIANLIANG","剩余电量",varGroupCfgSensorRun,varTypeYC);
 		
+		VarSubType varSubType91 = new VarSubType("ZYZ_RU_KOU_WEN_DU","入口温度",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType92 = new VarSubType("ZYZ_CHU_KOU_WEN_DU","出口温度",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType93 = new VarSubType("ZYZ_WAI_SHU_YA_LI","外输压力",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType94 = new VarSubType("ZYZ_HAN_SHUI_LV","原油含水率",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType95 = new VarSubType("ZYZ_SHUN_SHI_LIU_LIANG","瞬时流量",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType96 = new VarSubType("ZYZ_LEI_JI_LIU_LIANG","累积流量",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType97 = new VarSubType("ZYZ_YE_WEI","缓冲罐液位",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType98 = new VarSubType("ZYZ_WEN_DU_1","环境温度#1",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType99 = new VarSubType("ZYZ_WEN_DU_2","环境温度#2",varGroupCfgZYZYC,varTypeYC);
+		VarSubType varSubType100 = new VarSubType("ZYZ_DIAN_DONG_DIE_FA","电动蝶阀值",varGroupCfgZYZYC,varTypeYC);
+		
 		varSubTypeList.add(varSubType);
 		varSubTypeList.add(varSubType1);
 		varSubTypeList.add(varSubType2);
@@ -421,6 +432,16 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varSubTypeList.add(varSubType88);
 		varSubTypeList.add(varSubType89);
 		varSubTypeList.add(varSubType90);
+		varSubTypeList.add(varSubType91);
+		varSubTypeList.add(varSubType92);
+		varSubTypeList.add(varSubType93);
+		varSubTypeList.add(varSubType94);
+		varSubTypeList.add(varSubType95);
+		varSubTypeList.add(varSubType96);
+		varSubTypeList.add(varSubType97);
+		varSubTypeList.add(varSubType98);
+		varSubTypeList.add(varSubType99);
+		varSubTypeList.add(varSubType100);
 		
 		List<EndTagExtInfoName> endInfoNameList = new ArrayList<EndTagExtInfoName>();
 		List<EndTagExtInfoValue> endInfoValueList = new ArrayList<EndTagExtInfoValue>();

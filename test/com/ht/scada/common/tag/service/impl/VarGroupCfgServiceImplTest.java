@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 
 import com.ht.scada.common.tag.entity.VarGroupCfg;
 import com.ht.scada.common.tag.service.VarGroupCfgService;
-import com.ht.scada.common.tag.util.VarGroup;
 
 public class VarGroupCfgServiceImplTest {
 	
@@ -31,11 +30,11 @@ public class VarGroupCfgServiceImplTest {
 		  System.out.println(varGroupCfg.getId() + " "+ varGroupCfg.getIntvl()+" "+ varGroupCfg.getName());
 	  }
 //	  
-	  VarGroup value = VarGroup.values()[1];
-	  
-	  System.out.println(value);
-	  System.out.println( value.ordinal());
-	  System.out.println( value.getValue());
+//	  VarGroup value = VarGroup.values()[1];
+//	  
+//	  System.out.println(value);
+//	  System.out.println( value.ordinal());
+//	  System.out.println( value.getValue());
 	  
   }
 }
