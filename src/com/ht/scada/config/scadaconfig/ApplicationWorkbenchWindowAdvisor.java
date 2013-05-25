@@ -45,7 +45,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	public void postWindowOpen() {
 		super.postWindowOpen();
 		// 使得窗口最大化
-		//this.getWindowConfigurer().getWindow().getShell().setMaximized(true);
+		this.getWindowConfigurer().getWindow().getShell().setMaximized(true);
 	}
 
 }
