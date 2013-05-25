@@ -25,33 +25,35 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
-import com.ht.scada.common.tag.service.AcquisitionDeviceService;
+import com.ht.scada.common.tag.entity.SensorDevice;
+import com.ht.scada.common.tag.service.SensorDeviceService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
+import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.Utils;
 import com.ht.scada.config.util.ViewPropertyChange;
 
-public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeListener {
+public class ScadaSensorConfigView extends ViewPart implements IPropertyChangeListener {
 
-	public ScadaDeviceIndexView() {
+	public ScadaSensorConfigView() {
 	}
 
-	public static final String ID = "com.ht.scada.config.view.ScadaDeviceIndexView";
-	private AcquisitionDevice acquisitionDevice = new AcquisitionDevice();
+	public static final String ID = "com.ht.scada.config.view.ScadaSensorConfigView";
+	private SensorDevice sensorDevice = new SensorDevice();
 
-	private AcquisitionDeviceService acquisitionDeviceService = (AcquisitionDeviceService) Activator.getDefault()
-			.getApplicationContext().getBean("acquisitionDeviceService");
+	private SensorDeviceService sensorDeviceService = (SensorDeviceService) Activator.getDefault()
+			.getApplicationContext().getBean("sensorDeviceService");
 	
 	private Text textDeviceName;
 	private Text textType;
 	private DateTime dateTimeFixTime;
 	private Text textAddress;
-	private Text textTimeout;
-	private Text textRetry;
 	private Text textManufacture;
 	private Text textFixPositin;
 	private Text textRemark;
-	private Button btnUsed;
+	private Text text_number;
+	private Text text_checkInterval;
+	private Text textNickName;
 
 	public void createPartControl(Composite parent) {
 		GridLayout gl_parent = new GridLayout(1, false);
@@ -75,20 +77,35 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		groupBasicInfo.setLayout(new GridLayout(2, false));
 		
 		Label labelDeviceName = new Label(groupBasicInfo, SWT.NONE);
-		labelDeviceName.setText("设备名称：");
+		labelDeviceName.setText("传感器名：");
 		
 		textDeviceName = new Text(groupBasicInfo, SWT.BORDER);
 		GridData gd_textDeviceName = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_textDeviceName.widthHint = 120;
 		textDeviceName.setLayoutData(gd_textDeviceName);
-		textDeviceName.setText("<dynamic>");
+		
+		Label label_1 = new Label(groupBasicInfo, SWT.NONE);
+		label_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label_1.setText("别      名：");
+		
+		textNickName = new Text(groupBasicInfo, SWT.BORDER);
+		GridData gd_textNickName = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_textNickName.widthHint = 120;
+		textNickName.setLayoutData(gd_textNickName);
+		
+		Label labelAddress = new Label(groupBasicInfo, SWT.NONE);
+		labelAddress.setText("地      址：");
+		
+		textAddress = new Text(groupBasicInfo, SWT.BORDER);
+		GridData gd_textAddress = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_textAddress.widthHint = 120;
+		textAddress.setLayoutData(gd_textAddress);
 		
 		Label labelManufacture = new Label(groupBasicInfo, SWT.NONE);
 		labelManufacture.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		labelManufacture.setText("生产厂家：");
 		
 		textManufacture = new Text(groupBasicInfo, SWT.BORDER);
-		textManufacture.setText("<dynamic>");
 		GridData gd_textManufacture = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_textManufacture.widthHint = 120;
 		textManufacture.setLayoutData(gd_textManufacture);
@@ -98,16 +115,18 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		labelType.setText("型      号：");
 		
 		textType = new Text(groupBasicInfo, SWT.BORDER);
-		textType.setText("<dynamic>");
 		GridData gd_textType = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_textType.widthHint = 120;
 		textType.setLayoutData(gd_textType);
 		
-		Group groupCommuInfo = new Group(composite, SWT.NONE);
-		GridData gd_groupCommuInfo = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_groupCommuInfo.widthHint = 253;
-		groupCommuInfo.setLayoutData(gd_groupCommuInfo);
-		groupCommuInfo.setText("通讯信息");
+		Label label = new Label(groupBasicInfo, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setText("序      号：");
+		
+		text_number = new Text(groupBasicInfo, SWT.BORDER);
+		GridData gd_text_number = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_text_number.widthHint = 80;
+		text_number.setLayoutData(gd_text_number);
 		
 		Label labelFixTime = new Label(groupBasicInfo, SWT.NONE);
 		labelFixTime.setText("安装日期：");
@@ -116,6 +135,15 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		GridData gd_dateTimeFixTime = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_dateTimeFixTime.widthHint = 120;
 		dateTimeFixTime.setLayoutData(gd_dateTimeFixTime);
+		
+		Label lblNewLabel = new Label(groupBasicInfo, SWT.NONE);
+		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel.setText("校准间隔：");
+		
+		text_checkInterval = new Text(groupBasicInfo, SWT.BORDER);
+		GridData gd_text_checkInterval = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_text_checkInterval.widthHint = 80;
+		text_checkInterval.setLayoutData(gd_text_checkInterval);
 		
 		Label labelFixPositin = new Label(groupBasicInfo, SWT.NONE);
 		labelFixPositin.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -135,48 +163,6 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		GridData gd_textRemark = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_textRemark.widthHint = 120;
 		textRemark.setLayoutData(gd_textRemark);
-		groupCommuInfo.setLayout(new GridLayout(3, false));
-		
-		Label labelAddress = new Label(groupCommuInfo, SWT.NONE);
-		labelAddress.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		labelAddress.setText("设备地址：");
-		
-		textAddress = new Text(groupCommuInfo, SWT.BORDER);
-		GridData gd_textAddress = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_textAddress.widthHint = 120;
-		textAddress.setLayoutData(gd_textAddress);
-		textAddress.setText("<dynamic>");
-		new Label(groupCommuInfo, SWT.NONE);
-		
-		Label labelTimeout = new Label(groupCommuInfo, SWT.NONE);
-		labelTimeout.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		labelTimeout.setText("通讯超时：");
-		
-		textTimeout = new Text(groupCommuInfo, SWT.BORDER);
-		GridData gd_textTimeout = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_textTimeout.widthHint = 120;
-		textTimeout.setLayoutData(gd_textTimeout);
-		textTimeout.setText("5");
-		
-		Label lblMs = new Label(groupCommuInfo, SWT.NONE);
-		lblMs.setText("ms");
-		
-		Label labelRetry = new Label(groupCommuInfo, SWT.NONE);
-		labelRetry.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		labelRetry.setText("重发次数：");
-		
-		textRetry = new Text(groupCommuInfo, SWT.BORDER);
-		GridData gd_textRetry = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_textRetry.widthHint = 120;
-		textRetry.setLayoutData(gd_textRetry);
-		textRetry.setText("3");
-		new Label(groupCommuInfo, SWT.NONE);
-		
-		btnUsed = new Button(groupCommuInfo, SWT.CHECK);
-		btnUsed.setSelection(true);
-		btnUsed.setText("启用");
-		new Label(groupCommuInfo, SWT.NONE);
-		new Label(groupCommuInfo, SWT.NONE);
 		
 		Composite composite_1 = new Composite(composite, SWT.NONE);
 		GridData gd_composite_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -189,31 +175,31 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (acquisitionDevice.getId() == null) {// 新建
+				if (sensorDevice.getId() == null) {// 新建
 //					if ("".equals(acquisitionDevice.getName().trim())) {
 //						MessageDialog.openError(getSite().getShell(), "错误",
 //								"设备名不能为空！");
 //						return;
 //					}
 
-					acquisitionDevice.setName(textDeviceName.getText().trim());
-					acquisitionDevice.setManufacture(textManufacture.getText().trim());
-					acquisitionDevice.setType(textType.getText().trim());
-					acquisitionDevice.setFixTime(new Date());
-					acquisitionDevice.setFixPositin(textFixPositin.getText().trim());
-					acquisitionDevice.setRemark(textRemark.getText().trim());
-					acquisitionDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
-					acquisitionDevice.setTimeout(Integer.valueOf(textTimeout.getText().trim()));
-					acquisitionDevice.setRetry(Integer.valueOf(textRetry.getText().trim()));
-					acquisitionDevice.setUsed(btnUsed.getSelection());
+					sensorDevice.setName(textDeviceName.getText().trim());
+					sensorDevice.setManufacture(textManufacture.getText().trim());
+					sensorDevice.setType(textType.getText().trim());
+					sensorDevice.setFixTime(new Date());
+					sensorDevice.setFixPositin(textFixPositin.getText().trim());
+					sensorDevice.setRemark(textRemark.getText().trim());
+					sensorDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
+					sensorDevice.setNumber("".equals(text_number.getText().trim())?null:text_number.getText().trim());
+					sensorDevice.setCheckInterval("".equals(text_checkInterval.getText().trim())?null:text_checkInterval.getText().trim());
+					sensorDevice.setNickName("".equals(textNickName.getText().trim())?null:textNickName.getText().trim());
 					
 					// 更新数据库
-					acquisitionDeviceService.create(acquisitionDevice);
+					sensorDeviceService.create(sensorDevice);
 					
 					// 更新左边的树状结构
 					Object parentObject;
-					parentObject = acquisitionDevice.getChannel();
-					ScadaDeviceTreeView.treeViewer.add(parentObject, acquisitionDevice);
+					parentObject = sensorDevice.getRtuDevice();
+					ScadaDeviceTreeView.treeViewer.add(parentObject, sensorDevice);
 					ScadaDeviceTreeView.treeViewer.setExpandedState(parentObject, true);
 
 				}
@@ -223,36 +209,31 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 								"设备名不能为空！");
 						return;
 					}
-					acquisitionDevice.setName(textDeviceName.getText().trim());
-					acquisitionDevice.setManufacture(textManufacture.getText().trim());
-					acquisitionDevice.setType(textType.getText().trim());
+					sensorDevice.setName(textDeviceName.getText().trim());
+					sensorDevice.setManufacture(textManufacture.getText().trim());
+					sensorDevice.setType(textType.getText().trim());
 					// 
 					int year = dateTimeFixTime.getYear();
 					int month = dateTimeFixTime.getMonth();
 					int day = dateTimeFixTime.getDay();
 					Date fixTime = new Date(year-1900,month,day);
-					acquisitionDevice.setFixTime(fixTime);
+					sensorDevice.setFixTime(fixTime);
 					
-					acquisitionDevice.setFixPositin(textFixPositin.getText().trim());
-					acquisitionDevice.setRemark(textRemark.getText().trim());
-					acquisitionDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
-					acquisitionDevice.setTimeout(Integer.valueOf(textTimeout.getText().trim()));
-					acquisitionDevice.setRetry(Integer.valueOf(textRetry.getText().trim()));
-					acquisitionDevice.setUsed(btnUsed.getSelection());
-					
+					sensorDevice.setFixPositin(textFixPositin.getText().trim());
+					sensorDevice.setRemark(textRemark.getText().trim());
+					sensorDevice.setAddress(Integer.valueOf(textAddress.getText().trim()));
+					sensorDevice.setNumber("".equals(text_number.getText().trim())?null:text_number.getText().trim());
+					sensorDevice.setCheckInterval("".equals(text_checkInterval.getText().trim())?null:text_checkInterval.getText().trim());
+					sensorDevice.setNickName("".equals(textNickName.getText().trim())?null:textNickName.getText().trim());
 					// 更新数据库
-					acquisitionDeviceService.update(acquisitionDevice);
+					sensorDeviceService.update(sensorDevice);
 					
 					// 更新左边的树状结构
-					ScadaDeviceTreeView.treeViewer.update(acquisitionDevice, null);
+					ScadaDeviceTreeView.treeViewer.update(sensorDevice, null);
 
 				}
 
-				IWorkbenchPage page = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage();
-				IWorkbenchPart part = page.getActivePart();
-				if (part instanceof IViewPart)
-					page.hideView((IViewPart) part);
+				LayoutUtil.hideViewPart();
 				
 			}
 		});
@@ -263,18 +244,14 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IWorkbenchPage page = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage();
-				IWorkbenchPart part = page.getActivePart();
-				if (part instanceof IViewPart)
-					page.hideView((IViewPart) part);
+				LayoutUtil.hideViewPart();
 			}
 		});
 		btnCancel.setText("取消(C)");
 		btnCancel.setBounds(143, 10, 60, 27);
 
 		ViewPropertyChange.getInstance()
-				.addPropertyChangeListener("area", this);
+				.addPropertyChangeListener("sensorDeviceConfig", this);
 	}
 
 	@Override
@@ -284,16 +261,16 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(FirePropertyConstants.ACQUISITIONDEVICE_ADD)) {
-			acquisitionDevice = new AcquisitionDevice();
+		if (event.getProperty().equals(FirePropertyConstants.SENSORDEVICE_ADD)) {
+			sensorDevice = new SensorDevice();
 			Object object = event.getNewValue();
-			if (object instanceof AcquisitionChannel) {
-				acquisitionDevice.setChannel((AcquisitionChannel) object);
+			if (object instanceof AcquisitionDevice) {
+				sensorDevice.setRtuDevice((AcquisitionDevice) object);
 			} else {
-				acquisitionDevice.setChannel(null);
+				sensorDevice.setRtuDevice(null);
 			}
 //			// 初始化控件值
-			textDeviceName.setText("PDM");
+			textDeviceName.setText("");
 			textManufacture.setText("丹东华通测控有限公司");
 			textType.setText("");
 			Date fixTime = new Date();
@@ -305,36 +282,35 @@ public class ScadaDeviceIndexView extends ViewPart implements IPropertyChangeLis
 			textFixPositin.setText("");
 			textRemark.setText("");
 			textAddress.setText("");
-			textTimeout.setText("500");
-			textRetry.setText("2");
-			btnUsed.setSelection(false);
+			text_number.setText("");
+			text_checkInterval.setText("");
 			
 		} else if (event.getProperty().equals(
-				FirePropertyConstants.ACQUISITIONDEVICE_EDIT)) {
-			acquisitionDevice = (AcquisitionDevice) event.getNewValue();
+				FirePropertyConstants.SENSORDEVICE_EDIT)) {
+			sensorDevice = (SensorDevice) event.getNewValue();
 
 			// 初始化控件值
-			textDeviceName.setText(acquisitionDevice.getName());
-			textManufacture.setText(acquisitionDevice.getManufacture());
-			textType.setText(acquisitionDevice.getType());
-			Date fixTime = acquisitionDevice.getFixTime();
+			textDeviceName.setText(sensorDevice.getName());
+			textManufacture.setText(sensorDevice.getManufacture());
+			textType.setText(sensorDevice.getType());
+			Date fixTime = sensorDevice.getFixTime();
 			Calendar fixTimeCalendar = Utils.date2CalendarUtil(fixTime);
 			int year = fixTimeCalendar.get(Calendar.YEAR);
 			int month = fixTimeCalendar.get(Calendar.MONTH);
 			int day = fixTimeCalendar.get((Calendar.DAY_OF_MONTH));
 			dateTimeFixTime.setDate(year, month, day);
-			textFixPositin.setText(acquisitionDevice.getFixPositin());
-			textRemark.setText(acquisitionDevice.getRemark());
-			textAddress.setText(acquisitionDevice.getAddress() + "");
-			textTimeout.setText(acquisitionDevice.getTimeout() + "");
-			textRetry.setText(acquisitionDevice.getRetry() + "");
-			btnUsed.setSelection(btnUsed.getSelection());
+			textFixPositin.setText(sensorDevice.getFixPositin()==null?"":sensorDevice.getFixPositin());
+			textRemark.setText(sensorDevice.getRemark()==null?"":sensorDevice.getRemark());
+			textAddress.setText(sensorDevice.getAddress()+"");
+			
+			text_number.setText(sensorDevice.getNumber()==null?"":sensorDevice.getNumber());
+			text_checkInterval.setText(sensorDevice.getCheckInterval()==null?"":sensorDevice.getCheckInterval());
 		}
 	}
 
 	@Override
 	public void dispose() {
-		ViewPropertyChange.getInstance().removePropertyChangeListener("area");
+		ViewPropertyChange.getInstance().removePropertyChangeListener("sensorDeviceConfig");
 		super.dispose();
 	}
 }

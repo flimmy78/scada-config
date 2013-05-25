@@ -41,45 +41,45 @@
      
       <view
             allowMultiple="true"
-            class="com.ht.scada.config.view.ScadaDeviceIndexView"
+            class="com.ht.scada.config.view.ScadaDeviceConfigView"
             icon="icons/acquisition_device.png"
-            id="com.ht.scada.config.view.ScadaDeviceIndexView"
-            name="采集设备配置索引">
+            id="com.ht.scada.config.view.ScadaDeviceConfigView"
+            name="监控设备配置">
       </view>
       <view
             allowMultiple="true"
-            class="com.ht.scada.config.view.ScadaChannelIndexView"
+            class="com.ht.scada.config.view.ScadaChannelConfigView"
             icon="icons/acquisition_channel.png"
-            id="com.ht.scada.config.view.ScadaChannelIndexView"
-            name="采集通道配置索引">
+            id="com.ht.scada.config.view.ScadaChannelConfigView"
+            name="采集通道配置">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.MainIndexView"
             icon="icons/major_tag.png"
             id="com.ht.scada.config.view.MainIndexView"
-            name="配置索引">
+            name="监控对象索引">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.EndTagView"
             icon="icons/end_tag.gif"
             id="com.ht.scada.config.view.EndTagView"
-            name="配置监控对象">
+            name="监控对象配置">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.AreaIndexView"
             icon="icons/index_area_node.gif"
             id="com.ht.scada.config.view.AreaIndexView"
-            name="配置常规分类">
+            name="常规分类配置">
       </view>
       <view
             allowMultiple="true"
             class="com.ht.scada.config.view.EnergyIndexView"
             icon="icons/index_energy_node.gif"
             id="com.ht.scada.config.view.EnergyIndexView"
-            name="配置能耗分类">
+            name="能耗分类配置">
       </view>
       <!-- -->
       <view
@@ -112,18 +112,6 @@
       </view>
       <view
             allowMultiple="true"
-            class="com.ht.scada.config.view.AquisitionChannelView"
-            id="com.ht.scada.config.view.AquisitionChannelView"
-            name="配置采集通道">
-      </view>
-      <view
-            allowMultiple="true"
-            class="com.ht.scada.config.view.AquisitionDeviceView"
-            id="com.ht.scada.config.view.AquisitionDeviceView"
-            name="配置采集设备">
-      </view>
-      <view
-            allowMultiple="true"
             class="com.ht.scada.config.view.VariableGroupConfigView"
             icon="icons/menu_variable_group.png"
             id="com.ht.scada.config.view.VariableGroupConfigView"
@@ -135,6 +123,13 @@
             icon="icons/menu_variable_template.png"
             id="com.ht.scada.config.view.VariableTemplateConfigView"
             name="变量模板配置">
+      </view>
+      <view
+            allowMultiple="true"
+            class="com.ht.scada.config.view.ScadaSensorConfigView"
+            icon="icons/acquisition_device.png"
+            id="com.ht.scada.config.view.ScadaSensorConfigView"
+            name="传感器配置">
       </view>
    </extension>
    <extension

@@ -4,6 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -28,6 +29,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
+import com.ht.scada.common.tag.entity.SensorDevice;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.service.AcquisitionDeviceService;
 import com.ht.scada.config.scadaconfig.Activator;
@@ -61,27 +63,23 @@ public class ScadaDeviceTreeView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		
-		Composite filterComposite = new Composite(parent, SWT.NONE);
+		Composite filterComposite = new Composite(parent, SWT.BORDER);
 		filterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label label = new Label(filterComposite, SWT.NONE);
-		label.setBounds(334, 5, 94, 17);
-		label.setText("第1页/共4页");
+		label.setBounds(188, 5, 51, 17);
+		label.setText("1 / 3 ");
 		
 		Button btnNewButton = new Button(filterComposite, SWT.NONE);
-		btnNewButton.setBounds(145, 0, 80, 27);
+		btnNewButton.setBounds(67, 2, 51, 22);
 		btnNewButton.setText("上一页");
 		
 		Button btnNewButton_1 = new Button(filterComposite, SWT.NONE);
-		btnNewButton_1.setBounds(248, 0, 80, 27);
+		btnNewButton_1.setBounds(124, 2, 48, 22);
 		btnNewButton_1.setText("下一页");
 		
-		Label label_1 = new Label(filterComposite, SWT.NONE);
-		label_1.setBounds(10, 5, 61, 17);
-		label_1.setText("每页显示：");
-		
 		Combo combo = new Combo(filterComposite, SWT.NONE);
-		combo.setBounds(77, 0, 51, 25);
+		combo.setBounds(10, 2, 51, 20);
 		combo.setText("100");
 		
 		Composite treeComposite = new Composite(parent, SWT.NONE);
@@ -163,7 +161,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 								PlatformUI.getWorkbench()
 										.getActiveWorkbenchWindow()
 										.getActivePage()
-										.showView(ScadaChannelIndexView.ID);
+										.showView(ScadaChannelConfigView.ID);
 							} catch (PartInitException e) {
 								e.printStackTrace();
 							}
@@ -187,7 +185,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 						try {
 							PlatformUI.getWorkbench()
 									.getActiveWorkbenchWindow().getActivePage()
-									.showView(ScadaDeviceIndexView.ID);
+									.showView(ScadaDeviceConfigView.ID);
 						} catch (PartInitException e) {
 							e.printStackTrace();
 						}
@@ -201,6 +199,8 @@ public class ScadaDeviceTreeView extends ViewPart {
 				};
 				objectIndex.setText("添加设备(&A)");
 				menuMng.add(objectIndex);
+				
+				menuMng.add(new Separator());
 
 				// ===============修改采集通道(E)=======================
 				objectIndex = new Action() {
@@ -208,7 +208,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 						try {
 							PlatformUI.getWorkbench()
 									.getActiveWorkbenchWindow().getActivePage()
-									.showView(ScadaChannelIndexView.ID);
+									.showView(ScadaChannelConfigView.ID);
 						} catch (PartInitException e) {
 							e.printStackTrace();
 						}
@@ -245,7 +245,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 						try {
 							PlatformUI.getWorkbench()
 									.getActiveWorkbenchWindow().getActivePage()
-									.showView(ScadaDeviceIndexView.ID);
+									.showView(ScadaSensorConfigView.ID);
 						} catch (PartInitException e) {
 							e.printStackTrace();
 						}
@@ -257,6 +257,8 @@ public class ScadaDeviceTreeView extends ViewPart {
 				};
 				objectIndex.setText("添加传感器(&A)");
 				menuMng.add(objectIndex);
+				
+				menuMng.add(new Separator());
 
 				// ===============修改设备(E)=======================
 				objectIndex = new Action() {
@@ -264,7 +266,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 						try {
 							PlatformUI.getWorkbench()
 									.getActiveWorkbenchWindow().getActivePage()
-									.showView(ScadaChannelIndexView.ID);
+									.showView(ScadaChannelConfigView.ID);
 						} catch (PartInitException e) {
 							e.printStackTrace();
 						}
@@ -301,7 +303,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 		if (object instanceof AcquisitionChannel) {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().showView(ScadaChannelIndexView.ID);
+						.getActivePage().showView(ScadaChannelConfigView.ID);
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}
@@ -310,12 +312,21 @@ public class ScadaDeviceTreeView extends ViewPart {
 		} else if (object instanceof AcquisitionDevice) {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().showView(ScadaDeviceIndexView.ID);
+						.getActivePage().showView(ScadaDeviceConfigView.ID);
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}
 			ViewPropertyChange.getInstance().firePropertyChangeListener(
 					FirePropertyConstants.ACQUISITIONDEVICE_EDIT, object);
+		} else if (object instanceof SensorDevice) {
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().showView(ScadaSensorConfigView.ID);
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+			ViewPropertyChange.getInstance().firePropertyChangeListener(
+					FirePropertyConstants.SENSORDEVICE_EDIT, object);
 		}
 		
 	}
