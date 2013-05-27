@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.ht.scada.common.tag.entity.VarGroupCfg;
+import com.ht.scada.common.tag.type.entity.CommunicationProtocalType;
+import com.ht.scada.common.tag.type.entity.DataType;
 import com.ht.scada.common.tag.type.entity.EndTagExtInfoName;
 import com.ht.scada.common.tag.type.entity.EndTagExtInfoValue;
 import com.ht.scada.common.tag.type.entity.EndTagSubType;
@@ -308,9 +310,9 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType70 = new VarSubType("JLC_SL_SH","水量瞬时流量",varGroupCfgJiLiangChe,varTypeYC);
 		VarSubType varSubType71 = new VarSubType("JLC_SL_LJ","水量瞬时流量",varGroupCfgJiLiangChe,varTypeYM);
 		VarSubType varSubType72 = new VarSubType("JLC_HSL_SH","瞬时含水率",varGroupCfgJiLiangChe,varTypeYC);
-		VarSubType varSubType73 = new VarSubType("JLC_WD_SH","温度",varGroupCfgJiLiangChe,varTypeYC);
-		VarSubType varSubType74 = new VarSubType("JLC_YL_SH","压力",varGroupCfgJiLiangChe,varTypeYC);
-		VarSubType varSubType75 = new VarSubType("JLC_MD_SH","密度",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType73 = new VarSubType("JLC_WD_SH","计量车温度",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType74 = new VarSubType("JLC_YL_SH","计量车压力",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType75 = new VarSubType("JLC_MD_SH","计量车密度",varGroupCfgJiLiangChe,varTypeYC);
 		
 		VarSubType varSubType76 = new VarSubType("ZC_ZQLL_SH","蒸汽流量瞬时值",varGroupCfgZhuCai,varTypeYC);
 		VarSubType varSubType77 = new VarSubType("ZC_ZQLL_LJ","蒸汽流量累计值",varGroupCfgZhuCai,varTypeYM);
@@ -326,9 +328,13 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType86 = new VarSubType("RTU_ZIGBEE_STATUS","ZigBee通讯状态",varGroupCfgRTUStatus,varTypeYX);
 		
 		VarSubType varSubType87 = new VarSubType("CGQ_RTU_STATUS","传感器通讯状态",varGroupCfgSensorRun,varTypeYX);
+		varSubType87.setRemark("非唯一子类型，需用传感器别名区分，格式为\"子类型名|传感器别名\"");
 		VarSubType varSubType88 = new VarSubType("CGQ_RTU_TIME","传感器运行时间",varGroupCfgSensorRun,varTypeYC);
+		varSubType88.setRemark("非唯一子类型，需用传感器别名区分，格式为\"子类型名|传感器别名\"");
 		VarSubType varSubType89 = new VarSubType("CGQ_REMAINED_TIME","剩余工作时间",varGroupCfgSensorRun,varTypeYC);
+		varSubType89.setRemark("非唯一子类型，需用传感器别名区分，格式为\"子类型名|传感器别名\"");
 		VarSubType varSubType90 = new VarSubType("CGQ_REMAINED_DIANLIANG","剩余电量",varGroupCfgSensorRun,varTypeYC);
+		varSubType90.setRemark("非唯一子类型，需用传感器别名区分，格式为\"子类型名|传感器别名\"");
 		
 		VarSubType varSubType91 = new VarSubType("ZYZ_RU_KOU_WEN_DU","入口温度",varGroupCfgZYZYC,varTypeYC);
 		VarSubType varSubType92 = new VarSubType("ZYZ_CHU_KOU_WEN_DU","出口温度",varGroupCfgZYZYC,varTypeYC);
@@ -487,6 +493,32 @@ public class ProjectInitWindow extends ApplicationWindow {
 		endInfoValueList.add(endTagExtInfoValue4);
 		endInfoValueList.add(endTagExtInfoValue5);
 		
+		List<DataType> dataTypeList = new ArrayList<DataType>();
+		DataType dataType1 = new DataType("BOOL", "布尔型");
+		DataType dataType2 = new DataType("INT32", "整型32位");
+		DataType dataType3 = new DataType("INT16", "整型16位");
+		DataType dataType4 = new DataType("BCD", "BCD码");
+		DataType dataType5 = new DataType("MOD10000", "MOD10000");
+		DataType dataType6 = new DataType("FLOAT", "浮点型32位");
+		DataType dataType7 = new DataType("DOUBLE", "双浮点型64位");
+		dataTypeList.add(dataType1);
+		dataTypeList.add(dataType2);
+		dataTypeList.add(dataType3);
+		dataTypeList.add(dataType4);
+		dataTypeList.add(dataType5);
+		dataTypeList.add(dataType6);
+		dataTypeList.add(dataType7);
+		
+		List<CommunicationProtocalType> commProtocalList = new ArrayList<CommunicationProtocalType>();
+		CommunicationProtocalType communicationProtocalType1 = new CommunicationProtocalType("IEC104", "IEC104协议");
+		CommunicationProtocalType communicationProtocalType2 = new CommunicationProtocalType("ModbusTCP", "ModbusTCP协议");
+		CommunicationProtocalType communicationProtocalType3 = new CommunicationProtocalType("ModbusRTU", "ModbusRTU协议");
+		CommunicationProtocalType communicationProtocalType4 = new CommunicationProtocalType("DL645", "DL645协议");
+		commProtocalList.add(communicationProtocalType1);
+		commProtocalList.add(communicationProtocalType2);
+		commProtocalList.add(communicationProtocalType3);
+		commProtocalList.add(communicationProtocalType4);
+		
 		typeService.insertMajorTagType(majorTagTypeList);
 		typeService.insertEndTagType(endTagTypeList);
 		typeService.insertEndTagSubType(endTagSubTypeList);
@@ -495,6 +527,8 @@ public class ProjectInitWindow extends ApplicationWindow {
 		typeService.insertVarSubType(varSubTypeList);
 		typeService.insertEndTagExtInfoName(endInfoNameList);
 		typeService.insertEndTagExtInfoValue(endInfoValueList);
+		typeService.insertDataType(dataTypeList);
+		typeService.insertCommunicationProtocalType(commProtocalList);
 
 	}
 

@@ -46,11 +46,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ht.scada.common.tag.entity.TagCfgTpl;
+import com.ht.scada.common.tag.entity.VarGroupCfg;
 import com.ht.scada.common.tag.service.TagCfgTplService;
+import com.ht.scada.common.tag.type.entity.DataType;
 import com.ht.scada.common.tag.type.entity.VarSubType;
 import com.ht.scada.common.tag.type.entity.VarType;
 import com.ht.scada.common.tag.type.service.TypeService;
-import com.ht.scada.common.tag.util.DataType;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
 import com.ht.scada.config.util.PinyinComparator;
@@ -62,62 +63,76 @@ import com.ht.scada.config.util.PinyinComparator;
  * 
  */
 public class VariableTemplateConfigView extends ViewPart {
-
+	public static final String ID = "com.ht.scada.config.view.VariableTemplateConfigView";
+	
 	private static final Logger log = LoggerFactory
 			.getLogger(VariableTemplateConfigView.class);
-
-	// private boolean isAdded = false; // 是否是新增变量标志
-	private String selectedTplName = null; // 选定的变量模板名字
-	private String addedTplName = null; // 新增的变量模板名字
-	private String[] varTypeArray; // 变量类型
-	private String[] varSubTypeArray;	//变量子类型
-	private String[] varDataTypeArray;	//值类型	
-
-	public VariableTemplateConfigView() {
-		tplNameList = tagCfgTplService.findAllTplName();
-		
-		List<VarType> varTypeList = typeService.getAllVarType();
-		List<VarSubType> varSubTypeList = typeService.getAllVarSubType();
-
-		int length = varTypeList.size();
-		varTypeArray = new String[length + 1];
-		varTypeArray[0] = "";
-		for (int i = 1; i <= length; i++) {
-			varTypeArray[i] = varTypeList.get(i - 1).getValue();
-		}
-		
-		int len = varSubTypeList.size();
-		varSubTypeArray = new String[len + 1];
-		varSubTypeArray[0] = "";
-		for (int i = 1; i <= len; i++) {
-			varSubTypeArray[i] = varSubTypeList.get(i - 1).getValue();
-		}
-		
-		int len1 = DataType.values().length;
-		varDataTypeArray = new String[len1 + 1];
-		varDataTypeArray[0] = "";
-		for (int i = 1; i <= len1; i++) {
-			varDataTypeArray[i] = DataType.values()[i - 1].getValue();
-		}
-
-	}
-
+	
 	private TagCfgTplService tagCfgTplService = (TagCfgTplService) Activator
 			.getDefault().getApplicationContext().getBean("tagCfgTplService");
-	private TypeService typeService = (TypeService) Activator.getDefault()
+	private final TypeService typeService = (TypeService) Activator.getDefault()
 			.getApplicationContext().getBean("typeService");
 
 	private MenuManager menuMng;
 
-	public static final String ID = "com.ht.scada.config.view.VariableTemplateConfigView";
 	private Text text_tpl_name;
 	private ListViewer listViewer_1;
 	private List<String> tplNameList; // 所有变量模板名字
 	private List<TagCfgTpl> tagCfgTplList = new ArrayList<>(); // 当前模板所有变量
 	private GridTableViewer gridTableViewer;
 	private List<TagCfgTpl> deletedTplList = new ArrayList<>(); // 要删除的变量模板
+	
+	private List<VarType> varTypeList;
+	private List<VarSubType> varSubTypeList;
+	private List<VarGroupCfg> varGroupCfgList;
+	private List<DataType> dataTypeList;
+	private List<VarSubType> allSubTypeList;
+	
+	private String selectedTplName = null; // 选定的变量模板名字
+	private String addedTplName = null; // 新增的变量模板名字
+	private String[] varTypeArray = new String[]{""}; // 变量类型
+	private String[] varSubTypeArray = new String[]{""};	//变量子类型
+	private String[] varDataTypeArray = new String[]{""};	//值类型	
 
-	// private List<TagCfgTpl> addedTagTplList = new ArrayList<>(); //新增的变量模板
+	public VariableTemplateConfigView() {
+		tplNameList = tagCfgTplService.findAllTplName();
+		//类型
+		varTypeList = typeService.getAllVarType();
+		if(varTypeList != null && !varTypeList.isEmpty()) {
+			int length = varTypeList.size();
+			varTypeArray = new String[length + 1];
+			varTypeArray[0] = "";
+			for (int i = 1; i <= length; i++) {
+				varTypeArray[i] = varTypeList.get(i - 1).getValue();
+			}
+		}
+		//子类型
+		varSubTypeList = typeService.getAllVarSubType();
+		allSubTypeList = typeService.getAllVarSubType();
+		if(varSubTypeList != null && !varSubTypeList.isEmpty()) {
+			int len = varSubTypeList.size();
+			varSubTypeArray = new String[len + 1];
+			varSubTypeArray[0] = "";
+			for (int i = 1; i <= len; i++) {
+				varSubTypeArray[i] = varSubTypeList.get(i - 1).getValue();
+			}
+		}
+		//分组
+		varGroupCfgList = typeService.getAllVarGroupCfg();
+		
+		//值类型
+		dataTypeList = typeService.getAllDataType();
+		if(dataTypeList != null && !dataTypeList.isEmpty()) {
+			int len1 = dataTypeList.size();
+			varDataTypeArray = new String[len1 + 1];
+			varDataTypeArray[0] = "";
+			for (int i = 1; i <= len1; i++) {
+				varDataTypeArray[i] = dataTypeList.get(i - 1).getValue();
+			}
+		}
+		
+
+	}
 
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -281,11 +296,12 @@ public class VariableTemplateConfigView extends ViewPart {
 					protected Object getValue(Object element) {
 						TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
 						if (tagCfgTpl.getVarType() != null) {
-							for (int i = 1; i < varTypeArray.length; i++) {
-								if (tagCfgTpl.getVarType().equals(
-										VarType.getByValue(varTypeArray[i]))) {
+							int i = 1;
+							for (VarType varType : varTypeList) {
+								if (varType.getName().equals(tagCfgTpl.getVarType())) {
 									return i;
 								}
+								i++;
 							}
 						}
 						return 0;
@@ -296,9 +312,24 @@ public class VariableTemplateConfigView extends ViewPart {
 						int index = (int)value;
 						if (index<=0) {
 							tagCfgTpl.setVarType(null);
+							//设置子类型为空
+							varSubTypeArray = new String[]{""};
+							varSubTypeList.clear();
+							
 						} else {
-							tagCfgTpl.setVarType(VarType
-									.getByValue(varTypeArray[index]));
+							tagCfgTpl.setVarType(varTypeList.get(index-1).getName());
+							
+							//重新初始化子类型
+							varSubTypeList = typeService.getVarSubTypeByVarTypeName(tagCfgTpl.getVarType());
+							if(varSubTypeList != null && !varSubTypeList.isEmpty()) {
+								int len = varSubTypeList.size();
+								varSubTypeArray = new String[len + 1];
+								varSubTypeArray[0] = "";
+								for (int i = 1; i <= len; i++) {
+									varSubTypeArray[i] = varSubTypeList.get(i - 1).getValue();
+								}
+							}
+							
 						}
 
 						gridTableViewer.update(tagCfgTpl, null);
@@ -325,11 +356,12 @@ public class VariableTemplateConfigView extends ViewPart {
 			protected Object getValue(Object element) {
 				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
 				if (tagCfgTpl.getSubType() != null) {
-					for (int i = 1; i < varSubTypeArray.length; i++) {
-						if (tagCfgTpl.getSubType().equals(
-								VarSubType.getByValue(varSubTypeArray[i]))) {
+					int i = 1;
+					for (VarSubType varSubType : varSubTypeList) {
+						if (varSubType.getName().equals(tagCfgTpl.getSubType())) {
 							return i;
 						}
+						i++;
 					}
 				}
 				return 0;
@@ -340,9 +372,18 @@ public class VariableTemplateConfigView extends ViewPart {
 				int index = (int)value;
 				if (index<=0) {
 					tagCfgTpl.setSubType(null);
+					//设置变量分组为空
+					tagCfgTpl.setVarGroup(null);
+					//设置变量名为空
+					tagCfgTpl.setVarName(null);
 				} else {
-					tagCfgTpl.setSubType(VarSubType
-							.getByValue(varSubTypeArray[index]));
+					VarSubType varSubType = varSubTypeList.get(index-1);
+					tagCfgTpl.setSubType(varSubType.getName());
+					//自动设置变量分组
+					tagCfgTpl.setVarGroup(varSubType.getVarGroupCfg().getName());
+					//设置变量名
+					tagCfgTpl.setVarName(varSubType.getName().toLowerCase());
+					// TODO 非唯一的需要处理
 				}
 
 				gridTableViewer.update(tagCfgTpl, null);
@@ -360,6 +401,31 @@ public class VariableTemplateConfigView extends ViewPart {
 		GridColumn gridColumn_3 = gridViererColumn_3.getColumn();
 		gridColumn_3.setText("变量标志");
 		gridColumn_3.setWidth(70);
+		gridViererColumn_3.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getVarName();
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {
+					MessageDialog.openError(grid.getShell(), "错误", "变量标志不能为空！");
+					return;
+				}
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setVarName((String) value);
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		GridViewerColumn gridViewerColumn_5 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
@@ -581,7 +647,7 @@ public class VariableTemplateConfigView extends ViewPart {
 				if (tagCfgTpl.getDataType() != null) {
 					for (int i = 1; i < varDataTypeArray.length; i++) {
 						if (tagCfgTpl.getDataType().equals(
-								DataType.getByValue(varDataTypeArray[i]))) {
+								getDataType(varDataTypeArray[i]).getName())) {
 							return i;
 						}
 					}
@@ -595,8 +661,7 @@ public class VariableTemplateConfigView extends ViewPart {
 				if (index<=0) {
 					tagCfgTpl.setDataType(null);
 				} else {
-					tagCfgTpl.setDataType(DataType
-							.getByValue(varDataTypeArray[index]));
+					tagCfgTpl.setDataType(getDataType(varDataTypeArray[index]).getName());
 				}
 
 				gridTableViewer.update(tagCfgTpl, null);
@@ -883,14 +948,14 @@ public class VariableTemplateConfigView extends ViewPart {
 
 				for (TagCfgTpl tct : tagCfgTplList) {
 					tct.setTplName(text_tpl_name.getText().trim());//更新模板名字
-					//更新变量分组与变量Key
-					if(tct.getSubType() == null) {
-						tct.setVarGroup(null);
-						tct.setVarName(null);
-					} else {
-						tct.setVarGroup(tct.getSubType().getVarGroup());
-						tct.setVarName(tct.getSubType().toString().toLowerCase());
-					}
+//					//更新变量分组与变量Key
+//					if(tct.getSubType() == null) {
+//						tct.setVarGroup(null);
+//						tct.setVarName(null);
+//					} else {
+////						tct.setVarGroup(tct.getSubType().getVarGroup());
+////						tct.setVarName(tct.getSubType().toString().toLowerCase());
+//					}
 					
 					
 					tagCfgTplService.update(tct);
@@ -902,6 +967,8 @@ public class VariableTemplateConfigView extends ViewPart {
 				deletedTplList.clear();
 				
 				gridTableViewer.refresh();
+				
+				MessageDialog.openInformation(gridTableViewer.getGrid().getShell(), "提示", "保存成功！");
 			}
 		});
 		button_1.setText("  保 存 模 板  ");
@@ -969,7 +1036,6 @@ public class VariableTemplateConfigView extends ViewPart {
 				};
 				action.setText("删除变量模板");
 				menuMng.add(action);
-
 			}
 		}
 
@@ -985,7 +1051,7 @@ public class VariableTemplateConfigView extends ViewPart {
 		super.dispose();
 	}
 
-	private static class ViewerLabelProvider_1 extends LabelProvider implements
+	private class ViewerLabelProvider_1 extends LabelProvider implements
 			ITableLabelProvider {
 		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
@@ -1001,14 +1067,11 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 0:// 变量名
 				return tagCfgTpl.getTagName();
 			case 1:// 变量类型
-				return tagCfgTpl.getVarType() == null ? null : tagCfgTpl
-						.getVarType().getValue();
+				return tagCfgTpl.getVarType() == null ? null : getVarType(tagCfgTpl.getVarType()).getValue();
 			case 2:// 变量子类型
-				return tagCfgTpl.getSubType() == null ? null : tagCfgTpl
-						.getSubType().getValue();
+				return tagCfgTpl.getSubType() == null ? null : getVarSubType(tagCfgTpl.getSubType()).getValue();
 			case 3:// 变量分组
-				return tagCfgTpl.getVarGroup() == null ? null : tagCfgTpl
-						.getVarGroup().getValue();
+				return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
 			case 4:// 变量key
 				return tagCfgTpl.getVarName();
 			case 5:// 功能码
@@ -1022,8 +1085,7 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 9:// 位偏移量
 				return String.valueOf(tagCfgTpl.getBitOffset());
 			case 10:// 值类型
-				return tagCfgTpl.getDataType() == null ? null : tagCfgTpl
-						.getDataType().getValue();
+				return tagCfgTpl.getDataType() == null ? null : getDataType(tagCfgTpl.getDataType()).getValue();
 			case 11:// 基数
 				return tagCfgTpl.getBaseValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getBaseValue());
@@ -1104,4 +1166,67 @@ public class VariableTemplateConfigView extends ViewPart {
 		gridTableViewer.refresh();
 
 	}
+	/**
+	 * 通过变量名或值获得变量类型
+	 * @param key
+	 * @return
+	 */
+	private VarType getVarType(String key) {
+		if(varTypeList!=null && !varTypeList.isEmpty()) {
+			for(VarType varType : varTypeList) {
+				if(varType.getName().equals(key) || varType.getValue().equals(key)) {
+					return varType;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 通过变量名或值获得变量子类型
+	 * @param key
+	 * @return
+	 */
+	private VarSubType getVarSubType(String key) {
+		if(allSubTypeList!=null && !allSubTypeList.isEmpty()) {
+			for(VarSubType varSubType : allSubTypeList) {
+				if(varSubType.getName().equals(key) || varSubType.getValue().equals(key)) {
+					return varSubType;
+				}
+			}
+		}
+		return null;
+	}
+	/**
+	 * 通过关键字获得变量分组
+	 * @param key
+	 * @return
+	 */
+	private VarGroupCfg getVarGroupCfg(String key) {
+		if(varGroupCfgList!=null && !varGroupCfgList.isEmpty()) {
+			for(VarGroupCfg type : varGroupCfgList) {
+				if(type.getName().equals(key) || type.getValue().equals(key)) {
+					return type;
+				}
+			}
+		}
+		return null;
+	}
+	/**
+	 * 获得值类型
+	 * @param key
+	 * @return
+	 */
+	private DataType getDataType(String key) {
+		if(dataTypeList!=null && !dataTypeList.isEmpty()) {
+			for(DataType type : dataTypeList) {
+				if(type.getName().equals(key) || type.getValue().equals(key)) {
+					return type;
+				}
+			}
+		}
+		return null;
+	}
+
 }

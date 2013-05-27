@@ -24,7 +24,9 @@
 		<class>com.ht.scada.common.tag.type.entity.EndTagType</class>
 		<class>com.ht.scada.common.tag.type.entity.EndTagSubType</class>
 		<class>com.ht.scada.common.tag.type.entity.EndTagExtInfoValue</class>
+		<class>com.ht.scada.common.tag.type.entity.CommunicationProtocalType</class>
 		<class>com.ht.scada.common.tag.type.entity.EndTagExtInfoName</class>
+		<class>com.ht.scada.common.tag.type.entity.DataType</class>
 <!-- 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="hibernate.show_sql" value="true" />

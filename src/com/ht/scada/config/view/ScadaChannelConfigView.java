@@ -1,7 +1,6 @@
 package com.ht.scada.config.view;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -22,25 +21,31 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
-import com.ht.scada.common.tag.util.CommunicationProtocal;
+import com.ht.scada.common.tag.type.entity.CommunicationProtocalType;
+import com.ht.scada.common.tag.type.service.TypeService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.LayoutUtil;
-import com.ht.scada.config.util.Utils;
 import com.ht.scada.config.util.ViewPropertyChange;
 
 public class ScadaChannelConfigView extends ViewPart implements
 		IPropertyChangeListener {
 
 	public ScadaChannelConfigView() {
+		protocalTypeList = typeService.getAllCommunicationProtocalType();
+		if(protocalTypeList!=null && !protocalTypeList.isEmpty()) {
+			protocalTypeStr = new String[protocalTypeList.size()];
+			int i = 0;
+			for(CommunicationProtocalType type : protocalTypeList) {
+				protocalTypeStr[i] = type.getValue();
+				i++;
+			}
+		}
+		
 	}
 
 	public static final String ID = "com.ht.scada.config.view.ScadaChannelConfigView";
@@ -50,6 +55,8 @@ public class ScadaChannelConfigView extends ViewPart implements
 	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator
 			.getDefault().getApplicationContext()
 			.getBean("acquisitionChannelService");
+	private TypeService typeService = (TypeService) Activator.getDefault()
+			.getApplicationContext().getBean("typeService");
 	private Text textChannelName;
 	private Combo comboProtocal;
 	private Text textIdx;
@@ -60,6 +67,8 @@ public class ScadaChannelConfigView extends ViewPart implements
 	private Text textFrames;
 	private DateTime dateTimeUpdateTime;
 	private Label labelProtocal;
+	private List<CommunicationProtocalType> protocalTypeList;
+	private String[] protocalTypeStr = new String[]{""};
 
 	public void createPartControl(Composite parent) {
 		GridLayout gl_parent = new GridLayout(1, false);
@@ -101,8 +110,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 		labelProtocal.setText("通信规约：");
 
 		comboProtocal = new Combo(groupBasicInfo, SWT.READ_ONLY);
-		comboProtocal.setItems(new String[] { "IEC104", "ModbusTCP",
-				"ModbusRTU", "DL645" });
+		comboProtocal.setItems(protocalTypeStr);
 		GridData gd_comboProtocal = new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1);
 		gd_comboProtocal.widthHint = 100;
@@ -258,7 +266,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 					}
 					
 					acquisitionChannel.setName(textChannelName.getText().trim());
-					acquisitionChannel.setProtocal(CommunicationProtocal.valueOf(comboProtocal.getText()));
+					acquisitionChannel.setProtocal(getCommPotclType(comboProtocal.getText()).getName());
 					acquisitionChannel.setIdx(Integer.valueOf(textIdx.getText().trim()));
 					acquisitionChannel.setOffline(Integer.valueOf(textOffline.getText()));
 					acquisitionChannel.setIntvl(Integer.valueOf(textInterval.getText()));
@@ -309,7 +317,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 					}
 					
 					acquisitionChannel.setName(textChannelName.getText().trim());
-					acquisitionChannel.setProtocal(CommunicationProtocal.valueOf(comboProtocal.getText()));
+					acquisitionChannel.setProtocal(getCommPotclType(comboProtocal.getText()).getName());
 					acquisitionChannel.setIdx(Integer.valueOf(textIdx.getText().trim()));
 					acquisitionChannel.setOffline(Integer.valueOf(textOffline.getText()));
 					acquisitionChannel.setIntvl(Integer.valueOf(textInterval.getText()));
@@ -386,7 +394,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 
 			// ============初始化控件值============
 			textChannelName.setText(acquisitionChannel.getName());
-			comboProtocal.setText(acquisitionChannel.getProtocal().toString());
+			comboProtocal.setText(acquisitionChannel.getProtocal()==null?"":getCommPotclType(acquisitionChannel.getProtocal()).getValue());
 			textIdx.setText(acquisitionChannel.getIdx().toString());
 			textOffline.setText(acquisitionChannel.getOffline() + "");
 			textInterval.setText(String.valueOf(acquisitionChannel
@@ -410,5 +418,16 @@ public class ScadaChannelConfigView extends ViewPart implements
 	public void dispose() {
 		ViewPropertyChange.getInstance().removePropertyChangeListener("channel");
 		super.dispose();
+	}
+	
+	private CommunicationProtocalType getCommPotclType(String key) {
+		if(protocalTypeList != null && !protocalTypeList.isEmpty()) {
+			for(CommunicationProtocalType type : protocalTypeList) {
+				if(type.getName().equals(key) || type.getValue().equals(key)) {
+					return type;
+				}
+			}
+		}
+		return null;
 	}
 }

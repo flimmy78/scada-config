@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
-import com.ht.scada.common.tag.util.CommunicationProtocal;
 
 public class AcquisitionChannelServiceImplTest {
 	
@@ -27,7 +26,7 @@ public class AcquisitionChannelServiceImplTest {
 		a.setName("344");
 		a.setFrames("eeeee");
 		a.setPortInfo("dddd");
-		a.setProtocal(CommunicationProtocal.IEC104);
+		a.setProtocal("IEC104");
 		
 	  acquisitionChannelService.create(a);
   }
