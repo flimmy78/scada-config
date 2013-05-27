@@ -14,12 +14,11 @@ import com.ht.scada.config.action.OpenViewAction;
 import com.ht.scada.config.action.OpenWindowAction;
 import com.ht.scada.config.action.PerspectiveChangeAction;
 import com.ht.scada.config.perspective.RTURemotePerspective;
-import com.ht.scada.config.perspective.ScadaDevicePerspective;
 import com.ht.scada.config.perspective.ScadaObjectPerspective;
-import com.ht.scada.config.perspective.VariableConfigPerspective;
 import com.ht.scada.config.util.ImagePath;
 import com.ht.scada.config.view.AreaTreeView;
 import com.ht.scada.config.view.EnergyTreeView;
+import com.ht.scada.config.view.ScadaDeviceTreeView;
 import com.ht.scada.config.view.ScadaObjectTreeView;
 import com.ht.scada.config.view.VariableGroupConfigView;
 import com.ht.scada.config.view.VariableTemplateConfigView;
@@ -75,15 +74,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         energyViewShowAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.ENERGY_INDEX_IMAGE));
         register(energyViewShowAction);
         
-        varGroupShowAction = new OpenViewAction(window, VariableConfigPerspective.ID, VariableGroupConfigView.ID, "变量分组配置");
+        varGroupShowAction = new OpenViewAction(window, ScadaObjectPerspective.ID, VariableGroupConfigView.ID, "变量分组配置");
         varGroupShowAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.VARIABLE_GROUP_IMAGE));
         register(varGroupShowAction);
         
-        varTemplateShowAction = new OpenViewAction(window, VariableConfigPerspective.ID, VariableTemplateConfigView.ID, "变量模板配置");
+        varTemplateShowAction = new OpenViewAction(window, ScadaObjectPerspective.ID, VariableTemplateConfigView.ID, "变量模板配置");
         varTemplateShowAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.VARIABLE_TEMPLATE_IMAGE));
         register(varTemplateShowAction);
         
-        scadaDeviceChangeAction = new PerspectiveChangeAction("监控设备配置",ScadaDevicePerspective.ID, window);
+//        scadaDeviceChangeAction = new PerspectiveChangeAction("监控设备配置",ScadaDevicePerspective.ID, window);
+        scadaDeviceChangeAction = new OpenViewAction(window, ScadaObjectPerspective.ID, ScadaDeviceTreeView.ID, "监控设备配置");
         scadaDeviceChangeAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_CHANNEL_INDEX_IMAGE));
         register(scadaDeviceChangeAction);
         

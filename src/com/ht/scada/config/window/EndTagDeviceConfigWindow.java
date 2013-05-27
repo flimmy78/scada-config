@@ -87,7 +87,7 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 						return null;
 					} else {
 						AcquisitionDevice device = acquisitionDeviceService.getDeviceByChannelIdAndDeviceId(endTag.getChannelIdx(), endTag.getDeviceAddr());
-						return device==null?String.valueOf(endTag.getDeviceAddr()):endTag.getDevice().getName()+":"+endTag.getDeviceAddr();
+						return device==null?String.valueOf(endTag.getDeviceAddr()):device.getName()+":"+endTag.getDeviceAddr();
 					}
 					
 				}

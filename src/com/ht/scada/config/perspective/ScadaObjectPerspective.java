@@ -10,7 +10,12 @@ import com.ht.scada.config.view.EndTagView;
 import com.ht.scada.config.view.EnergyIndexView;
 import com.ht.scada.config.view.EnergyTreeView;
 import com.ht.scada.config.view.MainIndexView;
+import com.ht.scada.config.view.ScadaChannelConfigView;
+import com.ht.scada.config.view.ScadaDeviceConfigView;
+import com.ht.scada.config.view.ScadaDeviceTreeView;
 import com.ht.scada.config.view.ScadaObjectTreeView;
+import com.ht.scada.config.view.VariableGroupConfigView;
+import com.ht.scada.config.view.VariableTemplateConfigView;
 /**
  * 监控对象透视图
  * @author 赵磊
@@ -35,7 +40,11 @@ public class ScadaObjectPerspective implements IPerspectiveFactory {
 		leftFolder.addPlaceholder(AreaTreeView.ID);
 		leftFolder.addPlaceholder(EnergyTreeView.ID);
 		
-//		leftFolder.addView(ScadaObjectTreeView.ID);
+		leftFolder.addPlaceholder(ScadaDeviceTreeView.ID);
+		
+		leftFolder.addPlaceholder(VariableGroupConfigView.ID);
+		leftFolder.addPlaceholder(VariableTemplateConfigView.ID);
+		
 		
 		
 		IFolderLayout folder = layout.createFolder("messages", IPageLayout.LEFT, 1f, editorArea);
@@ -43,6 +52,9 @@ public class ScadaObjectPerspective implements IPerspectiveFactory {
 		folder.addPlaceholder(EndTagView.ID);
 		folder.addPlaceholder(AreaIndexView.ID);
 		folder.addPlaceholder(EnergyIndexView.ID);
+		
+		folder.addPlaceholder(ScadaChannelConfigView.ID);
+		folder.addPlaceholder(ScadaDeviceConfigView.ID);
 		
 //		layout.getViewLayout(ScadaObjectTreeView.ID).setCloseable(false);
 	}
