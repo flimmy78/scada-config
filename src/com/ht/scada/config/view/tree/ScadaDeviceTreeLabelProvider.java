@@ -59,7 +59,7 @@ public class ScadaDeviceTreeLabelProvider implements ILabelProvider {
 		if (object instanceof String) {
 			return (String) object;
 		} else if (object instanceof AcquisitionChannel) {
-			return ((AcquisitionChannel) object).getName();
+			return ((AcquisitionChannel) object).getName() + ":"+ ((AcquisitionChannel) object).getIdx();
 		} else if (object instanceof AcquisitionDevice) {
 			return ((AcquisitionDevice) object).getName() +":"+ ((AcquisitionDevice) object).getAddress();
 		}else if (object instanceof SensorDevice) {

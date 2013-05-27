@@ -57,7 +57,7 @@ public class ScadaDeviceTreeContentProvider implements ITreeContentProvider {
 			String str = (String) parentElement;
 			if (str.equals("采集通道")) { // 采集通道
 				List<AcquisitionChannel> acquisitionChannelList = acquisitionChannelService
-						.getRootAcquisitionChannel();
+						.getAllChannel();
 				if (acquisitionChannelList != null) {
 					return acquisitionChannelList.toArray();
 				}

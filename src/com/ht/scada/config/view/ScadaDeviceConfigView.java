@@ -320,7 +320,7 @@ public class ScadaDeviceConfigView extends ViewPart implements IPropertyChangeLi
 			textAddress.setText("");
 			textTimeout.setText("500");
 			textRetry.setText("2");
-			btnUsed.setSelection(false);
+			btnUsed.setSelection(true);
 			text_number.setText("");
 			text_checkInterval.setText("");
 			

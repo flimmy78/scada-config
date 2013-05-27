@@ -235,7 +235,8 @@ public class ScadaObjectTreeView extends ViewPart {
 				
 				objectIndex = new Action() {
 					public void run() {
-						
+						MessageDialog.openInformation(treeViewer.getTree().getShell(), "提示", "暂未开发");
+						return;
 					}
 				};
 				objectIndex.setText("关联所有变量模板与设备(&S)");
@@ -253,7 +254,8 @@ public class ScadaObjectTreeView extends ViewPart {
 				
 				objectIndex = new Action() {
 					public void run() {
-						
+						MessageDialog.openInformation(treeViewer.getTree().getShell(), "提示", "暂未开发");
+						return;
 					}
 				};
 				objectIndex.setText("所有监控对象IO设置(&K)");
