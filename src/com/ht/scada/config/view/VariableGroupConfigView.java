@@ -3,6 +3,7 @@ package com.ht.scada.config.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -117,7 +118,7 @@ public class VariableGroupConfigView extends ViewPart implements
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		composite.setLayout(null);
 
-		Button btnSave = new Button(composite, SWT.NONE);
+		final Button btnSave = new Button(composite, SWT.NONE);
 		btnSave.setBounds(142, 10, 52, 27);
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -125,6 +126,7 @@ public class VariableGroupConfigView extends ViewPart implements
 				for(VarGroupCfg varGroupCfg : varGroupCfgList){
 					varGroupCfgService.create(varGroupCfg);
 				}
+				MessageDialog.openInformation(btnSave.getShell(), "提示", "保存成功！");
 			}
 		});
 		btnSave.setText(" 保  存 ");

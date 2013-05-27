@@ -303,6 +303,7 @@ public class ScadaSensorConfigView extends ViewPart implements IPropertyChangeLi
 			textRemark.setText(sensorDevice.getRemark()==null?"":sensorDevice.getRemark());
 			textAddress.setText(sensorDevice.getAddress()+"");
 			
+			textNickName.setText(sensorDevice.getNickName()==null?"":sensorDevice.getNickName());
 			text_number.setText(sensorDevice.getNumber()==null?"":sensorDevice.getNumber());
 			text_checkInterval.setText(sensorDevice.getCheckInterval()==null?"":sensorDevice.getCheckInterval());
 		}

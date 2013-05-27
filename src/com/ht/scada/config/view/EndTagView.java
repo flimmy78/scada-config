@@ -49,6 +49,7 @@ import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.service.EndTagExtInfoService;
 import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.common.tag.type.entity.EndTagExtInfoName;
+import com.ht.scada.common.tag.type.entity.EndTagExtInfoValue;
 import com.ht.scada.common.tag.type.entity.EndTagSubType;
 import com.ht.scada.common.tag.type.entity.EndTagType;
 import com.ht.scada.common.tag.type.service.TypeService;
@@ -73,16 +74,38 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		EndTagSubType endTagSubType = new EndTagSubType(null, "");
 		endTagSubTypeList.add(endTagSubType);
 		
-		
+		//初始化油井阶段与油井工艺属性
+		endTagExtInfoValueStageList = typeService.getExtInfoValuesByInfoName(STAGE_ATTR);
+		endTagExtInfoValueTechList = typeService.getExtInfoValuesByInfoName(TECH_ATTR);
+		if(endTagExtInfoValueStageList!=null && !endTagExtInfoValueStageList.isEmpty()) {
+			extValueStageStr = new String[endTagExtInfoValueStageList.size()];
+			for(int i = 0;i<endTagExtInfoValueStageList.size();i++) {
+				extValueStageStr[i] = endTagExtInfoValueStageList.get(i).getValue();
+			}
+		}
+		if(endTagExtInfoValueTechList!=null && !endTagExtInfoValueTechList.isEmpty()) {
+			extValueTechStr = new String[endTagExtInfoValueTechList.size()];
+			for(int i = 0;i<endTagExtInfoValueTechList.size();i++) {
+				extValueTechStr[i] = endTagExtInfoValueTechList.get(i).getValue();
+			}
+		}
 		
 	}
 
 	public static final String ID = "com.ht.scada.config.view.EndTagView";
+	
+	private final String STAGE_ATTR = "STAGE";
+	private final String TECH_ATTR = "TECHNOLOGY";
 	private Text text_name;
 	private EndTag endTag;
 	private List<EndTagType> endTagTypeList = new ArrayList<EndTagType>();
 	private List<EndTagSubType> endTagSubTypeList = new ArrayList<EndTagSubType>();
-	private List<EndTagExtInfoName> extInfoName = new ArrayList<EndTagExtInfoName>();
+	private List<EndTagExtInfoName> endTagExtInfoNameList = new ArrayList<EndTagExtInfoName>();
+	
+	private List<EndTagExtInfoValue> endTagExtInfoValueStageList = new ArrayList<EndTagExtInfoValue>();	//采油阶段
+	private List<EndTagExtInfoValue> endTagExtInfoValueTechList = new ArrayList<EndTagExtInfoValue>();	//油井工艺
+	private String extValueStageStr[] = new String[]{""};
+	private String extValueTechStr[] = new String[]{""};
 
 	private EndTagService endTagService = (EndTagService) Activator
 			.getDefault().getApplicationContext().getBean("endTagService");
@@ -93,7 +116,6 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			.getApplicationContext().getBean("typeService");
 	private GridTableViewer gridTableViewer;
 	private List<EndTagExtInfo> endTagExtInfoList = new ArrayList<EndTagExtInfo>(); // 末端节点扩展信息列表
-//	private List<EndTagExtInfo> deletedExtInfoList = new ArrayList<>(); // 要删除的扩展信息列表
 	private ComboViewer comboViewer_endType;
 	private ComboViewer comboViewer_endSubType;
 	private Text text_code;
@@ -145,31 +167,44 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 				}
 				comboViewer_endSubType.setInput(endTagSubTypeList);
 				comboViewer_endSubType.refresh();
+
 				
-				//初始化属性
-				extInfoName = new ArrayList<EndTagExtInfoName>();
-				List<EndTagExtInfoName> nameList = typeService.getExtInfoNamesByEndTagValue(comboViewer_endType.getCombo().getText().trim());
-				if(nameList != null && !nameList.isEmpty()) {
-					extInfoName.addAll(nameList);
-				}
-				//按类型属性重新定义属性名
-				endTagExtInfoList = new ArrayList<EndTagExtInfo>();
-				if(extInfoName != null && !extInfoName.isEmpty()) {
-					for(EndTagExtInfoName name : extInfoName) {
-						EndTagExtInfo info = new EndTagExtInfo();
-						info.setEndTag(endTag);
-						info.setName(name.getValue());
-						info.setValue("");
-						info.setKeyName(name.getName());
-						
-						endTagExtInfoList.add(info);
+				IStructuredSelection iss = (IStructuredSelection) comboViewer_endType.getSelection();
+				EndTagType endTagType = (EndTagType) iss.getFirstElement();
+				if(endTagType!=null && endTagType.getName()!=null && !endTagType.getName().equals(endTag.getType())) {//类型改变了
+					//初始化属性
+					endTagExtInfoNameList = new ArrayList<EndTagExtInfoName>();
+					List<EndTagExtInfoName> nameList = typeService.getExtInfoNamesByEndTagValue(comboViewer_endType.getCombo().getText().trim());
+					if(nameList != null && !nameList.isEmpty()) {
+						endTagExtInfoNameList.addAll(nameList);
 					}
-					
+					//按类型属性重新定义属性名
+					endTagExtInfoList = new ArrayList<EndTagExtInfo>();
+					if(endTagExtInfoNameList != null && !endTagExtInfoNameList.isEmpty()) {
+						for(EndTagExtInfoName name : endTagExtInfoNameList) {
+							EndTagExtInfo info = new EndTagExtInfo();
+							info.setEndTag(endTag);
+							info.setName(name.getValue());
+							info.setValue("");
+							info.setKeyName(name.getName());
+							
+							endTagExtInfoList.add(info);
+						}
+					}
+				} else if(endTagType!=null && endTagType.getName()!=null && endTagType.getName().equals(endTag.getType())) {//仍为原来指则重新查询数据库
+					// 初始化末端节点扩展信息列表
+					endTagExtInfoList = new ArrayList<EndTagExtInfo>();
+					if (endTag.getId() != null) {
+						List<EndTagExtInfo> endTagExtInfoList = endTagExtInfoService.getByEndTagId(endTag
+								.getId());
+						if(endTagExtInfoList != null && !endTagExtInfoList.isEmpty()) {
+							endTagExtInfoList.addAll(endTagExtInfoList);
+						}
+					}
 				}
-				
+
 				gridTableViewer.setInput(endTagExtInfoList);
 				gridTableViewer.refresh();
-				
 			}
 		});
 		Combo combo = comboViewer_endType.getCombo();
@@ -218,19 +253,58 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			}
 
 			protected CellEditor getCellEditor(Object element) {
-				CellEditor ce = new TextCellEditor(grid);
-				return ce;
+				EndTagExtInfo info = (EndTagExtInfo) element;
+				if(info.getKeyName().equals(STAGE_ATTR)) {
+					ComboBoxCellEditor ce = new ComboBoxCellEditor(grid, extValueStageStr);
+					return ce;
+				} else if(info.getKeyName().equals(TECH_ATTR)) {
+					ComboBoxCellEditor ce = new ComboBoxCellEditor(grid, extValueTechStr);
+					return ce;
+				} else {
+					CellEditor ce = new TextCellEditor(grid);
+					return ce;
+				}
+				
 			}
 
 			protected Object getValue(Object element) {
 				EndTagExtInfo info = (EndTagExtInfo) element;
-				return info.getValue();
+				int i = 0;
+				if(info.getKeyName().equals(STAGE_ATTR)) {
+					for(String s : extValueStageStr) {
+						if(info.getName().equals(s)) {
+							return i;
+						}
+						i++;
+					}
+					return 0;
+				} else if(info.getKeyName().equals(TECH_ATTR)) {
+					for(String s : extValueTechStr) {
+						if(info.getName().equals(s)) {
+							return i;
+						}
+						i++;
+					}
+					return 0;
+				} else {
+					return info.getValue();
+				}
+				
 			}
 
 			protected void setValue(Object element, Object value) {
 				EndTagExtInfo info = (EndTagExtInfo) element;
 				//属性值
-				info.setValue((String) value);
+				if(info.getKeyName().equals(STAGE_ATTR)) {
+					int i = (int)value;
+					info.setValue(extValueStageStr[i]);
+				} else if(info.getKeyName().equals(TECH_ATTR)) {
+					int i = (int)value;
+					info.setValue(extValueTechStr[i]);
+				} else {
+					info.setValue((String) value);
+				}
+				
 				gridTableViewer.update(info, null);
 			}
 		});
@@ -239,48 +313,6 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		valueGridColumn.setCellSelectionEnabled(false);
 		valueGridColumn.setWidth(150);
 		valueGridColumn.setText("属性值");
-
-		Menu menu = new Menu(grid);
-		grid.setMenu(menu);
-
-		MenuItem addMenuItem = new MenuItem(menu, SWT.NONE);
-		addMenuItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				EndTagExtInfo endTagExtInfo = new EndTagExtInfo();
-				endTagExtInfo.setName("请输入名");
-				endTagExtInfo.setValue("请输入值");
-				endTagExtInfoList.add(endTagExtInfo);
-
-				gridTableViewer.setInput(endTagExtInfoList);
-				gridTableViewer.refresh();
-			}
-		});
-		addMenuItem.setText("添加扩展信息");
-
-		MenuItem deleteMenuItem = new MenuItem(menu, SWT.NONE);
-		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection selection = (IStructuredSelection) gridTableViewer
-						.getSelection();
-				if (selection.isEmpty()) {
-					MessageDialog.openWarning(grid.getShell(), "提示", "未选择！");
-					return;
-				}
-
-				GridItem gridItems[] = grid.getSelection();
-				for (GridItem gridItem : gridItems) {
-					EndTagExtInfo selectedInfo = (EndTagExtInfo) gridItem
-							.getData();
-					endTagExtInfoList.remove(selectedInfo);
-				}
-
-				gridTableViewer.setInput(endTagExtInfoList);
-				gridTableViewer.refresh();
-			}
-		});
-		deleteMenuItem.setText("删除扩展信息");
 
 		gridTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		gridTableViewer.setLabelProvider(new ViewerLabelProvider());
@@ -331,9 +363,12 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 								"监控对象名字不能为空！");
 						return;
 					}
+					endTag = endTagService.getById(endTag.getId());
 
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
+					
+					String oldType = endTag.getType();	//原始类型
 					
 					IStructuredSelection iss = (IStructuredSelection) comboViewer_endType.getSelection();
 					EndTagType endTagType = (EndTagType) iss.getFirstElement();
@@ -350,12 +385,15 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					/**
 					 * 保存属性
 					 */
-					endTagExtInfoService.deleteByEndTagId(endTag.getId());
-					endTagExtInfoService.saveAll(endTagExtInfoList);
-
+					if(oldType.equals(endTag.getType())) {
+						log.debug("类型未变，更新保存");
+						endTagExtInfoService.saveAll(endTagExtInfoList);
+					} else {
+						log.debug("类型改变，删除原来关联，保存新关联");
+						endTagExtInfoService.deleteByEndTagId(endTag.getId());
+						endTagExtInfoService.saveAll(endTagExtInfoList);
+					}
 					endTagService.update(endTag);
-					
-					
 
 					ScadaObjectTreeView.treeViewer.update(endTag, null);
 				}
@@ -373,9 +411,6 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			}
 		});
 		cancelButton.setText(" 取  消 ");
-
-		// gridTableViewer.setInput(endTagExtInfoList);
-		// gridTableViewer.refresh();
 
 		ViewPropertyChange.getInstance().addPropertyChangeListener("endtag",
 				this);
@@ -401,7 +436,25 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			comboViewer_endType.getCombo().setText("");
 			comboViewer_endSubType.getCombo().setText("");
 			
-			endTagExtInfoList.clear();
+			//初始化属性
+			endTagExtInfoNameList = new ArrayList<EndTagExtInfoName>();
+			List<EndTagExtInfoName> nameList = typeService.getExtInfoNamesByEndTagValue(comboViewer_endType.getCombo().getText().trim());
+			if(nameList != null && !nameList.isEmpty()) {
+				endTagExtInfoNameList.addAll(nameList);
+			}
+			//按类型属性重新定义属性名
+			endTagExtInfoList = new ArrayList<EndTagExtInfo>();
+			if(endTagExtInfoNameList != null && !endTagExtInfoNameList.isEmpty()) {
+				for(EndTagExtInfoName name : endTagExtInfoNameList) {
+					EndTagExtInfo info = new EndTagExtInfo();
+					info.setEndTag(endTag);
+					info.setName(name.getValue());
+					info.setValue("");
+					info.setKeyName(name.getName());
+					
+					endTagExtInfoList.add(info);
+				}
+			}
 
 		} else if (event.getProperty()
 				.equals(FirePropertyConstants.ENDTAG_EDIT)) {
@@ -411,6 +464,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			text_name.setText(endTag.getName());
 			text_code.setText(endTag.getCode()==null?"":endTag.getCode());
 
+			//初始化监控对象类型
 			if (endTag.getType() != null) {
 				for(EndTagType endTagType : endTagTypeList) {
 					if(endTagType.getName()!=null && endTagType.getName().equals(endTag.getType())) {
@@ -418,9 +472,8 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 						break;
 					}
 				}
-			} 
-			
-			if (endTag.getSubType() != null) {
+				
+				//初始化监控对象子类型
 				endTagSubTypeList = new ArrayList<EndTagSubType>();
 				EndTagSubType endTagSubType = new EndTagSubType(null, "");
 				endTagSubTypeList.add(endTagSubType);
@@ -433,28 +486,26 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 				comboViewer_endSubType.setInput(endTagSubTypeList);
 				comboViewer_endSubType.refresh();
 				
-				for(EndTagSubType sub : endTagSubTypeList) {
-					if(sub.getName()!=null && sub.getName().equals(endTag.getSubType())) {
-						comboViewer_endSubType.getCombo().setText(sub.getValue());
-						break;
+				if (endTag.getSubType() != null) {
+					for(EndTagSubType sub : endTagSubTypeList) {
+						if(sub.getName()!=null && sub.getName().equals(endTag.getSubType())) {
+							comboViewer_endSubType.getCombo().setText(sub.getValue());
+							break;
+						}
 					}
 				}
-				
-			}
-			
+			} 
 
 			// 初始化末端节点扩展信息列表
-			endTagExtInfoList.clear();
+			endTagExtInfoList = new ArrayList<EndTagExtInfo>();
 			if (endTag.getId() != null) {
 				List<EndTagExtInfo> list = endTagExtInfoService.getByEndTagId(endTag
 						.getId());
 				if(list != null && !list.isEmpty()) {
 					endTagExtInfoList.addAll(list);
-					
-					
 				}
-				
 			}
+			
 			
 
 		}

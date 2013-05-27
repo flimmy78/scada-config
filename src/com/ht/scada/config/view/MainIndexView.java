@@ -134,6 +134,8 @@ public class MainIndexView extends ViewPart implements IPropertyChangeListener {
 						MessageDialog.openError(getSite().getShell(), "错误", "索引名字不能为空！");
 						return;
 					}
+					majorTag = majorTagService.getById(majorTag.getId());
+					
 					majorTag.setName(text.getText().trim());
 					majorTag.setType(((MajorTagType)((IStructuredSelection)comboViewer.getSelection()).getFirstElement()).getName());
 
