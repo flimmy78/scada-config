@@ -195,10 +195,10 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					// 初始化末端节点扩展信息列表
 					endTagExtInfoList = new ArrayList<EndTagExtInfo>();
 					if (endTag.getId() != null) {
-						List<EndTagExtInfo> endTagExtInfoList = endTagExtInfoService.getByEndTagId(endTag
+						List<EndTagExtInfo> endTagExtList = endTagExtInfoService.getByEndTagId(endTag
 								.getId());
-						if(endTagExtInfoList != null && !endTagExtInfoList.isEmpty()) {
-							endTagExtInfoList.addAll(endTagExtInfoList);
+						if(endTagExtList != null && !endTagExtList.isEmpty()) {
+							endTagExtInfoList.addAll(endTagExtList);
 						}
 					}
 				}

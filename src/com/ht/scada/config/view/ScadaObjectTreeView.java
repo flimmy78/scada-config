@@ -246,7 +246,7 @@ public class ScadaObjectTreeView extends ViewPart {
 				
 				objectIndex = new Action() {
 					public void run() {
-						new EndTagIOConfigWindow().open();
+						new EndTagIOConfigWindow(majorTag).open();
 					}
 				};
 				objectIndex.setText("监控对象IO设置(&J)");

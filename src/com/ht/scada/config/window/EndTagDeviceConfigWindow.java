@@ -95,14 +95,10 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 				break;
 			}
 			
-			
-			// TODO Auto-generated method stub
 			return null;
 		}
 	}
 	
-	private MajorTagService majorTagService = (MajorTagService) Activator.getDefault()
-			.getApplicationContext().getBean("majorTagService");
 	private EndTagService endTagService = (EndTagService) Activator.getDefault()
 			.getApplicationContext().getBean("endTagService");
 	private TypeService typeService = (TypeService) Activator.getDefault()
@@ -352,9 +348,5 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 			}
 		}
 		return null;
-		
-		
-		
-		
 	}
 }
