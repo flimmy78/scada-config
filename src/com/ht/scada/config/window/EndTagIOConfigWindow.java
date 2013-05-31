@@ -15,10 +15,13 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.jface.window.Window;
 import org.eclipse.nebula.jface.gridviewer.GridTreeViewer;
 import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
+import org.eclipse.nebula.jface.gridviewer.internal.CellSelection;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
@@ -33,6 +36,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.ht.scada.common.tag.entity.AcquisitionDevice;
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.entity.TagCfgTpl;
@@ -42,6 +46,10 @@ import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.common.tag.service.VarIOInfoService;
 import com.ht.scada.common.tag.type.entity.EndTagType;
 import com.ht.scada.common.tag.type.service.TypeService;
+import com.ht.scada.config.dialog.FloatModifySettingsDialog;
+import com.ht.scada.config.dialog.FloatModifyTypeModel;
+import com.ht.scada.config.dialog.StringModifySettingsDialog;
+import com.ht.scada.config.dialog.StringModifyTypeModel;
 import com.ht.scada.config.scadaconfig.Activator;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.MouseAdapter;
@@ -187,6 +195,7 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 		final Grid grid = gridTableViewer.getGrid();
 		grid.setRowHeaderVisible(true);
 		grid.setHeaderVisible(true);
+		grid.setCellSelectionEnabled(true);
 		grid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		GridViewerColumn gridViewerColumn = new GridViewerColumn(gridTableViewer, SWT.NONE);
@@ -204,6 +213,7 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 		GridColumn gridColumn = gridViewerColumn_1.getColumn();
 		gridColumn.setWidth(100);
 		gridColumn.setText("基数");
+		gridColumn.setCellSelectionEnabled(true);
 		gridViewerColumn_1.setEditingSupport(new EditingSupport(gridTableViewer) {
 			protected boolean canEdit(Object element) {
 				if(element instanceof VarIOInfo) {
@@ -230,10 +240,42 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 			}
 
 			protected void setValue(Object element, Object value) {
-				if(element instanceof VarIOInfo) {
-					VarIOInfo io = (VarIOInfo) element;
-					io.setBaseValue(Float.valueOf((String)value));
-					gridTableViewer.update(io, null);
+				TreeSelection cellSel = (TreeSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List list = cellSel.toList();
+				
+				if (list.size() > 1) {
+					FloatModifyTypeModel im = new FloatModifyTypeModel();// 值修改方式模型
+					Float channelIndex = Float.valueOf((String)value);
+					im.setBase(channelIndex);
+					FloatModifySettingsDialog dlg = new FloatModifySettingsDialog(
+							getShell(), im, list.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						for(Object o : list) {
+							if(o instanceof VarIOInfo) {
+								VarIOInfo v = (VarIOInfo)o;
+								v.setBaseValue(channelIndex);
+
+								if (im.getType() > 0) {
+									channelIndex = channelIndex + im.getInterval();
+								} else if (im.getType() < 0) {
+									channelIndex = channelIndex - im.getInterval();
+								}
+								gridTableViewer.update(list.toArray(), null);
+							}
+						}
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					if(element instanceof VarIOInfo) {
+						VarIOInfo io = (VarIOInfo) element;
+						io.setBaseValue(Float.valueOf((String)value));
+						gridTableViewer.update(io, null);
+					}
 				}
 			}
 		});
@@ -268,10 +310,42 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 			}
 
 			protected void setValue(Object element, Object value) {
-				if(element instanceof VarIOInfo) {
-					VarIOInfo io = (VarIOInfo) element;
-					io.setCoefValue(Float.valueOf((String)value));
-					gridTableViewer.update(io, null);
+				TreeSelection cellSel = (TreeSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List list = cellSel.toList();
+				
+				if (list.size() > 1) {
+					FloatModifyTypeModel im = new FloatModifyTypeModel();// 值修改方式模型
+					Float channelIndex = Float.valueOf((String)value);
+					im.setBase(channelIndex);
+					FloatModifySettingsDialog dlg = new FloatModifySettingsDialog(
+							getShell(), im, list.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						for(Object o : list) {
+							if(o instanceof VarIOInfo) {
+								VarIOInfo v = (VarIOInfo)o;
+								v.setCoefValue(channelIndex);
+
+								if (im.getType() > 0) {
+									channelIndex = channelIndex + im.getInterval();
+								} else if (im.getType() < 0) {
+									channelIndex = channelIndex - im.getInterval();
+								}
+								gridTableViewer.update(list.toArray(), null);
+							}
+						}
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					if(element instanceof VarIOInfo) {
+						VarIOInfo io = (VarIOInfo) element;
+						io.setCoefValue(Float.valueOf((String)value));
+						gridTableViewer.update(io, null);
+					}
 				}
 			}
 		});

@@ -12,15 +12,20 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.jface.window.Window;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
+import org.eclipse.nebula.jface.gridviewer.internal.CellSelection;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -36,15 +41,13 @@ import com.ht.scada.common.tag.entity.VarIOInfo;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.service.AcquisitionDeviceService;
 import com.ht.scada.common.tag.service.EndTagService;
-import com.ht.scada.common.tag.service.MajorTagService;
 import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.common.tag.service.VarIOInfoService;
 import com.ht.scada.common.tag.type.entity.EndTagType;
 import com.ht.scada.common.tag.type.service.TypeService;
+import com.ht.scada.config.dialog.StringModifySettingsDialog;
+import com.ht.scada.config.dialog.StringModifyTypeModel;
 import com.ht.scada.config.scadaconfig.Activator;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 
 /**
  * 监控对象关联设备与模板
@@ -169,6 +172,7 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 		final Grid grid = gridTableViewer.getGrid();
 		grid.setRowHeaderVisible(true);
 		grid.setHeaderVisible(true);
+		grid.setCellSelectionEnabled(true);
 		grid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		GridViewerColumn gridViewerColumn = new GridViewerColumn(gridTableViewer, SWT.NONE);
@@ -210,15 +214,96 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 			}
 
 			protected void setValue(Object element, Object value) {
-				EndTag endTag = (EndTag) element;
-				int index = (int)value;
-				if (index<=0) {
-					endTag.setTplName(null);
-				} else {
-					endTag.setTplName(tplNameArray[index]);
-				}
+				
+				
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<EndTag> endTagList = cellSel.toList();
+				
+				if (endTagList.size() > 1) {
+					StringModifyTypeModel im = new StringModifyTypeModel();// 值修改方式模型
+					String channelIndex = String.valueOf(value);
+					im.setBase(channelIndex);
+					StringModifySettingsDialog dlg = new StringModifySettingsDialog(
+							getShell(), im, endTagList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								EndTag endTag=(EndTag)gridTableViewer.getElementAt(start-1);
+								
+								int index = Integer.parseInt(channelIndex);
+								if (index<=0) {
+									endTag.setTplName(null);
+								} else {
+									endTag.setTplName(tplNameArray[index]);
+								}
 
-				gridTableViewer.refresh();
+								int ci;
+								try {
+									ci = Integer.parseInt(channelIndex);
+								} catch (NumberFormatException e) {
+									MessageDialog.openError(getShell(), "错误", "非数字字符串不能计算");
+									e.printStackTrace();
+									return;
+								}
+								
+								if (im.getType() > 0) {
+									channelIndex = String.valueOf(ci + im.getInterval());
+								} else if (im.getType() < 0) {
+									channelIndex = String.valueOf(ci - im.getInterval());
+								}
+							}
+							
+							gridTableViewer.update(endTagList.toArray(), null);
+							return;
+						}
+						
+						for(EndTag endTag : endTagList) {
+							int index = Integer.valueOf(channelIndex);
+							if (index<=0) {
+								endTag.setTplName(null);
+							} else {
+								endTag.setTplName(tplNameArray[index]);
+							}
+
+							
+							int ci;
+							try {
+								ci = Integer.parseInt(channelIndex);
+							} catch (NumberFormatException e) {
+								MessageDialog.openError(getShell(), "错误", "非数字字符串不能计算");
+								e.printStackTrace();
+								return;
+							}
+							
+							if (im.getType() > 0) {
+								channelIndex = String.valueOf(ci + im.getInterval());
+							} else if (im.getType() < 0) {
+								channelIndex = String.valueOf(ci - im.getInterval());
+							}
+						}
+
+						gridTableViewer.update(endTagList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					EndTag endTag = (EndTag) element;
+					int index = (int)value;
+					if (index<=0) {
+						endTag.setTplName(null);
+					} else {
+						endTag.setTplName(tplNameArray[index]);
+					}
+
+					gridTableViewer.refresh();
+				}
 			}
 		});
 		
@@ -226,6 +311,7 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 		GridColumn gridColumn_2 = gridViewerColumn_2.getColumn();
 		gridColumn_2.setWidth(150);
 		gridColumn_2.setText("采集通道：序号");
+		gridColumn_2.setCellSelectionEnabled(true);
 		gridViewerColumn_2.setEditingSupport(new EditingSupport(gridTableViewer) {
 			protected boolean canEdit(Object element) {
 				return true;
@@ -242,11 +328,78 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 			}
 
 			protected void setValue(Object element, Object value) {
-				EndTag endTag = (EndTag) element;
-				String v = (String)value;
-				endTag.setChannelIdx(v.equals("")?null:Integer.valueOf(v));
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<EndTag> endTagList = cellSel.toList();
 				
-				gridTableViewer.refresh();
+				if (endTagList.size() > 1) {
+					StringModifyTypeModel im = new StringModifyTypeModel();// 值修改方式模型
+					String channelIndex = (String)value;
+					im.setBase(channelIndex);
+					StringModifySettingsDialog dlg = new StringModifySettingsDialog(
+							getShell(), im, endTagList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								EndTag endTag=(EndTag)gridTableViewer.getElementAt(start-1);
+								endTag.setChannelIdx(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+								
+								int ci;
+								try {
+									ci = Integer.parseInt(channelIndex);
+								} catch (NumberFormatException e) {
+									MessageDialog.openError(getShell(), "错误", "非数字字符串不能计算");
+									e.printStackTrace();
+									return;
+								}
+								
+								if (im.getType() > 0) {
+									channelIndex = String.valueOf(ci + im.getInterval());
+								} else if (im.getType() < 0) {
+									channelIndex = String.valueOf(ci - im.getInterval());
+								}
+							}
+							
+							gridTableViewer.update(endTagList.toArray(), null);
+							return;
+						}
+						
+						for(EndTag endTag : endTagList) {
+							endTag.setChannelIdx(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+							
+							int ci;
+							try {
+								ci = Integer.parseInt(channelIndex);
+							} catch (NumberFormatException e) {
+								MessageDialog.openError(getShell(), "错误", "非数字字符串不能计算");
+								e.printStackTrace();
+								return;
+							}
+							
+							if (im.getType() > 0) {
+								channelIndex = String.valueOf(ci + im.getInterval());
+							} else if (im.getType() < 0) {
+								channelIndex = String.valueOf(ci - im.getInterval());
+							}
+						}
+
+						gridTableViewer.update(endTagList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					EndTag endTag = (EndTag) element;
+					String v = (String)value;
+					endTag.setChannelIdx(v.equals("")?null:Integer.valueOf(v));
+					
+					gridTableViewer.refresh();
+				}
 			}
 		});
 		
@@ -270,14 +423,90 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 			}
 
 			protected void setValue(Object element, Object value) {
-				EndTag endTag = (EndTag) element;
-				String v = (String)value;
-				endTag.setDeviceAddr(v.equals("")?null:Integer.valueOf(v));
 				
-				AcquisitionDevice device = acquisitionDeviceService.getDeviceByChannelIdAndDeviceId(endTag.getChannelIdx(), endTag.getDeviceAddr());
-				endTag.setDevice(device);
 				
-				gridTableViewer.refresh();
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<EndTag> endTagList = cellSel.toList();
+				
+				if (endTagList.size() > 1) {
+					StringModifyTypeModel im = new StringModifyTypeModel();// 值修改方式模型
+					String channelIndex = (String)value;
+					im.setBase(channelIndex);
+					StringModifySettingsDialog dlg = new StringModifySettingsDialog(
+							getShell(), im, endTagList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								EndTag endTag=(EndTag)gridTableViewer.getElementAt(start-1);
+								
+								endTag.setDeviceAddr(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+								
+								AcquisitionDevice device = acquisitionDeviceService.getDeviceByChannelIdAndDeviceId(endTag.getChannelIdx(), endTag.getDeviceAddr());
+								endTag.setDevice(device);
+								
+								int ci;
+								try {
+									ci = Integer.parseInt(channelIndex);
+								} catch (NumberFormatException e) {
+									MessageDialog.openError(getShell(), "错误", "非数字字符串不能计算");
+									e.printStackTrace();
+									return;
+								}
+								
+								if (im.getType() > 0) {
+									channelIndex = String.valueOf(ci + im.getInterval());
+								} else if (im.getType() < 0) {
+									channelIndex = String.valueOf(ci - im.getInterval());
+								}
+							}
+							
+							gridTableViewer.update(endTagList.toArray(), null);
+							return;
+						}
+						
+						for(EndTag endTag : endTagList) {
+							endTag.setDeviceAddr(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+							
+							AcquisitionDevice device = acquisitionDeviceService.getDeviceByChannelIdAndDeviceId(endTag.getChannelIdx(), endTag.getDeviceAddr());
+							endTag.setDevice(device);
+							
+							int ci;
+							try {
+								ci = Integer.parseInt(channelIndex);
+							} catch (NumberFormatException e) {
+								MessageDialog.openError(getShell(), "错误", "非数字字符串不能计算");
+								e.printStackTrace();
+								return;
+							}
+							
+							if (im.getType() > 0) {
+								channelIndex = String.valueOf(ci + im.getInterval());
+							} else if (im.getType() < 0) {
+								channelIndex = String.valueOf(ci - im.getInterval());
+							}
+						}
+
+						gridTableViewer.update(endTagList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					EndTag endTag = (EndTag) element;
+					String v = (String)value;
+					endTag.setDeviceAddr(v.equals("")?null:Integer.valueOf(v));
+					
+					AcquisitionDevice device = acquisitionDeviceService.getDeviceByChannelIdAndDeviceId(endTag.getChannelIdx(), endTag.getDeviceAddr());
+					endTag.setDevice(device);
+					
+					gridTableViewer.refresh();
+				}
 			}
 		});
 		

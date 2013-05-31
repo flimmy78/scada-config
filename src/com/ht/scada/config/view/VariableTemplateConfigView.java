@@ -20,8 +20,10 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
+import org.eclipse.nebula.jface.gridviewer.internal.CellSelection;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
@@ -45,6 +47,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.entity.VarGroupCfg;
 import com.ht.scada.common.tag.service.TagCfgTplService;
@@ -52,6 +55,10 @@ import com.ht.scada.common.tag.type.entity.DataType;
 import com.ht.scada.common.tag.type.entity.VarSubType;
 import com.ht.scada.common.tag.type.entity.VarType;
 import com.ht.scada.common.tag.type.service.TypeService;
+import com.ht.scada.config.dialog.FloatModifySettingsDialog;
+import com.ht.scada.config.dialog.FloatModifyTypeModel;
+import com.ht.scada.config.dialog.StringModifySettingsDialog;
+import com.ht.scada.config.dialog.StringModifyTypeModel;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
 import com.ht.scada.config.util.PinyinComparator;
@@ -448,22 +455,84 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 
 			protected void setValue(Object element, Object value) {
-				if("".equals((String) value)) {
-					MessageDialog.openError(grid.getShell(), "错误", "功能码不能为空！");
-					return;
-				}
-				int myValue;
-				try {
-					myValue = Integer.valueOf((String)value);
-				} catch (NumberFormatException e) {
-					MessageDialog.openError(grid.getShell(), "错误", "功能码应该为整形！");
-					e.printStackTrace();
-					return;
-				}
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<TagCfgTpl> tagTplList = cellSel.toList();
 				
-				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setFunCode(myValue);
-				gridTableViewer.update(tct, null);
+				if (tagTplList.size() > 1) {
+					StringModifyTypeModel im = new StringModifyTypeModel();// 值修改方式模型
+					String channelIndex = (String)value;
+					im.setBase(channelIndex);
+					StringModifySettingsDialog dlg = new StringModifySettingsDialog(
+							grid.getShell(), im, tagTplList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								TagCfgTpl tagCfgTpl=(TagCfgTpl)gridTableViewer.getElementAt(start-1);
+								tagCfgTpl.setFunCode(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+								
+								int ci;
+								try {
+									ci = Integer.parseInt(channelIndex);
+								} catch (NumberFormatException e) {
+									MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+									e.printStackTrace();
+									return;
+								}
+								
+								if (im.getType() > 0) {
+									channelIndex = String.valueOf(ci + im.getInterval());
+								} else if (im.getType() < 0) {
+									channelIndex = String.valueOf(ci - im.getInterval());
+								}
+							}
+							gridTableViewer.update(tagTplList.toArray(), null);
+							return;
+						}
+						for(TagCfgTpl tagCfgTpl : tagTplList) {
+							tagCfgTpl.setFunCode(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+							
+							int ci;
+							try {
+								ci = Integer.parseInt(channelIndex);
+							} catch (NumberFormatException e) {
+								MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+								e.printStackTrace();
+								return;
+							}
+							if (im.getType() > 0) {
+								channelIndex = String.valueOf(ci + im.getInterval());
+							} else if (im.getType() < 0) {
+								channelIndex = String.valueOf(ci - im.getInterval());
+							}
+						}
+						gridTableViewer.update(tagTplList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					if("".equals((String) value)) {
+						MessageDialog.openError(grid.getShell(), "错误", "功能码不能为空！");
+						return;
+					}
+					int myValue;
+					try {
+						myValue = Integer.valueOf((String)value);
+					} catch (NumberFormatException e) {
+						MessageDialog.openError(grid.getShell(), "错误", "功能码应该为整形！");
+						e.printStackTrace();
+						return;
+					}
+					
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setFunCode(myValue);
+					gridTableViewer.update(tct, null);
+				}
 			}
 		});
 
@@ -488,22 +557,86 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 
 			protected void setValue(Object element, Object value) {
-				if("".equals((String) value)) {
-					MessageDialog.openError(grid.getShell(), "错误", "数据地址不能为空！");
-					return;
-				}
-				int myValue;
-				try {
-					myValue = Integer.valueOf((String)value);
-				} catch (NumberFormatException e) {
-					MessageDialog.openError(grid.getShell(), "错误", "数据地址应该为整形！");
-					e.printStackTrace();
-					return;
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<TagCfgTpl> tagTplList = cellSel.toList();
+				
+				if (tagTplList.size() > 1) {
+					StringModifyTypeModel im = new StringModifyTypeModel();// 值修改方式模型
+					String channelIndex = (String)value;
+					im.setBase(channelIndex);
+					StringModifySettingsDialog dlg = new StringModifySettingsDialog(
+							grid.getShell(), im, tagTplList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								TagCfgTpl tagCfgTpl=(TagCfgTpl)gridTableViewer.getElementAt(start-1);
+								tagCfgTpl.setDataId(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+								
+								int ci;
+								try {
+									ci = Integer.parseInt(channelIndex);
+								} catch (NumberFormatException e) {
+									MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+									e.printStackTrace();
+									return;
+								}
+								
+								if (im.getType() > 0) {
+									channelIndex = String.valueOf(ci + im.getInterval());
+								} else if (im.getType() < 0) {
+									channelIndex = String.valueOf(ci - im.getInterval());
+								}
+							}
+							gridTableViewer.update(tagTplList.toArray(), null);
+							return;
+						}
+						for(TagCfgTpl tagCfgTpl : tagTplList) {
+							tagCfgTpl.setDataId(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+							
+							int ci;
+							try {
+								ci = Integer.parseInt(channelIndex);
+							} catch (NumberFormatException e) {
+								MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+								e.printStackTrace();
+								return;
+							}
+							if (im.getType() > 0) {
+								channelIndex = String.valueOf(ci + im.getInterval());
+							} else if (im.getType() < 0) {
+								channelIndex = String.valueOf(ci - im.getInterval());
+							}
+						}
+						gridTableViewer.update(tagTplList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					if("".equals((String) value)) {
+						MessageDialog.openError(grid.getShell(), "错误", "数据地址不能为空！");
+						return;
+					}
+					int myValue;
+					try {
+						myValue = Integer.valueOf((String)value);
+					} catch (NumberFormatException e) {
+						MessageDialog.openError(grid.getShell(), "错误", "数据地址应该为整形！");
+						e.printStackTrace();
+						return;
+					}
+					
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setDataId(myValue);
+					gridTableViewer.update(tct, null);
 				}
 				
-				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setDataId(myValue);
-				gridTableViewer.update(tct, null);
+				
 			}
 		});
 
@@ -528,22 +661,87 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 
 			protected void setValue(Object element, Object value) {
-				if("".equals((String) value)) {
-					MessageDialog.openError(grid.getShell(), "错误", "字节长度不能为空！");
-					return;
-				}
-				int myValue;
-				try {
-					myValue = Integer.valueOf((String)value);
-				} catch (NumberFormatException e) {
-					MessageDialog.openError(grid.getShell(), "错误", "字节长度应该为整形！");
-					e.printStackTrace();
-					return;
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<TagCfgTpl> tagTplList = cellSel.toList();
+				
+				if (tagTplList.size() > 1) {
+					StringModifyTypeModel im = new StringModifyTypeModel();// 值修改方式模型
+					String channelIndex = (String)value;
+					im.setBase(channelIndex);
+					StringModifySettingsDialog dlg = new StringModifySettingsDialog(
+							grid.getShell(), im, tagTplList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								TagCfgTpl tagCfgTpl=(TagCfgTpl)gridTableViewer.getElementAt(start-1);
+								tagCfgTpl.setByteLen(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+								
+								int ci;
+								try {
+									ci = Integer.parseInt(channelIndex);
+								} catch (NumberFormatException e) {
+									MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+									e.printStackTrace();
+									return;
+								}
+								
+								if (im.getType() > 0) {
+									channelIndex = String.valueOf(ci + im.getInterval());
+								} else if (im.getType() < 0) {
+									channelIndex = String.valueOf(ci - im.getInterval());
+								}
+							}
+							gridTableViewer.update(tagTplList.toArray(), null);
+							return;
+						}
+						for(TagCfgTpl tagCfgTpl : tagTplList) {
+							tagCfgTpl.setByteLen(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+							
+							int ci;
+							try {
+								ci = Integer.parseInt(channelIndex);
+							} catch (NumberFormatException e) {
+								MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+								e.printStackTrace();
+								return;
+							}
+							if (im.getType() > 0) {
+								channelIndex = String.valueOf(ci + im.getInterval());
+							} else if (im.getType() < 0) {
+								channelIndex = String.valueOf(ci - im.getInterval());
+							}
+						}
+						gridTableViewer.update(tagTplList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					if("".equals((String) value)) {
+						MessageDialog.openError(grid.getShell(), "错误", "字节长度不能为空！");
+						return;
+					}
+					int myValue;
+					try {
+						myValue = Integer.valueOf((String)value);
+					} catch (NumberFormatException e) {
+						MessageDialog.openError(grid.getShell(), "错误", "字节长度应该为整形！");
+						e.printStackTrace();
+						return;
+					}
+					
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setByteLen(myValue);
+					gridTableViewer.update(tct, null);
 				}
 				
-				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setByteLen(myValue);
-				gridTableViewer.update(tct, null);
+				
+				
 			}
 		});
 
@@ -568,21 +766,86 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 
 			protected void setValue(Object element, Object value) {
-				if("".equals((String) value)) {
-					MessageDialog.openError(grid.getShell(), "错误", "字节偏移量不能为空！");
-					return;
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<TagCfgTpl> tagTplList = cellSel.toList();
+				
+				if (tagTplList.size() > 1) {
+					StringModifyTypeModel im = new StringModifyTypeModel();// 值修改方式模型
+					String channelIndex = (String)value;
+					im.setBase(channelIndex);
+					StringModifySettingsDialog dlg = new StringModifySettingsDialog(
+							grid.getShell(), im, tagTplList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								TagCfgTpl tagCfgTpl=(TagCfgTpl)gridTableViewer.getElementAt(start-1);
+								tagCfgTpl.setByteOffset(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+								
+								int ci;
+								try {
+									ci = Integer.parseInt(channelIndex);
+								} catch (NumberFormatException e) {
+									MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+									e.printStackTrace();
+									return;
+								}
+								
+								if (im.getType() > 0) {
+									channelIndex = String.valueOf(ci + im.getInterval());
+								} else if (im.getType() < 0) {
+									channelIndex = String.valueOf(ci - im.getInterval());
+								}
+							}
+							gridTableViewer.update(tagTplList.toArray(), null);
+							return;
+						}
+						for(TagCfgTpl tagCfgTpl : tagTplList) {
+							tagCfgTpl.setByteOffset(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+							
+							int ci;
+							try {
+								ci = Integer.parseInt(channelIndex);
+							} catch (NumberFormatException e) {
+								MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+								e.printStackTrace();
+								return;
+							}
+							if (im.getType() > 0) {
+								channelIndex = String.valueOf(ci + im.getInterval());
+							} else if (im.getType() < 0) {
+								channelIndex = String.valueOf(ci - im.getInterval());
+							}
+						}
+						gridTableViewer.update(tagTplList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					if("".equals((String) value)) {
+						MessageDialog.openError(grid.getShell(), "错误", "字节偏移量不能为空！");
+						return;
+					}
+					int myValue;
+					try {
+						myValue = Integer.valueOf((String)value);
+					} catch (NumberFormatException e) {
+						MessageDialog.openError(grid.getShell(), "错误", "字节偏移量应该为整形！");
+						e.printStackTrace();
+						return;
+					}
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setByteOffset(myValue);
+					gridTableViewer.update(tct, null);
 				}
-				int myValue;
-				try {
-					myValue = Integer.valueOf((String)value);
-				} catch (NumberFormatException e) {
-					MessageDialog.openError(grid.getShell(), "错误", "字节偏移量应该为整形！");
-					e.printStackTrace();
-					return;
-				}
-				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setByteOffset(myValue);
-				gridTableViewer.update(tct, null);
+				
+				
+				
 			}
 		});
 
@@ -607,21 +870,86 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 
 			protected void setValue(Object element, Object value) {
-				if("".equals((String) value)) {
-					MessageDialog.openError(grid.getShell(), "错误", "位偏移量不能为空！");
-					return;
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<TagCfgTpl> tagTplList = cellSel.toList();
+				
+				if (tagTplList.size() > 1) {
+					StringModifyTypeModel im = new StringModifyTypeModel();// 值修改方式模型
+					String channelIndex = (String)value;
+					im.setBase(channelIndex);
+					StringModifySettingsDialog dlg = new StringModifySettingsDialog(
+							grid.getShell(), im, tagTplList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								TagCfgTpl tagCfgTpl=(TagCfgTpl)gridTableViewer.getElementAt(start-1);
+								tagCfgTpl.setBitOffset(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+								
+								int ci;
+								try {
+									ci = Integer.parseInt(channelIndex);
+								} catch (NumberFormatException e) {
+									MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+									e.printStackTrace();
+									return;
+								}
+								
+								if (im.getType() > 0) {
+									channelIndex = String.valueOf(ci + im.getInterval());
+								} else if (im.getType() < 0) {
+									channelIndex = String.valueOf(ci - im.getInterval());
+								}
+							}
+							gridTableViewer.update(tagTplList.toArray(), null);
+							return;
+						}
+						for(TagCfgTpl tagCfgTpl : tagTplList) {
+							tagCfgTpl.setBitOffset(channelIndex.equals("")?null:Integer.valueOf(channelIndex));
+							
+							int ci;
+							try {
+								ci = Integer.parseInt(channelIndex);
+							} catch (NumberFormatException e) {
+								MessageDialog.openError(grid.getShell(), "错误", "非数字字符串不能计算");
+								e.printStackTrace();
+								return;
+							}
+							if (im.getType() > 0) {
+								channelIndex = String.valueOf(ci + im.getInterval());
+							} else if (im.getType() < 0) {
+								channelIndex = String.valueOf(ci - im.getInterval());
+							}
+						}
+						gridTableViewer.update(tagTplList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					if("".equals((String) value)) {
+						MessageDialog.openError(grid.getShell(), "错误", "位偏移量不能为空！");
+						return;
+					}
+					int myValue;
+					try {
+						myValue = Integer.valueOf((String)value);
+					} catch (NumberFormatException e) {
+						MessageDialog.openError(grid.getShell(), "错误", "位偏移量应该为整形！");
+						e.printStackTrace();
+						return;
+					}
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setBitOffset(myValue);
+					gridTableViewer.update(tct, null);
 				}
-				int myValue;
-				try {
-					myValue = Integer.valueOf((String)value);
-				} catch (NumberFormatException e) {
-					MessageDialog.openError(grid.getShell(), "错误", "位偏移量应该为整形！");
-					e.printStackTrace();
-					return;
-				}
-				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setBitOffset(myValue);
-				gridTableViewer.update(tct, null);
+				
+				
+				
 			}
 		});
 
@@ -689,11 +1017,57 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 
 			protected void setValue(Object element, Object value) {
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<TagCfgTpl> tagTplList = cellSel.toList();
 				
-				TagCfgTpl tct = (TagCfgTpl) element;
-				String myValue = (String)value;
-				tct.setBaseValue("".equals(myValue)?null:Float.valueOf(myValue));
-				gridTableViewer.update(tct, null);
+				if (tagTplList.size() > 1) {
+					FloatModifyTypeModel im = new FloatModifyTypeModel();// 值修改方式模型
+					Float channelIndex = Float.valueOf((String)value);
+					im.setBase(channelIndex);
+					FloatModifySettingsDialog dlg = new FloatModifySettingsDialog(
+							grid.getShell(), im, tagTplList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								TagCfgTpl tagCfgTpl=(TagCfgTpl)gridTableViewer.getElementAt(start-1);
+								tagCfgTpl.setBaseValue(channelIndex);
+								
+								
+								if (im.getType() > 0) {
+									channelIndex = channelIndex + im.getInterval();
+								} else if (im.getType() < 0) {
+									channelIndex = channelIndex - im.getInterval();
+								}
+							}
+							gridTableViewer.update(tagTplList.toArray(), null);
+							return;
+						}
+						for(TagCfgTpl tagCfgTpl : tagTplList) {
+							tagCfgTpl.setBaseValue(channelIndex);
+							
+							
+							if (im.getType() > 0) {
+								channelIndex = channelIndex + im.getInterval();
+							} else if (im.getType() < 0) {
+								channelIndex = channelIndex - im.getInterval();
+							}
+						}
+						gridTableViewer.update(tagTplList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					TagCfgTpl tct = (TagCfgTpl) element;
+					String myValue = (String)value;
+					tct.setBaseValue("".equals(myValue)?null:Float.valueOf(myValue));
+					gridTableViewer.update(tct, null);
+				}
 			}
 		});
 
@@ -718,10 +1092,57 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 
 			protected void setValue(Object element, Object value) {
-				TagCfgTpl tct = (TagCfgTpl) element;
-				String myValue = (String)value;
-				tct.setCoefValue("".equals(myValue)?null:Float.valueOf(myValue));
-				gridTableViewer.update(tct, null);
+				CellSelection cellSel = (CellSelection) gridTableViewer
+						.getSelection();
+				@SuppressWarnings("unchecked")
+				List<TagCfgTpl> tagTplList = cellSel.toList();
+				
+				if (tagTplList.size() > 1) {
+					FloatModifyTypeModel im = new FloatModifyTypeModel();// 值修改方式模型
+					Float channelIndex = Float.valueOf((String)value);
+					im.setBase(channelIndex);
+					FloatModifySettingsDialog dlg = new FloatModifySettingsDialog(
+							grid.getShell(), im, tagTplList.size());
+					
+					if (dlg.open() == Window.OK) {
+						channelIndex = im.getBase();
+						if(im.isFanwei()) {//按范围
+							int start = im.getStart();
+							int end = im.getEnd();
+							for(;start<=end;start ++) {
+								TagCfgTpl tagCfgTpl=(TagCfgTpl)gridTableViewer.getElementAt(start-1);
+								tagCfgTpl.setCoefValue(channelIndex);
+								
+								
+								if (im.getType() > 0) {
+									channelIndex = channelIndex + im.getInterval();
+								} else if (im.getType() < 0) {
+									channelIndex = channelIndex - im.getInterval();
+								}
+							}
+							gridTableViewer.update(tagTplList.toArray(), null);
+							return;
+						}
+						for(TagCfgTpl tagCfgTpl : tagTplList) {
+							tagCfgTpl.setCoefValue(channelIndex);
+							
+							
+							if (im.getType() > 0) {
+								channelIndex = channelIndex + im.getInterval();
+							} else if (im.getType() < 0) {
+								channelIndex = channelIndex - im.getInterval();
+							}
+						}
+						gridTableViewer.update(tagTplList.toArray(), null);
+					} else {
+						return;
+					}
+				} else {// 选中一个单元格
+					TagCfgTpl tct = (TagCfgTpl) element;
+					String myValue = (String)value;
+					tct.setCoefValue("".equals(myValue)?null:Float.valueOf(myValue));
+					gridTableViewer.update(tct, null);
+				}
 			}
 		});
 
