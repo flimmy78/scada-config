@@ -163,12 +163,15 @@ public class ProjectInitWindow extends ApplicationWindow {
 		endTagSubType3.setEndTagType(endTagType);
 		EndTagSubType endTagSubType4 = new EndTagSubType("DIAN_QIAN_BENG","电潜泵");
 		endTagSubType4.setEndTagType(endTagType);
+		EndTagSubType endTagSubType5 = new EndTagSubType("GU_LI_JING","孤立井");
+		endTagSubType5.setEndTagType(endTagType);
 		
 		endTagSubTypeList.add(endTagSubType);
 		endTagSubTypeList.add(endTagSubType1);
 		endTagSubTypeList.add(endTagSubType2);
 		endTagSubTypeList.add(endTagSubType3);
 		endTagSubTypeList.add(endTagSubType4);
+		endTagSubTypeList.add(endTagSubType5);
 		
 		VarGroupCfg varGroupCfgDianYC = new VarGroupCfg("DIAN_YC","电力数据");
 		VarGroupCfg varGroupCfgDianYM = new VarGroupCfg("DIAN_YM","电能数据");
@@ -265,6 +268,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType28 = new VarSubType("GV_YG","有功功率",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType29 = new VarSubType("GV_WG","无功功率",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType30 = new VarSubType("GV_SZ","视在功率",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType101 = new VarSubType("GV_YS","功率因数",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType31 = new VarSubType("GV_ZB","周波",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType32 = new VarSubType("GV_YG_A","A相有功功率",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType33 = new VarSubType("GV_YG_B","B相有功功率",varGroupCfgDianYC,varTypeYC);
@@ -378,6 +382,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varSubTypeList.add(varSubType28);
 		varSubTypeList.add(varSubType29);
 		varSubTypeList.add(varSubType30);
+		varSubTypeList.add(varSubType101);
 		varSubTypeList.add(varSubType31);
 		varSubTypeList.add(varSubType32);
 		varSubTypeList.add(varSubType33);

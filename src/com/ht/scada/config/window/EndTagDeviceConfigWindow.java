@@ -32,11 +32,13 @@ import com.ht.scada.common.tag.entity.AcquisitionDevice;
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
 import com.ht.scada.common.tag.entity.TagCfgTpl;
+import com.ht.scada.common.tag.entity.VarIOInfo;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.service.AcquisitionDeviceService;
 import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.common.tag.service.MajorTagService;
 import com.ht.scada.common.tag.service.TagCfgTplService;
+import com.ht.scada.common.tag.service.VarIOInfoService;
 import com.ht.scada.common.tag.type.entity.EndTagType;
 import com.ht.scada.common.tag.type.service.TypeService;
 import com.ht.scada.config.scadaconfig.Activator;
@@ -105,6 +107,8 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 			.getApplicationContext().getBean("typeService");
 	private TagCfgTplService tagCfgTplService = (TagCfgTplService) Activator
 			.getDefault().getApplicationContext().getBean("tagCfgTplService");
+	private VarIOInfoService varIOInfoService = (VarIOInfoService) Activator
+			.getDefault().getApplicationContext().getBean("varIOInfoService");
 	private AcquisitionChannelService acquisitionChannelService = (AcquisitionChannelService) Activator
 			.getDefault().getApplicationContext()
 			.getBean("acquisitionChannelService");
@@ -159,7 +163,7 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 		Combo combo = new Combo(composite, SWT.NONE);
 		combo.setBounds(100, 0, 88, 25);
 		
-		final GridTableViewer gridTableViewer = new GridTableViewer(container, SWT.BORDER);
+		final GridTableViewer gridTableViewer = new GridTableViewer(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		
 		
 		final Grid grid = gridTableViewer.getGrid();
@@ -286,6 +290,58 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				endTagService.saveAll(endTagList);
+				//初始化变量IO
+				for(EndTag endTag : endTagList) {
+					if(endTag.getTplName() != null && !"".equals(endTag.getTplName())) {
+						List<TagCfgTpl> tagCfgTplList = tagCfgTplService.getAllTagTpl();
+						if(tagCfgTplList != null && !tagCfgTplList.isEmpty()) {
+							for(TagCfgTpl t : tagCfgTplList) {
+								if(t.getVarType().equalsIgnoreCase("YC")) {
+									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
+									if(varIOInfo == null) {
+										varIOInfo = new VarIOInfo();
+										varIOInfo.setBaseValue(0);
+										varIOInfo.setCoefValue(1);
+										varIOInfo.setEndTag(endTag);
+										varIOInfo.setVarName(t.getVarName());
+										varIOInfoService.create(varIOInfo);
+									}
+								} else if(t.getVarType().equalsIgnoreCase("YM")) {
+									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
+									if(varIOInfo == null) {
+										varIOInfo = new VarIOInfo();
+										varIOInfo.setBaseValue(0);
+										varIOInfo.setCoefValue(1);
+										varIOInfo.setEndTag(endTag);
+										varIOInfo.setVarName(t.getVarName());
+										varIOInfoService.create(varIOInfo);
+									}
+								} else if(t.getVarType().equalsIgnoreCase("YK")) {
+									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
+									if(varIOInfo == null) {
+										varIOInfo = new VarIOInfo();
+										varIOInfo.setBaseValue(0);
+										varIOInfo.setCoefValue(1);
+										varIOInfo.setEndTag(endTag);
+										varIOInfo.setVarName(t.getVarName());
+										varIOInfoService.create(varIOInfo);
+									}
+								} else if(t.getVarType().equalsIgnoreCase("YT")) {
+									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
+									if(varIOInfo == null) {
+										varIOInfo = new VarIOInfo();
+										varIOInfo.setBaseValue(0);
+										varIOInfo.setCoefValue(1);
+										varIOInfo.setEndTag(endTag);
+										varIOInfo.setVarName(t.getVarName());
+										varIOInfoService.create(varIOInfo);
+									}
+								}
+							}
+						}
+					}
+				}
+				
 				
 				MessageDialog.openInformation(getShell(), "提示", "保存成功！");
 			}

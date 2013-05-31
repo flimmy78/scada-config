@@ -272,7 +272,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 				int i = 0;
 				if(info.getKeyName().equals(STAGE_ATTR)) {
 					for(String s : extValueStageStr) {
-						if(info.getName().equals(s)) {
+						if(info.getValue().equals(s)) {
 							return i;
 						}
 						i++;
@@ -280,7 +280,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					return 0;
 				} else if(info.getKeyName().equals(TECH_ATTR)) {
 					for(String s : extValueTechStr) {
-						if(info.getName().equals(s)) {
+						if(info.getValue().equals(s)) {
 							return i;
 						}
 						i++;

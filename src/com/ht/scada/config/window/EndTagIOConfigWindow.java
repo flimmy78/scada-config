@@ -1,14 +1,20 @@
 package com.ht.scada.config.window;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.nebula.jface.gridviewer.GridTreeViewer;
@@ -29,12 +35,17 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
+import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.entity.VarIOInfo;
 import com.ht.scada.common.tag.service.EndTagService;
+import com.ht.scada.common.tag.service.TagService;
 import com.ht.scada.common.tag.service.VarIOInfoService;
 import com.ht.scada.common.tag.type.entity.EndTagType;
 import com.ht.scada.common.tag.type.service.TypeService;
 import com.ht.scada.config.scadaconfig.Activator;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 
 /**
  * 监控对象IO配置
@@ -56,6 +67,7 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 				List<VarIOInfo> list = varIOInfoService.findByEndTagId(endTag.getId());
 				if(list!=null && !list.isEmpty()) {
 					System.out.println("个数：" + list.size());
+					varMap.put(endTag, list);
 					return list.toArray();
 				}
 			}
@@ -100,11 +112,11 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 				case 0:
 					return null;
 				case 1:
-					return var.getVarName();
+					return tagService.getTagCfgTplByCodeAndVarName(var.getEndTag().getCode(), var.getVarName()).getTagName();
 				case 2:
-					return "基数";
+					return String.valueOf(var.getBaseValue());
 				case 3:
-					return "系数";
+					return String.valueOf(var.getCoefValue());
 				
 				default:
 					break;
@@ -142,6 +154,7 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 	private List<EndTag> endTagList = new ArrayList<EndTag>();
 	private MajorTag majorTag;
 	private List<EndTagType> endTagTypeList;
+	private Map<EndTag, List<VarIOInfo>> varMap = new HashMap<>();
 	
 	private EndTagService endTagService = (EndTagService) Activator.getDefault()
 			.getApplicationContext().getBean("endTagService");
@@ -149,6 +162,8 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 			.getApplicationContext().getBean("typeService");
 	private VarIOInfoService varIOInfoService = (VarIOInfoService)Activator.getDefault()
 			.getApplicationContext().getBean("varIOInfoService");
+	private TagService tagService = (TagService)Activator.getDefault()
+			.getApplicationContext().getBean("tagService");
 
 	/**
 	 * Create contents of the application window.
@@ -168,8 +183,8 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 		Combo combo = new Combo(composite, SWT.NONE);
 		combo.setBounds(100, 0, 88, 25);
 		
-		GridTreeViewer gridTableViewer = new GridTreeViewer(container, SWT.BORDER);
-		Grid grid = gridTableViewer.getGrid();
+		final GridTreeViewer gridTableViewer = new GridTreeViewer(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		final Grid grid = gridTableViewer.getGrid();
 		grid.setRowHeaderVisible(true);
 		grid.setHeaderVisible(true);
 		grid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -189,11 +204,105 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 		GridColumn gridColumn = gridViewerColumn_1.getColumn();
 		gridColumn.setWidth(100);
 		gridColumn.setText("基数");
+		gridViewerColumn_1.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				if(element instanceof VarIOInfo) {
+					return true;
+				} else {
+					return false;
+				}
+				
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				if(element instanceof VarIOInfo) {
+					VarIOInfo io = (VarIOInfo) element;
+					return String.valueOf(io.getBaseValue());
+				} else {
+					return "";
+				}
+				
+			}
+
+			protected void setValue(Object element, Object value) {
+				if(element instanceof VarIOInfo) {
+					VarIOInfo io = (VarIOInfo) element;
+					io.setBaseValue(Float.valueOf((String)value));
+					gridTableViewer.update(io, null);
+				}
+			}
+		});
 		
 		GridViewerColumn gridViewerColumn_4 = new GridViewerColumn(gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_4 = gridViewerColumn_4.getColumn();
 		gridColumn_4.setWidth(100);
 		gridColumn_4.setText("系数");
+		gridViewerColumn_4.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				if(element instanceof VarIOInfo) {
+					return true;
+				} else {
+					return false;
+				}
+				
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				if(element instanceof VarIOInfo) {
+					VarIOInfo io = (VarIOInfo) element;
+					return String.valueOf(io.getCoefValue());
+				} else {
+					return "";
+				}
+				
+			}
+
+			protected void setValue(Object element, Object value) {
+				if(element instanceof VarIOInfo) {
+					VarIOInfo io = (VarIOInfo) element;
+					io.setCoefValue(Float.valueOf((String)value));
+					gridTableViewer.update(io, null);
+				}
+			}
+		});
+		
+		Composite composite_1 = new Composite(container, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		composite_1.setLayout(new GridLayout(2, false));
+		
+		Button button = new Button(composite_1, SWT.NONE);
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				for(EndTag endTag : varMap.keySet()) {
+					varIOInfoService.saveAll(varMap.get(endTag));
+				}
+				MessageDialog.openInformation(getShell(), "提示", "保存成功！");
+			}
+		});
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		button.setText("  保   存  ");
+		
+		Button button_1 = new Button(composite_1, SWT.NONE);
+		button_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				close();
+			}
+		});
+		button_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		button_1.setText("  取   消  ");
+
 		
 		gridTableViewer.setContentProvider(new ContentProvider());
 		gridTableViewer.setLabelProvider(new ViewerLabelProvider());

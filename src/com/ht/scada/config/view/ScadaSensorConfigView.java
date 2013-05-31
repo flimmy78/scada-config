@@ -284,6 +284,7 @@ public class ScadaSensorConfigView extends ViewPart implements IPropertyChangeLi
 			textAddress.setText("");
 			text_number.setText("");
 			text_checkInterval.setText("");
+			textNickName.setText("");
 			
 		} else if (event.getProperty().equals(
 				FirePropertyConstants.SENSORDEVICE_EDIT)) {
