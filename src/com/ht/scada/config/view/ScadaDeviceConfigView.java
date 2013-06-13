@@ -333,11 +333,14 @@ public class ScadaDeviceConfigView extends ViewPart implements IPropertyChangeLi
 			textManufacture.setText(acquisitionDevice.getManufacture());
 			textType.setText(acquisitionDevice.getType());
 			Date fixTime = acquisitionDevice.getFixTime();
-			Calendar fixTimeCalendar = Utils.date2CalendarUtil(fixTime);
-			int year = fixTimeCalendar.get(Calendar.YEAR);
-			int month = fixTimeCalendar.get(Calendar.MONTH);
-			int day = fixTimeCalendar.get((Calendar.DAY_OF_MONTH));
-			dateTimeFixTime.setDate(year, month, day);
+			if(fixTime != null) {
+				Calendar fixTimeCalendar = Utils.date2CalendarUtil(fixTime);
+				int year = fixTimeCalendar.get(Calendar.YEAR);
+				int month = fixTimeCalendar.get(Calendar.MONTH);
+				int day = fixTimeCalendar.get((Calendar.DAY_OF_MONTH));
+				dateTimeFixTime.setDate(year, month, day);
+			}
+			
 			textFixPositin.setText(acquisitionDevice.getFixPositin()==null?"":acquisitionDevice.getFixPositin());
 			textRemark.setText(acquisitionDevice.getRemark()==null?"":acquisitionDevice.getRemark());
 			textAddress.setText(acquisitionDevice.getAddress()+"");
