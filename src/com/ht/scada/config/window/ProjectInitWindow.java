@@ -130,6 +130,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 
 		EndTagType endTagType = new EndTagType("YOU_JING","油井");
 		EndTagType endTagType1 = new EndTagType("SHUI_YUAN_JING","水源井");
+		EndTagType endTagType11 = new EndTagType("TIAN_RAN_QI_JING","天然气井");
 		EndTagType endTagType2 = new EndTagType("ZHU_SHUI_JING","注水井");
 		EndTagType endTagType3 = new EndTagType("ZENG_YA_ZHAN","增压站");
 		EndTagType endTagType4 = new EndTagType("ZHU_QI_ZHAN","注汽站");
@@ -143,6 +144,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		
 		endTagTypeList.add(endTagType);
 		endTagTypeList.add(endTagType1);
+		endTagTypeList.add(endTagType11);
 		endTagTypeList.add(endTagType2);
 		endTagTypeList.add(endTagType3);
 		endTagTypeList.add(endTagType4);
