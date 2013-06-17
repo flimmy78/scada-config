@@ -14,9 +14,5 @@ public class AreaTreeViewTest {
 	public static void main(String args[]) {
 		System.out.println(VarGroupEnum.valueOf("DIAN_YC").getValue());
 	}
-	
-	public static void main(String args[]) {
-		System.out.println(3+"");
-	}
 
 }
