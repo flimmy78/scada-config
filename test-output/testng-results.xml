@@ -2,20 +2,20 @@
 <testng-results skipped="0" failed="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="4923" started-at="2013-05-19T14:37:05Z" finished-at="2013-05-19T14:37:10Z">
+  <suite name="Default suite" duration-ms="7614" started-at="2013-06-16T12:34:59Z" finished-at="2013-06-16T12:35:06Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="4923" started-at="2013-05-19T14:37:05Z" finished-at="2013-05-19T14:37:10Z">
-      <class name="com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest">
-        <test-method status="PASS" signature="beforeTest()[pri:0, instance:com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest@17d05cdb]" name="beforeTest" is-config="true" duration-ms="4765" started-at="2013-05-19T22:37:05Z" finished-at="2013-05-19T22:37:10Z">
+    <test name="Default test" duration-ms="7614" started-at="2013-06-16T12:34:59Z" finished-at="2013-06-16T12:35:06Z">
+      <class name="com.ht.scada.common.tag.service.impl.EndTagServiceImplTest">
+        <test-method status="PASS" signature="beforeTest()[pri:0, instance:com.ht.scada.common.tag.service.impl.EndTagServiceImplTest@d8c42e0]" name="beforeTest" is-config="true" duration-ms="7457" started-at="2013-06-16T20:34:59Z" finished-at="2013-06-16T20:35:06Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeTest -->
-        <test-method status="PASS" signature="initOilProject()[pri:0, instance:com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest@17d05cdb]" name="initOilProject" duration-ms="142" started-at="2013-05-19T22:37:10Z" finished-at="2013-05-19T22:37:10Z">
+        <test-method status="PASS" signature="getByType()[pri:0, instance:com.ht.scada.common.tag.service.impl.EndTagServiceImplTest@d8c42e0]" name="getByType" duration-ms="133" started-at="2013-06-16T20:35:06Z" finished-at="2013-06-16T20:35:06Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- initOilProject -->
-      </class> <!-- com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest -->
+        </test-method> <!-- getByType -->
+      </class> <!-- com.ht.scada.common.tag.service.impl.EndTagServiceImplTest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>
