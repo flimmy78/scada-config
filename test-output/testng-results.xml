@@ -2,20 +2,20 @@
 <testng-results skipped="0" failed="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="4923" started-at="2013-05-19T14:37:05Z" finished-at="2013-05-19T14:37:10Z">
+  <suite name="Default suite" duration-ms="8123" started-at="2013-06-13T04:40:10Z" finished-at="2013-06-13T04:40:18Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="4923" started-at="2013-05-19T14:37:05Z" finished-at="2013-05-19T14:37:10Z">
-      <class name="com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest">
-        <test-method status="PASS" signature="beforeTest()[pri:0, instance:com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest@17d05cdb]" name="beforeTest" is-config="true" duration-ms="4765" started-at="2013-05-19T22:37:05Z" finished-at="2013-05-19T22:37:10Z">
+    <test name="Default test" duration-ms="8123" started-at="2013-06-13T04:40:10Z" finished-at="2013-06-13T04:40:18Z">
+      <class name="com.ht.scada.oildata.service.impl.ReportServiceImplTest">
+        <test-method status="PASS" signature="beforeTest()[pri:0, instance:com.ht.scada.oildata.service.impl.ReportServiceImplTest@6083969e]" name="beforeTest" is-config="true" duration-ms="8100" started-at="2013-06-13T12:40:10Z" finished-at="2013-06-13T12:40:18Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeTest -->
-        <test-method status="PASS" signature="initOilProject()[pri:0, instance:com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest@17d05cdb]" name="initOilProject" duration-ms="142" started-at="2013-05-19T22:37:10Z" finished-at="2013-05-19T22:37:10Z">
+        <test-method status="PASS" signature="insertRecord()[pri:0, instance:com.ht.scada.oildata.service.impl.ReportServiceImplTest@6083969e]" name="insertRecord" duration-ms="7" started-at="2013-06-13T12:40:18Z" finished-at="2013-06-13T12:40:18Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- initOilProject -->
-      </class> <!-- com.ht.scada.common.tag.type.service.impl.TypeServiceImplTest -->
+        </test-method> <!-- insertRecord -->
+      </class> <!-- com.ht.scada.oildata.service.impl.ReportServiceImplTest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>
