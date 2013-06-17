@@ -20,4 +20,12 @@ public class TagServiceImplTest {
   public void getTagCfgTplByCodeAndVarName() {
 	  System.out.println(tagService.getTagCfgTplByCodeAndVarName("1", "jing_kou_w_du").getTagName());
   }
+  @Test
+  public void getSensorDeviceByCode() {
+	  System.out.println("个数：" + tagService.getSensorDeviceByCode("油井#自喷").size());
+  }
+  @Test
+  public void getSensorDeviceByCodeAndNickName() {
+	  System.out.println("个数：" + tagService.getSensorDeviceByCodeAndNickName("油井#自喷", "number1").getName());
+  }
 }
