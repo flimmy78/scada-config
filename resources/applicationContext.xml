@@ -45,7 +45,7 @@
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="showSql" value="true" />
 				<property name="generateDdl" value="true" />
-				<property name="database" value="MYSQL" />
+				<property name="database" value="${database.dialect}" />
 			</bean>
 		</property>
 		<property name="persistenceXmlLocation" value="classpath*:META-INF/persistence.xml" />
@@ -97,6 +97,7 @@
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
 			<list>
+				<value>file:././config/application.properties</value>
 				<value>classpath*:application.properties</value>
 			</list>
 		</property>
