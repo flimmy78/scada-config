@@ -4,3 +4,5 @@
 /.classpath
 /bin
 /test-output
+*.properties
+/resources/*.properties
