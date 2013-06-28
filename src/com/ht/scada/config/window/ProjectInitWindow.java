@@ -270,7 +270,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType28 = new VarSubType("GV_YG","有功功率",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType29 = new VarSubType("GV_WG","无功功率",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType30 = new VarSubType("GV_SZ","视在功率",varGroupCfgDianYC,varTypeYC);
-		VarSubType varSubType101 = new VarSubType("GV_YS","功率因数",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType101 = new VarSubType("GV_GLYS","功率因数",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType31 = new VarSubType("GV_ZB","周波",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType32 = new VarSubType("GV_YG_A","A相有功功率",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType33 = new VarSubType("GV_YG_B","B相有功功率",varGroupCfgDianYC,varTypeYC);
@@ -281,9 +281,9 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType38 = new VarSubType("GV_SZ_A","A相视在功率",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType39 = new VarSubType("GV_SZ_B","B相视在功率",varGroupCfgDianYC,varTypeYC);
 		VarSubType varSubType40 = new VarSubType("GV_SZ_C","C相视在功率",varGroupCfgDianYC,varTypeYC);
-		VarSubType varSubType41 = new VarSubType("GV_GLYS_A","A相功率因数",varGroupCfgDianYC,varTypeYC);
-		VarSubType varSubType42 = new VarSubType("GV_GLYS_B","B相功率因数",varGroupCfgDianYC,varTypeYC);
-		VarSubType varSubType43 = new VarSubType("GV_GLYS_C","C相功率因数",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType41 = new VarSubType("GV_GVYS_A","A相功率因数",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType42 = new VarSubType("GV_GVYS_B","B相功率因数",varGroupCfgDianYC,varTypeYC);
+		VarSubType varSubType43 = new VarSubType("GV_GVYS_C","C相功率因数",varGroupCfgDianYC,varTypeYC);
 		
 		VarSubType varSubType44 = new VarSubType("DL_ZX_Z","正向有功总电能",varGroupCfgDianYM,varTypeYM);
 		VarSubType varSubType45 = new VarSubType("DL_ZX_J","正向有功尖时电能",varGroupCfgDianYM,varTypeYM);
@@ -317,7 +317,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarSubType varSubType71 = new VarSubType("JLC_SL_LJ","水量瞬时流量",varGroupCfgJiLiangChe,varTypeYM);
 		VarSubType varSubType72 = new VarSubType("JLC_HSL_SH","瞬时含水率",varGroupCfgJiLiangChe,varTypeYC);
 		VarSubType varSubType73 = new VarSubType("JLC_WD_SH","计量车温度",varGroupCfgJiLiangChe,varTypeYC);
-		VarSubType varSubType74 = new VarSubType("JLC_YL_SH","计量车压力",varGroupCfgJiLiangChe,varTypeYC);
+		VarSubType varSubType74 = new VarSubType("JLC_YALI_SH","计量车压力",varGroupCfgJiLiangChe,varTypeYC);
 		VarSubType varSubType75 = new VarSubType("JLC_MD_SH","计量车密度",varGroupCfgJiLiangChe,varTypeYC);
 		
 		VarSubType varSubType76 = new VarSubType("ZC_ZQLL_SH","蒸汽流量瞬时值",varGroupCfgZhuCai,varTypeYC);
@@ -508,6 +508,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		DataType dataType5 = new DataType("MOD10000", "MOD10000");
 		DataType dataType6 = new DataType("FLOAT", "浮点型32位");
 		DataType dataType7 = new DataType("DOUBLE", "双浮点型64位");
+		DataType dataType8 = new DataType("INT16_ARRAY", "双字节数组");
 		dataTypeList.add(dataType1);
 		dataTypeList.add(dataType2);
 		dataTypeList.add(dataType3);
@@ -515,6 +516,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		dataTypeList.add(dataType5);
 		dataTypeList.add(dataType6);
 		dataTypeList.add(dataType7);
+		dataTypeList.add(dataType8);
 		
 		List<CommunicationProtocalType> commProtocalList = new ArrayList<CommunicationProtocalType>();
 		CommunicationProtocalType communicationProtocalType1 = new CommunicationProtocalType("IEC104", "IEC104协议");
