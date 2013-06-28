@@ -6,6 +6,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 
 import com.ht.scada.config.view.ScadaChannelConfigView;
 import com.ht.scada.config.view.ScadaDeviceConfigView;
+import com.ht.scada.config.view.ScadaDeviceTableTreeView;
 import com.ht.scada.config.view.ScadaDeviceTreeView;
 
 /**
@@ -33,5 +34,6 @@ public class ScadaDevicePerspective implements IPerspectiveFactory {
 		IFolderLayout folder = layout.createFolder("device_messages", IPageLayout.LEFT, 1f, editorArea);
 		folder.addPlaceholder(ScadaChannelConfigView.ID);
 		folder.addPlaceholder(ScadaDeviceConfigView.ID);
+		
 	}
 }

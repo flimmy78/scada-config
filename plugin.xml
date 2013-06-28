@@ -131,6 +131,11 @@
             id="com.ht.scada.config.view.ScadaSensorConfigView"
             name="传感器配置">
       </view>
+      <view
+            class="com.ht.scada.config.view.ScadaDeviceTableTreeView"
+            id="com.ht.scada.config.view.ScadaDeviceTableTreeView"
+            name="监控设备显示">
+      </view>
    </extension>
    <extension
          id="product"

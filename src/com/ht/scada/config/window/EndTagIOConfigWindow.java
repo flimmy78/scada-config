@@ -99,6 +99,7 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 		}
 		@Override
 		public Object[] getElements(Object inputElement) {
+			@SuppressWarnings("unchecked")
 			List<EndTag> list = (List<EndTag>) inputElement;
 			return list.toArray();
 		}
@@ -153,7 +154,7 @@ public class EndTagIOConfigWindow extends ApplicationWindow {
 	 */
 	public EndTagIOConfigWindow(MajorTag majorTag) {
 		super(null);
-		this.majorTag = majorTag;
+		this.majorTag  = majorTag;
 		endTagList = endTagService.getEndTagByParentId(majorTag.getId());
 		endTagTypeList = typeService.getAllEndTagType();
 		createActions();

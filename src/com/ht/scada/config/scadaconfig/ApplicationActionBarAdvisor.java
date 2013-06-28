@@ -18,6 +18,7 @@ import com.ht.scada.config.perspective.ScadaObjectPerspective;
 import com.ht.scada.config.util.ImagePath;
 import com.ht.scada.config.view.AreaTreeView;
 import com.ht.scada.config.view.EnergyTreeView;
+import com.ht.scada.config.view.ScadaDeviceTableTreeView;
 import com.ht.scada.config.view.ScadaDeviceTreeView;
 import com.ht.scada.config.view.ScadaObjectTreeView;
 import com.ht.scada.config.view.VariableGroupConfigView;
@@ -44,6 +45,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     private Action scadaObjectChangeAction;
     private Action scadaDeviceChangeAction;
+    private Action scadaDeviceTableTreeChangeAction;
     private Action rtuRemoteChangeAction;
     
     private Action areaViewShowAction;
@@ -82,10 +84,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         varTemplateShowAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.VARIABLE_TEMPLATE_IMAGE));
         register(varTemplateShowAction);
         
-//        scadaDeviceChangeAction = new PerspectiveChangeAction("监控设备配置",ScadaDevicePerspective.ID, window);
+//      scadaDeviceChangeAction = new PerspectiveChangeAction("监控设备配置",ScadaDevicePerspective.ID, window);
         scadaDeviceChangeAction = new OpenViewAction(window, ScadaObjectPerspective.ID, ScadaDeviceTreeView.ID, "监控设备配置");
         scadaDeviceChangeAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_CHANNEL_INDEX_IMAGE));
         register(scadaDeviceChangeAction);
+        
+        scadaDeviceTableTreeChangeAction = new OpenViewAction(window, ScadaObjectPerspective.ID, ScadaDeviceTableTreeView.ID, "监控设备配置(TableTree)");
+        scadaDeviceTableTreeChangeAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(ImagePath.ACQUISITION_CHANNEL_INDEX_IMAGE));
+        register(scadaDeviceTableTreeChangeAction);
+        
         
         rtuRemoteChangeAction = new PerspectiveChangeAction("RTU远程配置",RTURemotePerspective.ID, window);
         register(rtuRemoteChangeAction);
@@ -146,6 +153,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         //监控设备配置
         scadaDeviceMenu.add(scadaDeviceChangeAction);
+        scadaDeviceMenu.add(scadaDeviceTableTreeChangeAction);
         
         //远程RTU配置
         rtuRemoteMenu.add(rtuRemoteChangeAction);

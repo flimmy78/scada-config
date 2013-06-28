@@ -12,6 +12,7 @@ import com.ht.scada.config.view.EnergyTreeView;
 import com.ht.scada.config.view.MainIndexView;
 import com.ht.scada.config.view.ScadaChannelConfigView;
 import com.ht.scada.config.view.ScadaDeviceConfigView;
+import com.ht.scada.config.view.ScadaDeviceTableTreeView;
 import com.ht.scada.config.view.ScadaDeviceTreeView;
 import com.ht.scada.config.view.ScadaObjectTreeView;
 import com.ht.scada.config.view.VariableGroupConfigView;
@@ -41,6 +42,7 @@ public class ScadaObjectPerspective implements IPerspectiveFactory {
 		leftFolder.addPlaceholder(EnergyTreeView.ID);
 		
 		leftFolder.addPlaceholder(ScadaDeviceTreeView.ID);
+		leftFolder.addPlaceholder(ScadaDeviceTableTreeView.ID);					//表格树显示在左侧
 		
 		leftFolder.addPlaceholder(VariableGroupConfigView.ID);
 		leftFolder.addPlaceholder(VariableTemplateConfigView.ID);
