@@ -31,10 +31,27 @@ import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.ViewPropertyChange;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.custom.CTabItem;
 
 public class ScadaChannelConfigView extends ViewPart implements
 		IPropertyChangeListener {
 
+	private Combo comboBaud;
+	private Combo comboDatabit;
+	private Combo comboCheckbit;
+	private Combo comboStopbit;
+	
+	private String [] comboBaudArray = new String[] {"9600", "19200", "38400", "57600", "115200"};
+	private String [] comboDatabitArray = new String[] {"5", "6", "7", "8"};
+	private String [] comboCheckbitArray = new String[] {"无", "奇", "偶"};
+	private String [] comboStopbitArray = new String[] {"1", "1.5", "2"};
+	
+	private CTabFolder tabFolderPortInfor;
+	
 	public ScadaChannelConfigView() {
 		protocalTypeList = typeService.getAllCommunicationProtocalType();
 		if(protocalTypeList!=null && !protocalTypeList.isEmpty()) {
@@ -69,9 +86,16 @@ public class ScadaChannelConfigView extends ViewPart implements
 	private Label labelProtocal;
 	private List<CommunicationProtocalType> protocalTypeList;
 	private String[] protocalTypeStr = new String[]{""};
+	private Text textIP;
+	private Text textPort;
+	private Text textDTUID;
+	private Text textDtuPort;
+	private Text textHeart;
+	private Text textHeartInteval;
+	private Text textSerialPort;
 
 	public void createPartControl(Composite parent) {
-		GridLayout gl_parent = new GridLayout(1, false);
+		GridLayout gl_parent = new GridLayout(2, false);
 		gl_parent.verticalSpacing = 20;
 		gl_parent.marginTop = 25;
 		gl_parent.marginLeft = 40;
@@ -353,6 +377,133 @@ public class ScadaChannelConfigView extends ViewPart implements
 	
 		btnCancel.setText("取消(C)");
 		btnCancel.setBounds(151, 10, 61, 27);
+		
+		Composite composite_2 = new Composite(parent, SWT.NONE);
+		GridData gd_composite_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_composite_2.heightHint = 273;
+		gd_composite_2.widthHint = 310;
+		composite_2.setLayoutData(gd_composite_2);
+		
+		Group group_1 = new Group(composite_2, SWT.NONE);
+		group_1.setText("端口信息");
+		group_1.setBounds(10, 10, 290, 175);
+		
+	    tabFolderPortInfor = new CTabFolder(group_1, SWT.BORDER);
+		tabFolderPortInfor.setBounds(10, 39, 270, 126);
+		tabFolderPortInfor.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		
+		CTabItem tbtmTcpIp = new CTabItem(tabFolderPortInfor, SWT.NONE);
+		tbtmTcpIp.setText("tcp/ip");
+		
+		Composite composite_3 = new Composite(tabFolderPortInfor, SWT.NONE);
+		tbtmTcpIp.setControl(composite_3);
+		composite_3.setLayout(new GridLayout(2, false));
+		
+		Label labelIP = new Label(composite_3, SWT.NONE);
+		labelIP.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelIP.setText("IP   ：");
+		
+		textIP = new Text(composite_3, SWT.BORDER);
+		GridData gd_textIP = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_textIP.widthHint = 144;
+		textIP.setLayoutData(gd_textIP);
+		
+		Label labelPort = new Label(composite_3, SWT.NONE);
+		labelPort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelPort.setText("端口：");
+		
+		textPort = new Text(composite_3, SWT.BORDER);
+		
+		CTabItem tbtmDtu = new CTabItem(tabFolderPortInfor, SWT.NONE);
+		tbtmDtu.setText("dtu");
+		
+		Composite composite_4 = new Composite(tabFolderPortInfor, SWT.NONE);
+		tbtmDtu.setControl(composite_4);
+		composite_4.setLayout(new GridLayout(5, false));
+		
+		Label labelDTUID = new Label(composite_4, SWT.NONE);
+		labelDTUID.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelDTUID.setText("DTU-ID：");
+		
+		textDTUID = new Text(composite_4, SWT.BORDER);
+		GridData gd_textDTUID = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gd_textDTUID.widthHint = 62;
+		textDTUID.setLayoutData(gd_textDTUID);
+		
+		Label labelDtuPort = new Label(composite_4, SWT.NONE);
+		labelDtuPort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelDtuPort.setText("端口：");
+		
+		textDtuPort = new Text(composite_4, SWT.BORDER);
+		
+		Label labelHeart = new Label(composite_4, SWT.NONE);
+		labelHeart.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelHeart.setText("心跳信号：");
+		
+		textHeart = new Text(composite_4, SWT.BORDER);
+		GridData gd_textHeart = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gd_textHeart.widthHint = 60;
+		textHeart.setLayoutData(gd_textHeart);
+		new Label(composite_4, SWT.NONE);
+		new Label(composite_4, SWT.NONE);
+		
+		Label labelHeartInterval = new Label(composite_4, SWT.NONE);
+		labelHeartInterval.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 1));
+		labelHeartInterval.setText("心跳信号间隔：");
+		
+		textHeartInteval = new Text(composite_4, SWT.BORDER);
+		GridData gd_textHeartInteval = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gd_textHeartInteval.widthHint = 38;
+		textHeartInteval.setLayoutData(gd_textHeartInteval);
+		new Label(composite_4, SWT.NONE);
+		
+		CTabItem tbtmSerial = new CTabItem(tabFolderPortInfor, SWT.NONE);
+		tbtmSerial.setText("serial");
+		
+		Composite composite_5 = new Composite(tabFolderPortInfor, SWT.NONE);
+		tbtmSerial.setControl(composite_5);
+		composite_5.setLayout(new GridLayout(4, false));
+		
+		Label labelSerialPort = new Label(composite_5, SWT.NONE);
+		labelSerialPort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelSerialPort.setText("端口：");
+		
+		textSerialPort = new Text(composite_5, SWT.BORDER);
+		textSerialPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label labelBaud = new Label(composite_5, SWT.NONE);
+		labelBaud.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelBaud.setText("波特率：");
+		
+		comboBaud = new Combo(composite_5, SWT.NONE);
+		comboBaud.setItems(comboBaudArray);
+		comboBaud.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label labelData = new Label(composite_5, SWT.NONE);
+		labelData.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelData.setText("数据位：");
+		
+		comboDatabit = new Combo(composite_5, SWT.NONE);
+		comboDatabit.setItems(comboDatabitArray);
+		comboDatabit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label labelCheckbit = new Label(composite_5, SWT.NONE);
+		labelCheckbit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelCheckbit.setText("校验位：");
+		
+		comboCheckbit = new Combo(composite_5, SWT.NONE);
+		comboCheckbit.setItems(comboCheckbitArray);
+		comboCheckbit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label labelStopbit = new Label(composite_5, SWT.NONE);
+		labelStopbit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		labelStopbit.setText("停止位：");
+		
+		comboStopbit = new Combo(composite_5, SWT.NONE);
+		comboStopbit.setItems(comboStopbitArray);
+		comboStopbit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_5, SWT.NONE);
+		new Label(composite_5, SWT.NONE);
 
 		ViewPropertyChange.getInstance()
 				.addPropertyChangeListener("channel", this);
@@ -410,7 +561,119 @@ public class ScadaChannelConfigView extends ViewPart implements
 //			int day = updateTimeCalendar.get((Calendar.DAY_OF_MONTH));
 //			dateTimeUpdateTime.setDate(year, month, day);
 			// ====================================
-
+			
+			//20130713,王蓬====
+			/**
+			 * 物理信息
+			 * TCP/IP 通讯方式：	【通讯方式】|【IP】:【端口】
+			 * 					tcp/ip|192.168.1.110:4660
+			 * DTU 通讯方式：		【通讯方式】|【DTU-ID】:【端口】:【心跳信号】:【心跳信号间隔】
+			 * 					dtu|2000:9815:hello:180
+			 * 串口通讯方式:		【通讯方式】|【端口】：【波特率】:【数据位(5/6/7/8)】:【校验位(无/奇/偶)】:【停止位(1/1.5/2)】
+			 * 					serial|1:9600:8:无:1
+			 */
+			//==========================控制端口信息=================================================
+			String portInfor = acquisitionChannel.getPortInfo();	//获得端口信息字符串
+			String tongXinType = portInfor.split("\\|")[0]; 		//获得通讯方式
+			tabFolderPortInfor.setSelection(1);
+			if(tongXinType.equals("tcp/ip")) {
+				tabFolderPortInfor.setSelection(0);
+				
+				//控件初始化
+				String tcpIp = portInfor.split("\\|")[1].split(":")[0];
+				String tcpIpPort = portInfor.split("\\|")[1].split(":")[1];
+				textIP.setText(tcpIp);
+				textPort.setText(tcpIpPort);
+				
+				//其余输入框清空
+				textDTUID.setText("");
+				textDtuPort.setText("");
+				textHeart.setText("");
+				textHeartInteval.setText(""); //
+				textSerialPort.setText("");	
+				comboBaud.select(-1);
+				comboDatabit.select(-1);
+				comboCheckbit.select(-1);
+				comboStopbit.select(-1);
+							
+			} else if (tongXinType.equals("dtu")) {
+				tabFolderPortInfor.setSelection(1);
+				
+				//控件初始化
+				String dtuID = portInfor.split("\\|")[1].split(":")[0];
+				String dtuPort = portInfor.split("\\|")[1].split(":")[1];
+				String heart = portInfor.split("\\|")[1].split(":")[2];
+				String heartInteval = portInfor.split("\\|")[1].split(":")[3];
+				textDTUID.setText(dtuID);
+				textDtuPort.setText(dtuPort);
+				textHeart.setText(heart);
+				textHeartInteval.setText(heartInteval);
+				
+				//其余输入框清空
+				textIP.setText("");
+				textPort.setText("");//
+				textSerialPort.setText("");	
+				comboBaud.select(-1);
+				comboDatabit.select(-1);
+				comboCheckbit.select(-1);
+				comboStopbit.select(-1);
+				
+				
+			} else {
+				tabFolderPortInfor.setSelection(2);
+				//serial|1:9600:8:无:1
+				
+				//控件初始化
+				String serialPort = portInfor.split("\\|")[1].split(":")[0];
+				String baud = portInfor.split("\\|")[1].split(":")[1];
+				String databit = portInfor.split("\\|")[1].split(":")[2];
+				String checkbit = portInfor.split("\\|")[1].split(":")[3];
+				String stopbit =portInfor.split("\\|")[1].split(":")[4];
+				textSerialPort.setText(serialPort);
+				//初始化波特率combo
+				if(baud!=null){
+					for ( int i=0; i<this.comboBaudArray.length; i++) {
+						if ( baud.equals(this.comboBaudArray[i])) {
+							this.comboBaud.select(i);
+						}
+					}
+				}
+				//初始化数据位
+				if(databit!=null) {
+					for( int i=0; i< this.comboDatabitArray.length; i++) {
+						if(databit.equals(this.comboDatabitArray[i])) {
+							this.comboDatabit.select(i);
+						}
+					}
+				}
+				//初始化校验位
+				if(checkbit!=null) {
+					for (int i=0; i<this.comboCheckbitArray.length; i++) {
+						if(checkbit.equals(this.comboCheckbitArray[i])) {
+							this.comboCheckbit.select(i);
+						}
+					}
+				}
+				//初始化停止位
+				if(stopbit!=null) {
+					for(int i=0;i<this.comboStopbitArray.length;i++) {
+						if(stopbit.equals(this.comboStopbitArray[i])){
+							this.comboStopbit.select(i);
+						}
+					}
+				}
+				
+				//其余输入框清空
+				textIP.setText("");
+				textPort.setText("");//
+				textDTUID.setText("");
+				textDtuPort.setText("");
+				textHeart.setText("");
+				textHeartInteval.setText("");
+				
+			}
+			
+					
 		}
 	}
 
