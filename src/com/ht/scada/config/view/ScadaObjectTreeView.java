@@ -118,7 +118,7 @@ public class ScadaObjectTreeView extends ViewPart {
 			if (selectedObject instanceof String) {
 				final String str = (String) selectedObject;
 
-				if (str.equals(RootTreeModel.instanse.labelIndex)) {// 监控对象变量
+				if (str.equals(RootTreeModel.instanse.labelIndex)) {		// 监控对象变量
 					Action objectIndex = new Action() {
 						public void run() {
 							try {
