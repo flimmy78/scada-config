@@ -28,6 +28,7 @@ import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.MainTreeContentProvider;
 import com.ht.scada.config.view.tree.MainTreeLabelProvider;
 import com.ht.scada.config.view.tree.RootTreeModel;
+import com.ht.scada.config.window.EndTagDeviceConfigWindow;
 import com.ht.scada.config.window.EndTagIOConfigWindow;
 
 public class ScadaObjectTreeView extends ViewPart {
@@ -226,7 +227,7 @@ public class ScadaObjectTreeView extends ViewPart {
 				
 				objectIndex = new Action() {
 					public void run() {
-						new EndTagIOConfigWindow(majorTag).open();
+						new EndTagDeviceConfigWindow(majorTag).open();
 					}
 				};
 				objectIndex.setText("关联变量模板与设备(&G)");
