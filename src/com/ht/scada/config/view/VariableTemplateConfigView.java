@@ -100,6 +100,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private String[] varTypeArray = new String[]{""}; // 变量类型
 	private String[] varSubTypeArray = new String[]{""};	//变量子类型
 	private String[] varDataTypeArray = new String[]{""};	//值类型	
+	private String[] varGroupCfgArray = new String[]{""};	//变量分组
 
 	public VariableTemplateConfigView() {
 		tplNameList = tagCfgTplService.findAllTplName();
@@ -126,6 +127,14 @@ public class VariableTemplateConfigView extends ViewPart {
 		}
 		//分组
 		varGroupCfgList = typeService.getAllVarGroupCfg();
+		if(varGroupCfgList != null && !varGroupCfgList.isEmpty()) {
+			int length = varGroupCfgList.size();
+			varGroupCfgArray = new String[length + 1];
+			varGroupCfgArray[0] = "";
+			for (int i = 1; i <= length; i++) {
+				varGroupCfgArray[i] = varGroupCfgList.get(i - 1).getValue();
+			}
+		}
 		
 		//值类型
 		dataTypeList = typeService.getAllDataType();
@@ -402,6 +411,57 @@ public class VariableTemplateConfigView extends ViewPart {
 		GridColumn gridColumn_2 = gridViererColumn_2.getColumn();
 		gridColumn_2.setText("变量分组");
 		gridColumn_2.setWidth(70);
+		gridViererColumn_2
+		.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new ComboBoxCellEditor(grid,
+						varGroupCfgArray);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				if (tagCfgTpl.getVarGroup() != null) {
+					int i = 1;
+					for (VarGroupCfg varGroupCfg : varGroupCfgList) {
+						if (varGroupCfg.getName().equals(tagCfgTpl.getVarGroup())) {
+							return i;
+						}
+						i++;
+					}
+				}
+				return 0;
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				int index = (int)value;
+				if (index<=0) {
+					tagCfgTpl.setVarGroup(null);
+					
+				} else {
+					tagCfgTpl.setVarGroup(varGroupCfgList.get(index-1).getName());
+					
+					//重新初始化子类型
+//					varSubTypeList = typeService.getVarSubTypeByVarTypeName(tagCfgTpl.getVarType());
+//					if(varSubTypeList != null && !varSubTypeList.isEmpty()) {
+//						int len = varSubTypeList.size();
+//						varSubTypeArray = new String[len + 1];
+//						varSubTypeArray[0] = "";
+//						for (int i = 1; i <= len; i++) {
+//							varSubTypeArray[i] = varSubTypeList.get(i - 1).getValue();
+//						}
+//					}
+					
+				}
+
+				gridTableViewer.update(tagCfgTpl, null);
+			}
+		});
 
 		GridViewerColumn gridViererColumn_3 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
@@ -420,7 +480,7 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return tct.getVarName();
+				return tct.getVarName()==null?"":tct.getVarName();
 			}
 
 			protected void setValue(Object element, Object value) {
