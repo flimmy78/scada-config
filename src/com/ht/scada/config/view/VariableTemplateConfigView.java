@@ -62,6 +62,11 @@ import com.ht.scada.config.dialog.StringModifyTypeModel;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
 import com.ht.scada.config.util.PinyinComparator;
+import com.ht.scada.config.window.StorageDetailInfor;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 
 /**
  * 变量模板配置
@@ -88,6 +93,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private List<TagCfgTpl> tagCfgTplList = new ArrayList<>(); // 当前模板所有变量
 	private GridTableViewer gridTableViewer;
 	private List<TagCfgTpl> deletedTplList = new ArrayList<>(); // 要删除的变量模板
+	private List<TagCfgTpl> tagCfgTplListSelect = new ArrayList<>(); // 筛选后的模板集合
 	
 	private List<VarType> varTypeList;
 	private List<VarSubType> varSubTypeList;
@@ -101,6 +107,9 @@ public class VariableTemplateConfigView extends ViewPart {
 	private String[] varSubTypeArray = new String[]{""};	//变量子类型
 	private String[] varDataTypeArray = new String[]{""};	//值类型	
 	private String[] varGroupCfgArray = new String[]{""};	//变量分组
+	
+	private Combo combo;
+	private Combo combo_1;
 
 	public VariableTemplateConfigView() {
 		tplNameList = tagCfgTplService.findAllTplName();
@@ -109,11 +118,12 @@ public class VariableTemplateConfigView extends ViewPart {
 		if(varTypeList != null && !varTypeList.isEmpty()) {
 			int length = varTypeList.size();
 			varTypeArray = new String[length + 1];
-			varTypeArray[0] = "";
+			varTypeArray[0] = "全部";
 			for (int i = 1; i <= length; i++) {
 				varTypeArray[i] = varTypeList.get(i - 1).getValue();
 			}
 		}
+		
 		//子类型
 		varSubTypeList = typeService.getAllVarSubType();
 		allSubTypeList = typeService.getAllVarSubType();
@@ -130,7 +140,7 @@ public class VariableTemplateConfigView extends ViewPart {
 		if(varGroupCfgList != null && !varGroupCfgList.isEmpty()) {
 			int length = varGroupCfgList.size();
 			varGroupCfgArray = new String[length + 1];
-			varGroupCfgArray[0] = "";
+			varGroupCfgArray[0] = "全部";
 			for (int i = 1; i <= length; i++) {
 				varGroupCfgArray[i] = varGroupCfgList.get(i - 1).getValue();
 			}
@@ -178,8 +188,15 @@ public class VariableTemplateConfigView extends ViewPart {
 									.getFirstElement();
 							selectedTplName = tplName;
 							addedTplName = null;
-							initTplInfo(tplName);
+							initTplInfo(tplName);		//进行名称控件设置及获得全部的变量
 							deletedTplList.clear();
+						
+							//点击模板时，初始化变量类型及变量分组
+							combo.setItems(varTypeArray);
+							combo.select(0);
+							
+							combo_1.setItems(varGroupCfgArray);
+							combo_1.select(0);
 						}
 
 					}
@@ -222,12 +239,24 @@ public class VariableTemplateConfigView extends ViewPart {
 										Label lblNewLabel = new Label(composite_3, SWT.NONE);
 										lblNewLabel.setText("变量类型：");
 						
-								Combo combo = new Combo(composite_3, SWT.NONE);
+								combo = new Combo(composite_3, SWT.NONE);
+								combo.addSelectionListener(new SelectionAdapter() {
+									@Override
+									public void widgetSelected(SelectionEvent e) {									
+										tagSearch();	//根据条件筛选变量
+									}
+								});
 				
 						Label label_1 = new Label(composite_3, SWT.NONE);
 						label_1.setText("变量分组：");
 		
-				Combo combo_1 = new Combo(composite_3, SWT.NONE);
+				combo_1 = new Combo(composite_3, SWT.NONE);
+				combo_1.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						tagSearch();	//根据条件筛选变量
+					}
+				});
 
 		Button btnNewButton_1 = new Button(composite_3, SWT.NONE);
 		btnNewButton_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
@@ -246,6 +275,14 @@ public class VariableTemplateConfigView extends ViewPart {
 				| SWT.V_SCROLL | SWT.H_SCROLL);
 
 		final Grid grid = gridTableViewer.getGrid();
+		grid.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+		
+//				sdi.setLocationX(e.x);
+//				sdi.setLocationY(e.y);
+			}
+		});
 		grid.setHeaderVisible(true);
 		grid.setColumnScrolling(true);
 		grid.setCellSelectionEnabled(true);
@@ -1216,6 +1253,7 @@ public class VariableTemplateConfigView extends ViewPart {
 		gridColumn_13.setText("存储规则");
 		gridColumn_13.setWidth(65);
 		gridViewerColumn_13.setEditingSupport(new EditingSupport(gridTableViewer) {
+			StorageDetailInfor sdi;
 			protected boolean canEdit(Object element) {
 				return true;
 			}
@@ -1227,12 +1265,17 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return tct.getStorage()==null?"":tct.getStorage();
+				sdi =new StorageDetailInfor();
+				sdi.setStorageStr(tct.getStorage());
+				sdi.open();
+				return sdi.getStorageStr();
+				//return tct.getStorage()==null?"":tct.getStorage();
+			
 			}
 
 			protected void setValue(Object element, Object value) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setStorage("".equals((String)value)?null:(String)value);
+				tct.setStorage("".equals((String)value)?null:(String)value);			
 				gridTableViewer.update(tct, null);
 			}
 		});
@@ -1710,4 +1753,72 @@ public class VariableTemplateConfigView extends ViewPart {
 		return null;
 	}
 
+	/*
+	 * 根据条件筛选变量
+	 */
+	private void tagSearch() {
+		//System.out.println("变量类型进行了选择！");
+		
+		tagCfgTplListSelect.clear();
+		TagCfgTpl temp = new TagCfgTpl();	//临时变量
+		
+		String tagName = "";				//获得value对应的name，例如value为遥测，name获得为：YC
+		for (int j=0 ; j< varTypeList.size(); j++) {
+			VarType temp1=varTypeList.get(j);
+			if (temp1.getValue().equals(combo.getText().trim())) {
+				tagName =  temp1.getName();
+				break;
+			}
+		}
+		
+		String tagGroupName = "";			//分组的名字
+		for ( int jj=0 ; jj < varGroupCfgList.size(); jj++ ) {
+			VarGroupCfg temp11 = varGroupCfgList.get(jj);
+			if (temp11.getValue().equals(combo_1.getText().trim())) {
+				tagGroupName = temp11.getName();
+				break;
+			}
+		}
+		
+		if(combo.getSelectionIndex() == 0 && combo_1.getSelectionIndex() == 0 ) {	//全部选择'全部'
+			for (int k=0; k<tagCfgTplList.size(); k++) {
+				tagCfgTplListSelect.add(tagCfgTplList.get(k));
+			}
+		} else if (combo.getSelectionIndex() == 0 && combo_1.getSelectionIndex() != 0 ) {
+			
+			for ( int i=0; i< tagCfgTplList.size(); i++) {
+				temp = tagCfgTplList.get(i);
+				//System.out.println(temp.getVarGroup() + ", " + tagGroupName);
+				if (temp.getVarGroup()!=null && temp.getVarGroup().equals(tagGroupName)) {
+					tagCfgTplListSelect.add(temp);
+				}
+			}
+			
+		} else if (combo.getSelectionIndex() != 0 && combo_1.getSelectionIndex() == 0 ) {
+			
+			for ( int i=0; i< tagCfgTplList.size(); i++) {
+				temp = tagCfgTplList.get(i);
+
+				if (temp.getVarType()!=null && temp.getVarType().equals(tagName)) {
+					tagCfgTplListSelect.add(temp);
+				}
+			}
+			
+		} else {
+			
+			for ( int i=0; i< tagCfgTplList.size(); i++) {
+				temp = tagCfgTplList.get(i);
+				if (temp.getVarType()!=null && temp.getVarType().equals(tagName) &&
+						temp.getVarGroup()!=null && temp.getVarGroup().equals(tagGroupName) ) {
+					tagCfgTplListSelect.add(temp);
+				}
+			}
+			
+		}
+		
+		gridTableViewer.setInput(tagCfgTplListSelect);
+		gridTableViewer.refresh();
+
+	}
+	
 }
