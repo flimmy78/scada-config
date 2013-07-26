@@ -30,6 +30,7 @@ import com.ht.scada.common.tag.entity.VarGroupCfg;
 import com.ht.scada.common.tag.service.VarGroupCfgService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.LayoutUtil;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 
 /**
  * 变量分组配置
@@ -109,6 +110,9 @@ public class VariableGroupConfigView extends ViewPart implements
 		intervalGridColumn.setAlignment(SWT.CENTER);
 		intervalGridColumn.setWidth(100);
 		intervalGridColumn.setText("存储间隔");
+		
+		ControlDecoration controlDecoration = new ControlDecoration(grid, SWT.LEFT | SWT.TOP);
+		controlDecoration.setDescriptionText("Some description");
 
 		gridTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		gridTableViewer.setLabelProvider(new ViewerLabelProvider());
