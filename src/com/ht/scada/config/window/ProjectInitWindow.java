@@ -523,6 +523,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		dataTypeList.add(dataType6);
 		dataTypeList.add(dataType7);
 		dataTypeList.add(dataType8);
+		dataTypeList.add(dataType9);
 		
 		List<CommunicationProtocalType> commProtocalList = new ArrayList<CommunicationProtocalType>();
 		CommunicationProtocalType communicationProtocalType1 = new CommunicationProtocalType("IEC104", "IEC104协议");
