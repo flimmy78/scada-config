@@ -31,6 +31,7 @@ import com.ht.scada.common.tag.type.entity.MajorTagType;
 import com.ht.scada.common.tag.type.entity.VarSubType;
 import com.ht.scada.common.tag.type.entity.VarType;
 import com.ht.scada.common.tag.type.service.TypeService;
+import com.ht.scada.common.tag.util.VarGroupEnum;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.LayoutUtil;
 
@@ -175,21 +176,22 @@ public class ProjectInitWindow extends ApplicationWindow {
 		endTagSubTypeList.add(endTagSubType4);
 		endTagSubTypeList.add(endTagSubType5);
 		
-		VarGroupCfg varGroupCfgDianYC = new VarGroupCfg("DIAN_YC","电力数据");
-		VarGroupCfg varGroupCfgDianYM = new VarGroupCfg("DIAN_YM","电能数据");
-		VarGroupCfg varGroupCfgDianXB = new VarGroupCfg("DIAN_XB","谐波");
-		VarGroupCfg varGroupCfgYouJing = new VarGroupCfg("YOU_JING","油井");
-		VarGroupCfg varGroupCfgSGT = new VarGroupCfg("YOU_JING_SGT","示功图");
-		VarGroupCfg varGroupCfgDGT = new VarGroupCfg("YOU_JING_DGT","电功图");
-		VarGroupCfg varGroupCfgShuiJing = new VarGroupCfg("SHUI_JING","水井");
-		VarGroupCfg varGroupCfgJiLiangChe = new VarGroupCfg("JI_LIANG","计量车");
-		VarGroupCfg varGroupCfgZhuCai = new VarGroupCfg("ZHU_CAI","注采");
-		VarGroupCfg varGroupCfgRTUStatus = new VarGroupCfg("RTU_ZHUANG_TAI", "RTU状态");
-		VarGroupCfg varGroupCfgSensorRun = new VarGroupCfg("SENSOR_RUN", "传感器运行");
-		VarGroupCfg varGroupCfgZYZYC = new VarGroupCfg("ZYZ_YC", "增压站遥测量");
-		VarGroupCfg varGroupCfgZSZYC = new VarGroupCfg("ZSZ_YC", "注水站遥测量");
-		VarGroupCfg varGroupCfgJZZYC = new VarGroupCfg("JZZ_YC", "接转站遥测量");
-		VarGroupCfg varGroupCfgLHZYC = new VarGroupCfg("LHZ_YC", "联合站遥测量");
+		VarGroupCfg varGroupCfgDianYC = new VarGroupCfg(VarGroupEnum.DIAN_YC.toString(), "电力数据");
+		VarGroupCfg varGroupCfgDianYM = new VarGroupCfg(VarGroupEnum.DIAN_YM.toString(),"电能数据");
+		VarGroupCfg varGroupCfgDianXB = new VarGroupCfg(VarGroupEnum.DIAN_XB.toString(),"谐波");
+		VarGroupCfg varGroupCfgYouJing = new VarGroupCfg(VarGroupEnum.YOU_JING.toString(),"油井");
+		VarGroupCfg varGroupCfgSGT = new VarGroupCfg(VarGroupEnum.YOU_JING_SGT.toString(),"示功图");
+		VarGroupCfg varGroupCfgDGT = new VarGroupCfg(VarGroupEnum.YOU_JING_DGT.toString(),"电功图");
+		VarGroupCfg varGroupCfgShuiJing = new VarGroupCfg(VarGroupEnum.SHUI_JING.toString(),"水井");
+		VarGroupCfg varGroupCfgJiLiangChe = new VarGroupCfg(VarGroupEnum.JI_LIANG.toString(),"计量车");
+		VarGroupCfg varGroupCfgZhuCai = new VarGroupCfg(VarGroupEnum.ZHU_CAI.toString(),"注采");
+		VarGroupCfg varGroupCfgRTUStatus = new VarGroupCfg(VarGroupEnum.RTU_ZHUANG_TAI.toString(), "RTU状态");
+		VarGroupCfg varGroupCfgSensorRun = new VarGroupCfg(VarGroupEnum.SENSOR_RUN.toString(), "传感器运行");
+		VarGroupCfg varGroupCfgZYZYC = new VarGroupCfg(VarGroupEnum.ZYZ_YC.toString(), "增压站遥测量");
+		VarGroupCfg varGroupCfgZSZYC = new VarGroupCfg(VarGroupEnum.ZSZ_YC.toString(), "注水站遥测量");
+		VarGroupCfg varGroupCfgJZZYC = new VarGroupCfg(VarGroupEnum.JZZ_YC.toString(), "接转站遥测量");
+		VarGroupCfg varGroupCfgLHZYC = new VarGroupCfg(VarGroupEnum.LHZ_YC.toString(), "联合站遥测量");
+		VarGroupCfg varGroupCfgSBCS = new VarGroupCfg(VarGroupEnum.CAN_SHU_DEVICE.toString(), "设备参数");
 		
 		varGroupCfgList.add(varGroupCfgDianYC);
 		varGroupCfgList.add(varGroupCfgDianYM);
@@ -206,6 +208,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varGroupCfgList.add(varGroupCfgZSZYC);
 		varGroupCfgList.add(varGroupCfgJZZYC);
 		varGroupCfgList.add(varGroupCfgLHZYC);
+		varGroupCfgList.add(varGroupCfgSBCS);
 		
 		Set<VarGroupCfg> varGroupCfgSet = new HashSet<VarGroupCfg>();
 		varGroupCfgSet.add(varGroupCfgDianYC);
