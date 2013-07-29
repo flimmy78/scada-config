@@ -116,15 +116,14 @@ public class StorageDetailInfor {
 	 */
 	protected void createContents() {
 		shell = new Shell(SWT.TITLE);
+		//shell =  new Shell (SWT.CLOSE);
 		shell.setLocation(locationX, locationY);
-		shell.setSize(370, 190);
-		shell.setText("存储规则详细信息");
-		shell.setLayout(new GridLayout(1, false));
+		shell.setSize(377, 173);
+		shell.setText("存储规则详细配置");
+		shell.setLayout(new GridLayout(2, false));
 		
 		tabFolderStorage = new CTabFolder(shell, SWT.BORDER);
-		GridData gd_tabFolderStorage = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_tabFolderStorage.widthHint = 347;
-		tabFolderStorage.setLayoutData(gd_tabFolderStorage);
+		tabFolderStorage.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		tabFolderStorage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -202,7 +201,7 @@ public class StorageDetailInfor {
 		textYXSType = new Text(composite_1, SWT.BORDER);
 		textYXSType.setEditable(false);
 		GridData gd_textYXSType = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_textYXSType.widthHint = 80;
+		gd_textYXSType.widthHint = 39;
 		textYXSType.setLayoutData(gd_textYXSType);
 		new Label(composite_1, SWT.NONE);
 		
@@ -211,7 +210,7 @@ public class StorageDetailInfor {
 		
 		comboYXAlarm = new Combo(composite_1, SWT.NONE);
 		GridData gd_comboYXAlarm = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_comboYXAlarm.widthHint = 63;
+		gd_comboYXAlarm.widthHint = -19;
 		comboYXAlarm.setLayoutData(gd_comboYXAlarm);
 		comboYXAlarm.setItems(yxAlarmArray);
 		comboYXAlarm.select(0);
@@ -327,6 +326,17 @@ public class StorageDetailInfor {
 			}
 		});
 		btnSave.setText("保    存");
+		
+		Button btnNewButton = new Button(shell, SWT.NONE);
+		btnNewButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				storageStr = "";
+				shell.close();
+			}
+		});
+		btnNewButton.setText("清    空");
 		
 
 	

@@ -1,7 +1,16 @@
 package com.ht.scada.config.view;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JFileChooser;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -63,6 +72,7 @@ import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
 import com.ht.scada.config.util.PinyinComparator;
 import com.ht.scada.config.window.StorageDetailInfor;
+
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -92,6 +102,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private List<String> tplNameList; // 所有变量模板名字
 	private List<TagCfgTpl> tagCfgTplList = new ArrayList<>(); // 当前模板所有变量
 	private GridTableViewer gridTableViewer;
+	private Grid grid;
 	private List<TagCfgTpl> deletedTplList = new ArrayList<>(); // 要删除的变量模板
 	private List<TagCfgTpl> tagCfgTplListSelect = new ArrayList<>(); // 筛选后的模板集合
 	
@@ -259,10 +270,80 @@ public class VariableTemplateConfigView extends ViewPart {
 				});
 
 		Button btnNewButton_1 = new Button(composite_3, SWT.NONE);
+		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {	 
+				// 从dic字典文件导入对象集合
+				try {
+					
+					File file = new File(".");
+					JFileChooser chooser = new JFileChooser(file); 	//文件选择对话框 (打开TagModels 文件夹)
+					int returnVal = chooser.showOpenDialog(null);
+					String fileName = "";
+					if(returnVal == JFileChooser.APPROVE_OPTION) {
+						System.out.println("You chose to open this file: " +
+					    chooser.getSelectedFile().getName());
+						fileName = chooser.getSelectedFile().getAbsolutePath();
+					}
+					
+					
+					ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName)); 
+					List<TagCfgTpl> tagCfgTplListImport = ( List<TagCfgTpl> ) in.readObject();
+					tagCfgTplList =  tagCfgTplListImport;			//关联当前模板
+					gridTableViewer.setInput(tagCfgTplListImport);
+					gridTableViewer.refresh();
+//					for ( int i=0 ; i< tagCfgTplListImport.size() ; i++ ) {
+//					   TagCfgTpl temp111 =  tagCfgTplListImport.get(i);
+//					   System.out.println( (i+1) + " : " +temp111.getDataId() + " , " + temp111.getVarType());
+//					}
+					in.close();
+				} catch ( IOException | ClassNotFoundException e1) {  
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}		
+			}
+		});
 		btnNewButton_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnNewButton_1.setText("  导入变量词典  ");
 
 		Button button_2 = new Button(composite_3, SWT.NONE);
+		button_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {			
+				File file = new File(".\\TagModels");
+				if ( !file.exists()){
+					 file.mkdirs();
+				} 
+				JFileChooser chooser = new JFileChooser(file); 	//文件选择对话框 (打开TagModels 文件夹)
+				chooser.setSelectedFile(new File("TagModel.dic"));
+				int returnVal = chooser.showOpenDialog(null);
+				String fileName = "";
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					System.out.println("You chose to open this file: " +
+				    chooser.getSelectedFile().getName());
+					fileName = chooser.getSelectedFile().getAbsolutePath();
+				}
+				
+				// 导出变量模板  
+				List<TagCfgTpl> tagCfgTplListExport = new ArrayList<TagCfgTpl>();				
+				try {
+					ObjectOutputStream out = new ObjectOutputStream( 
+					     new FileOutputStream(fileName));
+					GridItem [] giArray = grid.getItems();		// 从gird获得所有变量模板
+					for (int i = 0 ; i < giArray.length ; i++ ) {					
+						tagCfgTplListExport.add( (TagCfgTpl)giArray[i].getData() );
+					}
+					out.writeObject(tagCfgTplListExport);		// 写文件
+
+					out.flush();
+					out.close();
+			
+				} catch ( IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
+			}
+		});
 		button_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		button_2.setText("导出变量词典 ");
 
@@ -274,7 +355,7 @@ public class VariableTemplateConfigView extends ViewPart {
 		gridTableViewer = new GridTableViewer(composite_4, SWT.BORDER
 				| SWT.V_SCROLL | SWT.H_SCROLL);
 
-		final Grid grid = gridTableViewer.getGrid();
+		grid = gridTableViewer.getGrid();
 		grid.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -1265,8 +1346,16 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
+				
 				sdi =new StorageDetailInfor();
-				sdi.setStorageStr(tct.getStorage());
+				if (tct.getStorage() == null || tct.getStorage().length() == 0) {
+					sdi.setStorageStr("fault|-|-|-|-");
+				} else {
+					sdi.setStorageStr(tct.getStorage()); 
+				}
+					
+//				sdi =new StorageDetailInfor();
+//				sdi.setStorageStr(tct.getStorage());
 				sdi.open();
 				return sdi.getStorageStr();
 				//return tct.getStorage()==null?"":tct.getStorage();
@@ -1482,7 +1571,9 @@ public class VariableTemplateConfigView extends ViewPart {
 //					}
 					
 					
-					tagCfgTplService.update(tct);
+					tagCfgTplService.update(tct); 	//正确的 
+					//tagCfgTplService.create(tct);		//修改的
+					
 				}
 
 				tplNameList = tagCfgTplService.findAllTplName();
