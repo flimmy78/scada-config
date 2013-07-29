@@ -31,6 +31,7 @@ import com.ht.scada.common.tag.type.entity.MajorTagType;
 import com.ht.scada.common.tag.type.entity.VarSubType;
 import com.ht.scada.common.tag.type.entity.VarType;
 import com.ht.scada.common.tag.type.service.TypeService;
+import com.ht.scada.common.tag.util.DataTypeEnum;
 import com.ht.scada.common.tag.util.VarGroupEnum;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.LayoutUtil;
@@ -504,7 +505,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		endInfoValueList.add(endTagExtInfoValue5);
 		
 		List<DataType> dataTypeList = new ArrayList<DataType>();
-		DataType dataType1 = new DataType("BOOL", "布尔型");
+		DataType dataType1 = new DataType(DataTypeEnum.BOOL.toString(), "布尔型");
 		DataType dataType2 = new DataType("INT32", "整型32位");
 		DataType dataType3 = new DataType("INT16", "整型16位");
 		DataType dataType4 = new DataType("BCD", "BCD码");
@@ -512,6 +513,8 @@ public class ProjectInitWindow extends ApplicationWindow {
 		DataType dataType6 = new DataType("FLOAT", "浮点型32位");
 		DataType dataType7 = new DataType("DOUBLE", "双浮点型64位");
 		DataType dataType8 = new DataType("INT16_ARRAY", "双字节数组");
+		DataType dataType9 = new DataType(DataTypeEnum.ASCII.toString(), DataTypeEnum.ASCII.getValue());
+		
 		dataTypeList.add(dataType1);
 		dataTypeList.add(dataType2);
 		dataTypeList.add(dataType3);
