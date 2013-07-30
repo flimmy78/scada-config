@@ -60,7 +60,7 @@ import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.entity.VarGroupCfg;
 import com.ht.scada.common.tag.service.TagCfgTplService;
-import com.ht.scada.common.tag.type.entity.DataType;
+import com.ht.scada.common.tag.type.entity.DataValueType;
 import com.ht.scada.common.tag.type.entity.VarSubType;
 import com.ht.scada.common.tag.type.entity.VarType;
 import com.ht.scada.common.tag.type.service.TypeService;
@@ -109,7 +109,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private List<VarType> varTypeList;
 	private List<VarSubType> varSubTypeList;
 	private List<VarGroupCfg> varGroupCfgList;
-	private List<DataType> dataTypeList;
+	private List<DataValueType> dataTypeList;
 	private List<VarSubType> allSubTypeList;
 	
 	private String selectedTplName = null; // 选定的变量模板名字
@@ -1833,9 +1833,9 @@ public class VariableTemplateConfigView extends ViewPart {
 	 * @param key
 	 * @return
 	 */
-	private DataType getDataType(String key) {
+	private DataValueType getDataType(String key) {
 		if(dataTypeList!=null && !dataTypeList.isEmpty()) {
-			for(DataType type : dataTypeList) {
+			for(DataValueType type : dataTypeList) {
 				if(type.getName().equals(key) || type.getValue().equals(key)) {
 					return type;
 				}

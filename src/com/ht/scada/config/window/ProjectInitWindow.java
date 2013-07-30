@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.ht.scada.common.tag.entity.VarGroupCfg;
 import com.ht.scada.common.tag.type.entity.CommunicationProtocalType;
-import com.ht.scada.common.tag.type.entity.DataType;
+import com.ht.scada.common.tag.type.entity.DataValueType;
 import com.ht.scada.common.tag.type.entity.EndTagExtInfoName;
 import com.ht.scada.common.tag.type.entity.EndTagExtInfoValue;
 import com.ht.scada.common.tag.type.entity.EndTagSubType;
@@ -31,7 +31,7 @@ import com.ht.scada.common.tag.type.entity.MajorTagType;
 import com.ht.scada.common.tag.type.entity.VarSubType;
 import com.ht.scada.common.tag.type.entity.VarType;
 import com.ht.scada.common.tag.type.service.TypeService;
-import com.ht.scada.common.tag.util.DataTypeEnum;
+import com.ht.scada.common.tag.util.DataType;
 import com.ht.scada.common.tag.util.VarGroupEnum;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.LayoutUtil;
@@ -504,16 +504,16 @@ public class ProjectInitWindow extends ApplicationWindow {
 		endInfoValueList.add(endTagExtInfoValue4);
 		endInfoValueList.add(endTagExtInfoValue5);
 		
-		List<DataType> dataTypeList = new ArrayList<DataType>();
-		DataType dataType1 = new DataType(DataTypeEnum.BOOL.toString(), "布尔型");
-		DataType dataType2 = new DataType("INT32", "整型32位");
-		DataType dataType3 = new DataType("INT16", "整型16位");
-		DataType dataType4 = new DataType("BCD", "BCD码");
-		DataType dataType5 = new DataType("MOD10000", "MOD10000");
-		DataType dataType6 = new DataType("FLOAT", "浮点型32位");
-		DataType dataType7 = new DataType("DOUBLE", "双浮点型64位");
-		DataType dataType8 = new DataType("INT16_ARRAY", "双字节数组");
-		DataType dataType9 = new DataType(DataTypeEnum.ASCII.toString(), DataTypeEnum.ASCII.getValue());
+		List<DataValueType> dataTypeList = new ArrayList<DataValueType>();
+		DataValueType dataType1 = new DataValueType(DataType.BOOL.toString(), "布尔型");
+		DataValueType dataType2 = new DataValueType("INT32", "整型32位");
+		DataValueType dataType3 = new DataValueType("INT16", "整型16位");
+		DataValueType dataType4 = new DataValueType("BCD", "BCD码");
+		DataValueType dataType5 = new DataValueType("MOD10000", "MOD10000");
+		DataValueType dataType6 = new DataValueType("FLOAT", "浮点型32位");
+		DataValueType dataType7 = new DataValueType("DOUBLE", "双浮点型64位");
+		DataValueType dataType8 = new DataValueType("INT16_ARRAY", "双字节数组");
+		DataValueType dataType9 = new DataValueType(DataType.ASCII.toString(), DataType.ASCII.getValue());
 		
 		dataTypeList.add(dataType1);
 		dataTypeList.add(dataType2);
