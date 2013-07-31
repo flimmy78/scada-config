@@ -193,6 +193,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarGroupCfg varGroupCfgJZZYC = new VarGroupCfg(VarGroupEnum.JZZ_YC.toString(), "接转站遥测量");
 		VarGroupCfg varGroupCfgLHZYC = new VarGroupCfg(VarGroupEnum.LHZ_YC.toString(), "联合站遥测量");
 		VarGroupCfg varGroupCfgSBCS = new VarGroupCfg(VarGroupEnum.CAN_SHU_DEVICE.toString(), "设备参数");
+		VarGroupCfg varGroupCfgQT = new VarGroupCfg(VarGroupEnum.QI_TA.toString(), VarGroupEnum.QI_TA.getValue());
 		
 		varGroupCfgList.add(varGroupCfgDianYC);
 		varGroupCfgList.add(varGroupCfgDianYM);
@@ -210,6 +211,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varGroupCfgList.add(varGroupCfgJZZYC);
 		varGroupCfgList.add(varGroupCfgLHZYC);
 		varGroupCfgList.add(varGroupCfgSBCS);
+		varGroupCfgList.add(varGroupCfgQT);
 		
 		Set<VarGroupCfg> varGroupCfgSet = new HashSet<VarGroupCfg>();
 		varGroupCfgSet.add(varGroupCfgDianYC);
