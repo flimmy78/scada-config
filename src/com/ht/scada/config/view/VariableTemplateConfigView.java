@@ -81,7 +81,7 @@ import org.eclipse.swt.events.MouseEvent;
 /**
  * 变量模板配置
  * 
- * @author 赵磊
+ * @author 赵磊,王蓬
  * 
  */
 public class VariableTemplateConfigView extends ViewPart {
@@ -289,13 +289,11 @@ public class VariableTemplateConfigView extends ViewPart {
 					
 					ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName)); 
 					List<TagCfgTpl> tagCfgTplListImport = ( List<TagCfgTpl> ) in.readObject();
-					tagCfgTplList =  tagCfgTplListImport;			//关联当前模板
-					gridTableViewer.setInput(tagCfgTplListImport);
+					makeNewModelTags(tagCfgTplListImport);			//从内存中新申请部分地址存放导入的变量模板
+	
+					gridTableViewer.setInput(tagCfgTplList);
 					gridTableViewer.refresh();
-//					for ( int i=0 ; i< tagCfgTplListImport.size() ; i++ ) {
-//					   TagCfgTpl temp111 =  tagCfgTplListImport.get(i);
-//					   System.out.println( (i+1) + " : " +temp111.getDataId() + " , " + temp111.getVarType());
-//					}
+
 					in.close();
 				} catch ( IOException | ClassNotFoundException e1) {  
 					// TODO Auto-generated catch block
@@ -1570,10 +1568,8 @@ public class VariableTemplateConfigView extends ViewPart {
 ////						tct.setVarName(tct.getSubType().toString().toLowerCase());
 //					}
 					
-					
 					tagCfgTplService.update(tct); 	//正确的 
-					//tagCfgTplService.create(tct);		//修改的
-					
+										
 				}
 
 				tplNameList = tagCfgTplService.findAllTplName();
@@ -1909,6 +1905,42 @@ public class VariableTemplateConfigView extends ViewPart {
 		
 		gridTableViewer.setInput(tagCfgTplListSelect);
 		gridTableViewer.refresh();
+
+	}
+	
+	/**
+	 * 将导入模板中的变量在内存中构建出来，并加入到当前模板集合中
+	 * @autor 王蓬
+	 * @param tagCfgTplListImport
+	 */
+	private void makeNewModelTags(List<TagCfgTpl> tagCfgTplListImport){
+	
+		for ( int ii=0; ii< tagCfgTplListImport.size(); ii++) {
+			TagCfgTpl temp= tagCfgTplListImport.get(ii);
+			TagCfgTpl newTag = new TagCfgTpl();			//内存新申请的变量
+			
+			newTag.setBaseValue(temp.getBaseValue());
+			newTag.setBitOffset(temp.getBitOffset());
+			newTag.setByteLen(temp.getByteLen());
+			newTag.setByteOffset(temp.getByteOffset());
+			newTag.setCoefValue(temp.getCoefValue());
+			newTag.setDataId(temp.getDataId());
+			newTag.setDataType(temp.getDataType());
+			newTag.setFunCode(temp.getFunCode());
+			newTag.setMaxValue(temp.getMaxValue());
+			newTag.setMinValue(temp.getMinValue());
+			newTag.setStorage(temp.getStorage());
+			newTag.setSubType(temp.getSubType());
+			newTag.setTagName(temp.getTagName());
+			newTag.setTplName(temp.getTplName());
+			newTag.setTriggerName(temp.getTriggerName());
+			newTag.setUnitValue(temp.getUnitValue());
+			newTag.setVarGroup(temp.getVarGroup());
+			newTag.setVarName(temp.getVarName());
+			newTag.setVarType(temp.getVarType());
+			
+			tagCfgTplList.add(newTag);	//添加入当前模板
+		}
 
 	}
 	
