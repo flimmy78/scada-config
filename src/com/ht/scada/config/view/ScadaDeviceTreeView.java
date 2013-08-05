@@ -32,12 +32,18 @@ import com.ht.scada.common.tag.entity.AcquisitionDevice;
 import com.ht.scada.common.tag.entity.SensorDevice;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.service.AcquisitionDeviceService;
+import com.ht.scada.common.tag.service.SensorDeviceService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.ScadaDeviceTreeContentProvider;
 import com.ht.scada.config.view.tree.ScadaDeviceTreeLabelProvider;
 
+/**
+ * 赵磊、王蓬
+ * @author Administrator
+ *
+ */
 public class ScadaDeviceTreeView extends ViewPart {
 	
 	//private static final Logger log = LoggerFactory.getLogger(ScadaDeviceTreeView.class);
@@ -46,7 +52,8 @@ public class ScadaDeviceTreeView extends ViewPart {
 			.getApplicationContext().getBean("acquisitionChannelService");
 	private AcquisitionDeviceService acquisitionDeviceService = (AcquisitionDeviceService) Activator.getDefault()
 			.getApplicationContext().getBean("acquisitionDeviceService");
-
+	private SensorDeviceService sensorDeviceService = (SensorDeviceService) Activator.getDefault()
+			.getApplicationContext().getBean("sensorDeviceService");
 	
 	public ScadaDeviceTreeView() {
 	}
@@ -295,6 +302,24 @@ public class ScadaDeviceTreeView extends ViewPart {
 				objectIndex.setText("删除设备(&D)");
 				menuMng.add(objectIndex);
 			}
+			else if ( selectedObject instanceof SensorDevice ) {	
+				final SensorDevice sensorDevice = (SensorDevice) selectedObject;
+				//===============删除传感器设备（王蓬）===============
+				Action objectIndex = new Action () {
+					public void run() {
+						if (MessageDialog.openConfirm(treeViewer.getTree()
+								.getShell(), "删除", "确认要删除吗？")) {
+							sensorDeviceService.deleteById(sensorDevice
+									.getId().intValue());
+							
+							treeViewer.remove(sensorDevice);
+						}
+					}
+				};
+				objectIndex.setText("删除传感器(&D)");
+				menuMng.add(objectIndex);
+			}
+			
 		}
 
 	}
