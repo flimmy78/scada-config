@@ -1,5 +1,15 @@
 package com.ht.scada.config.view;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.List;
+
+import javax.swing.JFileChooser;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -30,6 +40,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.ht.scada.common.tag.entity.AcquisitionChannel;
 import com.ht.scada.common.tag.entity.AcquisitionDevice;
 import com.ht.scada.common.tag.entity.SensorDevice;
+import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.service.AcquisitionChannelService;
 import com.ht.scada.common.tag.service.AcquisitionDeviceService;
 import com.ht.scada.common.tag.service.SensorDeviceService;
@@ -265,6 +276,81 @@ public class ScadaDeviceTreeView extends ViewPart {
 				objectIndex.setText("添加传感器(&A)");
 				menuMng.add(objectIndex);
 				
+				//===============导出传感器模板(王蓬)====================
+			    objectIndex = new Action() {
+			    	public void run() {	
+			    		//获得该设备下的所有传感器
+						List<SensorDevice> sensorDeviceList = sensorDeviceService.getSensorByDeviceId(acquisitionDevice.getId());
+						if(sensorDeviceList.size()==0 || sensorDeviceList==null) {	//传感器为空的设备不可导出模板
+							MessageDialog.openError(treeViewer.getTree().getShell(), "错误", "该设备下无传感器可导出!");
+							return;
+						} else {													//存在传感器，导出模板
+				    		File file = new File(".\\TagModels\\SensorModels");
+							if ( !file.exists()){
+								 file.mkdirs();
+							} 
+							JFileChooser chooser = new JFileChooser(file); 	//文件选择对话框 (打开TagModels 文件夹)
+							chooser.setSelectedFile(new File("SensorModel.dic"));
+							int returnVal = chooser.showOpenDialog(null);
+							String fileName = "";
+							if(returnVal == JFileChooser.APPROVE_OPTION) {
+								System.out.println("You chose to open this file: " +
+							    chooser.getSelectedFile().getName());
+								fileName = chooser.getSelectedFile().getAbsolutePath();
+							}
+							
+							// 导出变量模板  
+							try {
+								ObjectOutputStream out = new ObjectOutputStream( 
+								     new FileOutputStream(fileName));
+								
+								out.writeObject(sensorDeviceList);		// 写文件
+								out.flush();
+								out.close();			
+							} catch ( IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}	
+							
+						}
+
+			    	}
+			    };
+			    objectIndex.setText("相关传感器模板导出！(&O)");
+			    menuMng.add(objectIndex);
+			    
+			    //===============导入传感器模板======================
+			    objectIndex = new Action() {
+			    	public void run() {
+			    		System.out.println("要进行传感器模板的导入！");
+						// 从dic字典文件导入对象集合
+						try {
+							
+							File file = new File(".");
+							JFileChooser chooser = new JFileChooser(file); 	//文件选择对话框 (打开TagModels 文件夹)
+							int returnVal = chooser.showOpenDialog(null);
+							String fileName = "";
+							if(returnVal == JFileChooser.APPROVE_OPTION) {
+								System.out.println("You chose to open this file: " +
+							    chooser.getSelectedFile().getName());
+								fileName = chooser.getSelectedFile().getAbsolutePath();
+							}
+
+							ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName)); 
+							//获得文件中的传感器对象集合
+							List<SensorDevice> sensorDeviceList = ( List<SensorDevice> ) in.readObject();	
+							makeNewModelSensors( sensorDeviceList , acquisitionDevice );	//导入传感器对象集合
+							
+							in.close();
+						} catch ( IOException | ClassNotFoundException e1 ) {  
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}		
+			    	}
+			    };
+			    objectIndex.setText("相关传感器模板导入！(&I)");
+			    menuMng.add(objectIndex);
+				
 				menuMng.add(new Separator());
 
 				// ===============修改设备(E)=======================
@@ -356,6 +442,42 @@ public class ScadaDeviceTreeView extends ViewPart {
 		
 	}
 
+	
+	/**
+	 * 将导入模板中的传感器在内存中构建出来，并加入到当前模板集合中
+	 * @autor 王蓬
+	 * @param tagCfgTplListImport
+	 */
+	private void makeNewModelSensors(List<SensorDevice> sensorDeviceList, AcquisitionDevice acquisitionDevice){
+		for( int j=0; j<sensorDeviceList.size(); j++ ) {
+			// 更新数据库
+			SensorDevice sensorTemp = sensorDeviceList.get(j);
+			SensorDevice sensorDevice = new SensorDevice();
+			
+			sensorDevice.setAddress(sensorTemp.getAddress());
+			sensorDevice.setCheckInterval(sensorTemp.getCheckInterval());
+			sensorDevice.setFixPositin(sensorTemp.getFixPositin());
+			sensorDevice.setFixTime(sensorTemp.getFixTime());
+			sensorDevice.setManufacture(sensorTemp.getManufacture());
+			sensorDevice.setName(sensorTemp.getName() + "_in");
+			sensorDevice.setNickName(sensorTemp.getNickName());
+			sensorDevice.setNumber(sensorTemp.getNumber());
+			sensorDevice.setRemark(sensorTemp.getRemark());
+			sensorDevice.setRtuDevice(acquisitionDevice);
+			sensorDevice.setType(sensorTemp.getType());
+			
+			// 更新数据库
+			sensorDeviceService.create(sensorDevice);
+			
+			// 更新左边的树状结构
+			Object parentObject = acquisitionDevice; //关联选中的对象为父对象
+			ScadaDeviceTreeView.treeViewer.add(parentObject, sensorDevice);
+			ScadaDeviceTreeView.treeViewer.setExpandedState(parentObject, true);		
+		}
+	}
+	
+	
+	
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
