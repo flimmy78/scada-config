@@ -510,22 +510,29 @@ public class ProjectInitWindow extends ApplicationWindow {
 		DataValueType dataType1 = new DataValueType(DataType.BOOL.toString(), "布尔型");
 		DataValueType dataType2 = new DataValueType("INT32", "整型32位");
 		DataValueType dataType3 = new DataValueType("INT16", "整型16位");
+		DataValueType dataType11 = new DataValueType("UINT32", "无符号整型32位");
+		DataValueType dataType12 = new DataValueType("UINT16", "无符号整型16位");
 		DataValueType dataType4 = new DataValueType("BCD", "BCD码");
 		DataValueType dataType5 = new DataValueType("MOD10000", "MOD10000");
 		DataValueType dataType6 = new DataValueType("FLOAT", "浮点型32位");
 		DataValueType dataType7 = new DataValueType("DOUBLE", "双浮点型64位");
 		DataValueType dataType8 = new DataValueType("INT16_ARRAY", "双字节数组");
 		DataValueType dataType9 = new DataValueType(DataType.ASCII.toString(), DataType.ASCII.getValue());
+		DataValueType dataType10 = new DataValueType(DataType.MOD1000.toString(), DataType.MOD1000.getValue());
+		
 		
 		dataTypeList.add(dataType1);
 		dataTypeList.add(dataType2);
 		dataTypeList.add(dataType3);
+		dataTypeList.add(dataType11);
+		dataTypeList.add(dataType12);		
 		dataTypeList.add(dataType4);
 		dataTypeList.add(dataType5);
 		dataTypeList.add(dataType6);
 		dataTypeList.add(dataType7);
 		dataTypeList.add(dataType8);
 		dataTypeList.add(dataType9);
+		dataTypeList.add(dataType10);
 		
 		List<CommunicationProtocalType> commProtocalList = new ArrayList<CommunicationProtocalType>();
 		CommunicationProtocalType communicationProtocalType1 = new CommunicationProtocalType("IEC104", "IEC104协议");

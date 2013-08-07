@@ -286,6 +286,10 @@ public class VariableTemplateConfigView extends ViewPart {
 						fileName = chooser.getSelectedFile().getAbsolutePath();
 					}
 					
+					if (fileName == null || fileName.equals("") ) {
+						MessageDialog.openWarning(grid.getShell(), "提示", "请选择要导入的模板文件!");
+						return;
+					}
 					
 					ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName)); 
 					List<TagCfgTpl> tagCfgTplListImport = ( List<TagCfgTpl> ) in.readObject();
@@ -308,6 +312,12 @@ public class VariableTemplateConfigView extends ViewPart {
 		button_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {			
+				
+				if (grid.getItems()==null || grid.getItems().length==0) {
+					MessageDialog.openWarning(grid.getShell(), "提示", "不能导出空模板!");
+					return;
+				}
+				
 				File file = new File(".\\TagModels");
 				if ( !file.exists()){
 					 file.mkdirs();
@@ -320,6 +330,11 @@ public class VariableTemplateConfigView extends ViewPart {
 					System.out.println("You chose to open this file: " +
 				    chooser.getSelectedFile().getName());
 					fileName = chooser.getSelectedFile().getAbsolutePath();
+				}
+				
+				if (fileName == null || fileName.equals("") ) {
+					MessageDialog.openWarning(grid.getShell(), "提示", "请选择模板要导出至的文件!");
+					return;
 				}
 				
 				// 导出变量模板  
