@@ -1,4 +1,4 @@
-package com.ht.scada.config.view;
+package test.com.ht.scada.config.view;
 
 public class Test {
 	public static void main(String args[]) {
