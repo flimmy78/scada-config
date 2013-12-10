@@ -58,6 +58,12 @@ import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.ViewPropertyChange;
 
+/**
+ * 监控对象操作页面类
+ * @author 赵磊
+ * @author 王蓬
+ *
+ */
 public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private static final Logger log = LoggerFactory.getLogger(EndTagView.class);
 
@@ -352,10 +358,19 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					endTagExtInfoService.saveAll(endTagExtInfoList);
 
 
-					ScadaObjectTreeView.treeViewer.add(endTag.getMajorTag(),
-							endTag);
-					ScadaObjectTreeView.treeViewer.setExpandedState(
-							endTag.getMajorTag(), true);
+					//----添加endTag时需要判断其父节点是索引还是endTag对象
+					if (endTag.getParent() == null ) {			// 父节点是索引对象
+						ScadaObjectTreeView.treeViewer.add(endTag.getMajorTag(),
+								endTag);
+						ScadaObjectTreeView.treeViewer.setExpandedState(
+								endTag.getMajorTag(), true);
+					} else {									// 父节点是endTag对象
+						ScadaObjectTreeView.treeViewer.add(endTag.getParent(),
+								endTag);
+						ScadaObjectTreeView.treeViewer.setExpandedState(
+								endTag.getParent(), true);
+					}
+					
 
 				} else {// 编辑
 					if ("".equals(text_name.getText().trim())) {
@@ -426,9 +441,19 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		if (event.getProperty().equals(FirePropertyConstants.ENDTAG_ADD)) {
 			endTag = new EndTag();
 			Object object = event.getNewValue();
-			if (object instanceof MajorTag) {
-				endTag.setMajorTag((MajorTag) object);
+			if (object instanceof MajorTag) {				// 如果选择对象是主索引（王蓬注释）
+				endTag.setMajorTag((MajorTag) object);		
 			}
+			
+	
+			// begin(王蓬) 监控对象节点处添加子监控对象-----------------------------------------------
+			if (object instanceof EndTag) {
+				EndTag temp = (EndTag)object;				// 构造个临时对象
+				endTag.setParent(temp);
+				endTag.setMajorTag(temp.getMajorTag());
+			}
+			// end		 监控对象节点处添加子监控对象-------------------------------------------------
+			
 
 			// 初始化控件值
 			text_name.setText("");

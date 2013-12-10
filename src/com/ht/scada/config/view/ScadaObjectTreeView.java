@@ -175,10 +175,11 @@ public class ScadaObjectTreeView extends ViewPart {
 							e.printStackTrace();
 						}
 						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.MAJOR_ADD, selectedObject);
-						
+//						System.out.println(ViewPropertyChange.getInstance().toString());
+//						System.out.println(selectedObject);
 					}
 				};
-				objectIndex.setText("添加索引(&A)");
+				objectIndex.setText("添加索引1(&A)");
 				menuMng.add(objectIndex);
 				
 				
@@ -264,7 +265,32 @@ public class ScadaObjectTreeView extends ViewPart {
 			}  else if(selectedObject instanceof EndTag) {
 				final EndTag endTag = (EndTag)selectedObject;
 				
+				
+				
 				Action objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getActivePage()
+									.showView(EndTagView.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.ENDTAG_ADD, selectedObject);
+//						System.out.println(ViewPropertyChange.getInstance().toString());
+//						System.out.println(selectedObject);
+					}
+				};
+				objectIndex.setText("添加监控对象(&M)");
+				menuMng.add(objectIndex);
+				
+				
+				
+				
+				
+				
+				objectIndex = new Action() {
 					public void run() {
 						edit(selectedObject);
 					}

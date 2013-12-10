@@ -39,6 +39,7 @@ public class MainTreeContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		
 		if (parentElement instanceof String) {
+			
 			String label = (String) parentElement;
 //			log.debug(label);
 //			return label;
@@ -73,17 +74,48 @@ public class MainTreeContentProvider implements ITreeContentProvider {
 		} else if(parentElement instanceof MajorTag) {
 			List<Object> objectList = new ArrayList<Object>();
 			List<MajorTag> majorTagList = majorTagService.getMajorTagsByParentId(((MajorTag)parentElement).getId());
+			
 			if(majorTagList != null) {
 				objectList.addAll(majorTagList);
 			}
 			List<EndTag> endTagList = endTagService.getEndTagByParentId(((MajorTag)parentElement).getId());
+			
+			//-获得该索引下的一级endTag对象------------
+			List<EndTag> endTagListFather = new ArrayList<EndTag>();
+			for (int i=0; i<endTagList.size(); i++ ) {
+				EndTag temp = endTagList.get(i);
+				if (temp.getParent() == null) {
+					endTagListFather.add(temp);
+				}
+			}
+			
+			if(endTagListFather != null) {
+				objectList.addAll(endTagListFather);
+			}
+			if(!objectList.isEmpty()) {
+				return objectList.toArray();
+			}
+			//--------------
+			
+		}
+		// =若选中的节点是endTag对象------------------------------------------------------------
+		else if (parentElement instanceof EndTag ) {
+			List<Object> objectList = new ArrayList<Object>();
+			
+			EndTag temp = ((EndTag)parentElement);						// 获得当前选中的节点
+			List<EndTag> endTagList = endTagService.findByParent(temp);	// 该endTag节点的所有子节点
+			
 			if(endTagList != null) {
 				objectList.addAll(endTagList);
 			}
 			if(!objectList.isEmpty()) {
 				return objectList.toArray();
 			}
-		}
+			
+		} 
+		// ----------------------------------------------------------------------------------------------
+		
+		
 		return null;
 	}
 
