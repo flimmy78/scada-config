@@ -118,6 +118,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private String[] varSubTypeArray = new String[]{""};	//变量子类型
 	private String[] varDataTypeArray = new String[]{""};	//值类型	
 	private String[] varGroupCfgArray = new String[]{""};	//变量分组
+	private String[] varUnitArray = {"", "m", "cm", "KPa", "MPa", "KW", "KW·h", "KVA", "KVar", "V", "A", "Hz", "m³", "m³/h", "℃"};// 变量单位数组
 	
 	private Combo combo;
 	private Combo combo_1;
@@ -1408,7 +1409,68 @@ public class VariableTemplateConfigView extends ViewPart {
 				gridTableViewer.update(tct, null);
 			}
 		});
+		
+		GridViewerColumn gridViewerColumn_18 = new GridViewerColumn(
+				gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_18 = gridViewerColumn_18.getColumn();
+		gridColumn_18.setText("单位");
+		gridColumn_18.setWidth(50);
+		gridViewerColumn_18.setEditingSupport(new EditingSupport(gridTableViewer){
 
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new ComboBoxCellEditor(grid,
+						varUnitArray);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				if (tagCfgTpl.getUnit() != null) {
+					int i = 1;
+					for (String varUnit : varUnitArray) {
+						if (varUnit.equals(tagCfgTpl.getUnit())) {
+							return i-1;
+						}
+						i++;
+					}
+				}
+				return 0;
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				int index = (int)value;
+				if (index<=0) {
+					System.out.println("000000000000000000");
+					tagCfgTpl.setUnit(null);		
+				} else {
+					System.out.println("111111111111111111 " + value);
+					tagCfgTpl.setUnit("".equals(varUnitArray[index])?null:varUnitArray[index]);
+					//tagCfgTpl.setUnit("hjhjfghfghfghfgh");
+					//tct.setUnit("".equals((String)value)?null:Integer.valueOf((String)value));
+//					//重新初始化子类型
+//					varSubTypeList = typeService.getVarSubTypeByVarTypeName(tagCfgTpl.getVarType());
+//					if(varSubTypeList != null && !varSubTypeList.isEmpty()) {
+//						int len = varSubTypeList.size();
+//						varSubTypeArray = new String[len + 1];
+//						varSubTypeArray[0] = "";
+//						for (int i = 1; i <= len; i++) {
+//							varSubTypeArray[i] = varSubTypeList.get(i - 1).getValue();
+//						}
+//					}
+					
+				}
+
+				System.out.println("进行刷新..." + tagCfgTpl.getUnit());
+				gridTableViewer.update(tagCfgTpl, null);
+			}
+		
+		});
+		
 		GridViewerColumn gridViewerColumn_15 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_15 = gridViewerColumn_15.getColumn();
@@ -1722,13 +1784,15 @@ public class VariableTemplateConfigView extends ViewPart {
 				return tagCfgTpl.getStorage();
 			case 14:// 触发规则
 				return tagCfgTpl.getTriggerName();
-			case 15:// 最大值
+			case 15:// 单位
+				return tagCfgTpl.getUnit();
+			case 16:// 最大值
 				return tagCfgTpl.getMaxValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getMaxValue());
-			case 16:// 最小值
+			case 17:// 最小值
 				return tagCfgTpl.getMinValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getMinValue());
-			case 17:// 脉冲单位
+			case 18:// 脉冲单位
 				return tagCfgTpl.getUnitValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getUnitValue());
 
