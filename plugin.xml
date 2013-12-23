@@ -136,6 +136,11 @@
             id="com.ht.scada.config.view.ScadaDeviceTableTreeView"
             name="监控设备显示">
       </view>
+      <view
+            class="com.ht.scada.config.view.ConfigDesign"
+            id="com.ht.scada.config.view.ConfigDesign"
+            name="组态设计">
+      </view>
    </extension>
    <extension
          id="product"

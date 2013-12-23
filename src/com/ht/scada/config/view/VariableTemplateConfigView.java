@@ -56,10 +56,14 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ht.scada.common.tag.dao.TplModelConfigDao;
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.TagCfgTpl;
+import com.ht.scada.common.tag.entity.TplModelConfig;
 import com.ht.scada.common.tag.entity.VarGroupCfg;
+import com.ht.scada.common.tag.service.EndTagConfigService;
 import com.ht.scada.common.tag.service.TagCfgTplService;
+import com.ht.scada.common.tag.service.TplModelConfigService;
 import com.ht.scada.common.tag.type.entity.DataValueType;
 import com.ht.scada.common.tag.type.entity.VarSubType;
 import com.ht.scada.common.tag.type.entity.VarType;
@@ -113,7 +117,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private List<VarSubType> allSubTypeList;
 	
 	private String selectedTplName = null; // 选定的变量模板名字
-	private String addedTplName = null; // 新增的变量模板名字
+	private String addedTplName = null;			 // 新增的变量模板名字
 	private String[] varTypeArray = new String[]{""}; // 变量类型
 	private String[] varSubTypeArray = new String[]{""};	//变量子类型
 	private String[] varDataTypeArray = new String[]{""};	//值类型	
@@ -237,6 +241,24 @@ public class VariableTemplateConfigView extends ViewPart {
 
 		text_tpl_name = new Text(group_2, SWT.BORDER);
 		text_tpl_name.setBounds(79, 21, 96, 23);
+		
+		Button btnNewButton = new Button(group_2, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+//				TplModelConfigService tplModelConfigService = (TplModelConfigService) Activator
+//						.getDefault().getApplicationContext().getBean("tplModelConfigService");
+//				TplModelConfig tplModelConfig = tplModelConfigService.findByTplname("abc");
+//				tplModelConfigService.deleteByTplname("abc");
+				
+				EndTagConfigService endTagConfigService = (EndTagConfigService) Activator
+						.getDefault().getApplicationContext().getBean("endTagConfigService");
+				
+				endTagConfigService.deleteByTagCfgTplId(1622);
+			}
+		});
+		btnNewButton.setBounds(441, 14, 80, 27);
+		btnNewButton.setText("New Button");
 
 		Group group_1 = new Group(composite_1, SWT.NONE);
 		group_1.setLayout(new GridLayout(1, false));
@@ -2022,5 +2044,4 @@ public class VariableTemplateConfigView extends ViewPart {
 		}
 
 	}
-	
 }

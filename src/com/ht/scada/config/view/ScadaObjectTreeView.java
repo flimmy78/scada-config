@@ -264,9 +264,7 @@ public class ScadaObjectTreeView extends ViewPart {
 				
 			}  else if(selectedObject instanceof EndTag) {
 				final EndTag endTag = (EndTag)selectedObject;
-				
-				
-				
+
 				Action objectIndex = new Action() {
 					public void run() {
 						try {
@@ -278,18 +276,11 @@ public class ScadaObjectTreeView extends ViewPart {
 							e.printStackTrace();
 						}
 						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.ENDTAG_ADD, selectedObject);
-//						System.out.println(ViewPropertyChange.getInstance().toString());
-//						System.out.println(selectedObject);
 					}
 				};
 				objectIndex.setText("添加监控对象(&M)");
 				menuMng.add(objectIndex);
-				
-				
-				
-				
-				
-				
+
 				objectIndex = new Action() {
 					public void run() {
 						edit(selectedObject);
@@ -309,6 +300,25 @@ public class ScadaObjectTreeView extends ViewPart {
 					}
 				};
 				objectIndex.setText("删除监控对象(&D)");
+				menuMng.add(objectIndex);
+				
+				
+				menuMng.add(new Separator());	// 分割线
+				// 一下标签用于设置监控对象的组态图设计
+				objectIndex = new Action() {
+					public void run() {
+						try {
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getActivePage()
+									.showView(ConfigDesign.ID);
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.CONFIG_DESIGN, selectedObject);
+					}
+				};
+				objectIndex.setText("组态模板设计(&C)");
 				menuMng.add(objectIndex);
 			}
 		}

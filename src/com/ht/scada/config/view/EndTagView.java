@@ -1,7 +1,10 @@
 package com.ht.scada.config.view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JFileChooser;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -26,6 +29,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -125,6 +129,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private ComboViewer comboViewer_endType;
 	private ComboViewer comboViewer_endSubType;
 	private Text text_code;
+	private Text textImagePath;
 
 	public void createPartControl(Composite parent) {
 
@@ -234,6 +239,35 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		comboViewer_endSubType.setLabelProvider(new ViewerLabelProvider_2());
 		comboViewer_endSubType.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewer_endSubType.setInput(endTagSubTypeList);
+		
+		Label label_2 = new Label(parent, SWT.NONE);
+		label_2.setText("组态图模型选择：");
+		
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridData gd_composite = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_composite.heightHint = 23;
+		gd_composite.widthHint = 270;
+		composite.setLayoutData(gd_composite);
+		
+		textImagePath = new Text(composite, SWT.BORDER);
+		textImagePath.setBounds(0, 0, 205, 23);
+		
+		Button btnImageChoose = new Button(composite, SWT.NONE);
+		btnImageChoose.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				JFileChooser j1 = new JFileChooser();
+				j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录")); //\\192.168.0.212\软件\csView软件开发\组态图图片目录
+				int n = j1.showOpenDialog(null);
+				if(j1.getSelectedFile() != null ){
+					String fileName = j1.getSelectedFile().toString();
+					textImagePath.setText(fileName);			
+				}
+					
+			}
+		});
+		btnImageChoose.setBounds(211, 0, 55, 23);
+		btnImageChoose.setText("打  开");
 
 		gridTableViewer = new GridTableViewer(parent, SWT.BORDER);
 		final Grid grid = gridTableViewer.getGrid();
@@ -338,6 +372,16 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
 					
+					//以下8行处理图片保存
+					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
+					endTag.setImagePath("".equals(imagePath)?null:imagePath);	
+					// 图片路径非空，有图片存在，设置其宽度和高度
+					if(!imagePath.equals("")) {
+						ImageData data = new ImageData(imagePath);
+						endTag.setImageWidth(data.width);
+						endTag.setImageHeight(data.height);
+					}
+					
 					IStructuredSelection iss = (IStructuredSelection) comboViewer_endType.getSelection();
 					EndTagType endTagType = (EndTagType) iss.getFirstElement();
 					endTag.setType(endTagType.getName());
@@ -350,7 +394,8 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 						endTag.setSubType(null);
 					}
 
-					endTagService.create(endTag);
+
+					endTagService.create(endTag);	//调用新建方法
 					
 					/**
 					 * 保存属性
@@ -382,6 +427,16 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
+					
+					//以下8行处理图片保存
+					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
+					endTag.setImagePath("".equals(imagePath)?null:imagePath);	
+					// 图片路径非空，有图片存在，设置其宽度和高度
+					if(!imagePath.equals("")) {
+						ImageData data = new ImageData(imagePath);
+						endTag.setImageWidth(data.width);
+						endTag.setImageHeight(data.height);
+					}
 					
 					String oldType = endTag.getType();	//原始类型
 					
@@ -460,6 +515,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			text_code.setText("");
 			comboViewer_endType.getCombo().setText("");
 			comboViewer_endSubType.getCombo().setText("");
+			textImagePath.setText("");
 			
 			//初始化属性
 			endTagExtInfoNameList = new ArrayList<EndTagExtInfoName>();
@@ -488,6 +544,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			// 初始化控件值
 			text_name.setText(endTag.getName());
 			text_code.setText(endTag.getCode()==null?"":endTag.getCode());
+			textImagePath.setText(endTag.getImagePath()==null?"":endTag.getImagePath());
 
 			//初始化监控对象类型
 			if (endTag.getType() != null) {
