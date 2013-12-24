@@ -6,9 +6,9 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.config.util.FirePropertyConstants;
@@ -19,13 +19,13 @@ import com.ht.scada.config.util.ViewPropertyChange;
  * @author 王蓬
  * @time 2013.12.20
  */
-public class ConfigDesign extends ViewPart  implements IPropertyChangeListener {
+public class EndTagConfigDesign extends ViewPart  implements IPropertyChangeListener {
 
 	public static final String ID = "com.ht.scada.config.view.ConfigDesign"; //$NON-NLS-1$
 	private Text text;
 
 	private EndTag endTag;		// 监控节点对象
-	public ConfigDesign() {
+	public EndTagConfigDesign() {
 	}
 
 	/**
