@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -52,6 +53,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +79,7 @@ import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
 import com.ht.scada.config.util.PinyinComparator;
 import com.ht.scada.config.window.StorageDetailInfor;
+import com.ht.scada.config.window.TplModelConfigDesign;
 
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -98,6 +102,8 @@ public class VariableTemplateConfigView extends ViewPart {
 			.getDefault().getApplicationContext().getBean("tagCfgTplService");
 	private final TypeService typeService = (TypeService) Activator.getDefault()
 			.getApplicationContext().getBean("typeService");
+	private TplModelConfigService tplModelConfigService = (TplModelConfigService) Activator
+			.getDefault().getApplicationContext().getBean("tplModelConfigService");			// 服务对象
 
 	private MenuManager menuMng;
 
@@ -126,6 +132,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	
 	private Combo combo;
 	private Combo combo_1;
+	private Button btnConfigDesign ;
 
 	public VariableTemplateConfigView() {
 		tplNameList = tagCfgTplService.findAllTplName();
@@ -230,35 +237,40 @@ public class VariableTemplateConfigView extends ViewPart {
 		composite_1.setLayout(new GridLayout(1, false));
 
 		Group group_2 = new Group(composite_1, SWT.NONE);
+		group_2.setLayout(new GridLayout(12, false));
 		group_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		group_2.setText("模板信息");
 		group_2.setBounds(0, 0, 70, 84);
 
 		Label label = new Label(group_2, SWT.NONE);
-		label.setBounds(10, 24, 56, 17);
 		label.setText("模板名：");
 
 		text_tpl_name = new Text(group_2, SWT.BORDER);
-		text_tpl_name.setBounds(79, 21, 96, 23);
+		new Label(group_2, SWT.NONE);
+		new Label(group_2, SWT.NONE);
+		new Label(group_2, SWT.NONE);
+		new Label(group_2, SWT.NONE);
+		new Label(group_2, SWT.NONE);
+		new Label(group_2, SWT.NONE);
+		new Label(group_2, SWT.NONE);
+		new Label(group_2, SWT.NONE);
+		new Label(group_2, SWT.NONE);
 		
-		Button btnNewButton = new Button(group_2, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
+		btnConfigDesign = new Button(group_2, SWT.NONE);
+		btnConfigDesign.setEnabled(false);
+		btnConfigDesign.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				TplModelConfigService tplModelConfigService = (TplModelConfigService) Activator
-//						.getDefault().getApplicationContext().getBean("tplModelConfigService");
-//				TplModelConfig tplModelConfig = tplModelConfigService.findByTplname("abc");
-//				tplModelConfigService.deleteByTplname("abc");
+				String tplName = text_tpl_name.getText().trim();
 				
-				EndTagConfigService endTagConfigService = (EndTagConfigService) Activator
-						.getDefault().getApplicationContext().getBean("endTagConfigService");
+				TplModelConfigDesign tmcd = new TplModelConfigDesign(tplName);
+				tmcd.open();
 				
-				endTagConfigService.deleteByTagCfgTplId(1622);
 			}
 		});
-		btnNewButton.setBounds(441, 14, 80, 27);
-		btnNewButton.setText("New Button");
+		btnConfigDesign.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		btnConfigDesign.setText("组 态 图 设 计");
 
 		Group group_1 = new Group(composite_1, SWT.NONE);
 		group_1.setLayout(new GridLayout(1, false));
@@ -446,6 +458,38 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 		};
 
+		
+		GridViewerColumn gridViewerColumn_19 = new GridViewerColumn(
+				gridTableViewer, SWT.NONE);
+		gridViewerColumn_19.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				return tct.getTagNameConfigDesing();
+			}
+
+			protected void setValue(Object element, Object value) {
+//				if("".equals((String) value)) {
+//					MessageDialog.openError(grid.getShell(), "错误", "设计显示名不能为空！");
+//					return;
+//				}
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setTagNameConfigDesing((String) value);
+				gridTableViewer.update(tct, null);
+			}
+		});
+		GridColumn gridColumn_19 = gridViewerColumn_19.getColumn();
+		gridColumn_19.setText("设计显示名");
+		gridColumn_19.setWidth(70);
+		
 		GridViewerColumn gridViererColumn_6 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_6 = gridViererColumn_6.getColumn();
@@ -1590,6 +1634,7 @@ public class VariableTemplateConfigView extends ViewPart {
 
 				TagCfgTpl tagCfgTpl = new TagCfgTpl();
 				tagCfgTpl.setTagName("新增的变量");
+				tagCfgTpl.setTagNameConfigDesing("新增的变量CD");
 
 				tagCfgTplList.add(tagCfgTpl);
 
@@ -1741,7 +1786,9 @@ public class VariableTemplateConfigView extends ViewPart {
 						deletedTplList.clear();
 						gridTableViewer.setInput(tagCfgTplList);
 						gridTableViewer.refresh();
-
+						
+						// 删除该模板关联的组态图
+						tplModelConfigService.deleteByTplname(text_tpl_name.getText().trim());
 					}
 				};
 				action.setText("删除变量模板");
@@ -1776,45 +1823,47 @@ public class VariableTemplateConfigView extends ViewPart {
 			switch (columnIndex) {
 			case 0:// 变量名
 				return tagCfgTpl.getTagName();
-			case 1:// 变量类型
+			case 1:// 组态设计显示名
+				return tagCfgTpl.getTagNameConfigDesing() ;
+			case 2:// 变量类型
 				return tagCfgTpl.getVarType() == null ? null : getVarType(tagCfgTpl.getVarType()).getValue();
-			case 2:// 变量子类型
+			case 3:// 变量子类型
 				return tagCfgTpl.getSubType() == null ? null : (getVarSubType(tagCfgTpl.getSubType())==null?null:getVarSubType(tagCfgTpl.getSubType()).getValue());
-			case 3:// 变量分组
+			case 4:// 变量分组
 				return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
-			case 4:// 变量key
+			case 5:// 变量key
 				return tagCfgTpl.getVarName();
-			case 5:// 功能码
+			case 6:// 功能码
 				return String.valueOf(tagCfgTpl.getFunCode());
-			case 6:// 数据地址
+			case 7:// 数据地址
 				return String.valueOf(tagCfgTpl.getDataId());
-			case 7:// 字节长度
+			case 8:// 字节长度
 				return String.valueOf(tagCfgTpl.getByteLen());
-			case 8:// 字节偏移量
+			case 9:// 字节偏移量
 				return String.valueOf(tagCfgTpl.getByteOffset());
-			case 9:// 位偏移量
+			case 10:// 位偏移量
 				return String.valueOf(tagCfgTpl.getBitOffset());
-			case 10:// 值类型
+			case 11:// 值类型
 				return tagCfgTpl.getDataType() == null ? null : getDataType(tagCfgTpl.getDataType()).getValue();
-			case 11:// 基数
+			case 12:// 基数
 				return tagCfgTpl.getBaseValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getBaseValue());
-			case 12:// 系数
+			case 13:// 系数
 				return tagCfgTpl.getCoefValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getCoefValue());
-			case 13:// 存储规则
+			case 14:// 存储规则
 				return tagCfgTpl.getStorage();
-			case 14:// 触发规则
+			case 15:// 触发规则
 				return tagCfgTpl.getTriggerName();
-			case 15:// 单位
+			case 16:// 单位
 				return tagCfgTpl.getUnit();
-			case 16:// 最大值
+			case 17:// 最大值
 				return tagCfgTpl.getMaxValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getMaxValue());
-			case 17:// 最小值
+			case 18:// 最小值
 				return tagCfgTpl.getMinValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getMinValue());
-			case 18:// 脉冲单位
+			case 19:// 脉冲单位
 				return tagCfgTpl.getUnitValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getUnitValue());
 
@@ -1849,6 +1898,8 @@ public class VariableTemplateConfigView extends ViewPart {
 		if (!"".equals(tplName)) {
 			initVariableByTplName(tplName);
 		}
+		
+		btnConfigDesign.setEnabled(true);	// 选择模板后，组态设计按钮可用
 	}
 
 	private void initVariableByTplName(String tplName) {
@@ -1867,6 +1918,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	 */
 	private void addTpl() {
 		text_tpl_name.setText("新增变量模板");
+		
 		addedTplName = text_tpl_name.getText();
 		selectedTplName = null;
 
