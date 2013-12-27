@@ -1,5 +1,7 @@
 package com.ht.scada.config.view;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -20,14 +22,17 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.MajorTag;
+import com.ht.scada.common.tag.entity.TplModelConfig;
 import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.common.tag.service.MajorTagService;
+import com.ht.scada.common.tag.service.TplModelConfigService;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
 import com.ht.scada.config.view.tree.MainTreeContentProvider;
 import com.ht.scada.config.view.tree.MainTreeLabelProvider;
 import com.ht.scada.config.view.tree.RootTreeModel;
+import com.ht.scada.config.window.EndTagConfigDesignWindow;
 import com.ht.scada.config.window.EndTagDeviceConfigWindow;
 import com.ht.scada.config.window.EndTagIOConfigWindow;
 
@@ -39,6 +44,8 @@ public class ScadaObjectTreeView extends ViewPart {
 			.getApplicationContext().getBean("majorTagService");
 	private EndTagService endTagService = (EndTagService) Activator.getDefault()
 			.getApplicationContext().getBean("endTagService");
+	private TplModelConfigService tplModelConfigService = (TplModelConfigService) Activator.getDefault()
+			.getApplicationContext().getBean("tplModelConfigService");
 	
 	public ScadaObjectTreeView() {
 	}
@@ -302,23 +309,43 @@ public class ScadaObjectTreeView extends ViewPart {
 				objectIndex.setText("删除监控对象(&D)");
 				menuMng.add(objectIndex);
 				
+				// 个性组态设计是否可用（仅仅当节点关联完模板，并且模板或者节点至少一个存在组态图时可用）
+				boolean configDesignEnable = true;	
+				if (endTag.getTplName()==null) {
+					//JOptionPane.showConfirmDialog(null, "", "", JOptionPane.ERROR_MESSAGE);
+					configDesignEnable = false;
+				}
+				if (configDesignEnable == true ){	 // 关联了模板
+					TplModelConfig tplModelConfigTemp = tplModelConfigService.findByTplname(endTag.getTplName());
+					if (tplModelConfigTemp == null && endTag.getImageWidth() == null ) {	// 个性和共性均为配置模板底图
+						configDesignEnable = false;
+					}
+				}		
 				
 				menuMng.add(new Separator());	// 分割线
 				// 一下标签用于设置监控对象的组态图设计
 				objectIndex = new Action() {
 					public void run() {
-						try {
-							PlatformUI.getWorkbench()
-									.getActiveWorkbenchWindow()
-									.getActivePage()
-									.showView(EndTagConfigDesignView.ID);
-						} catch (PartInitException e) {
-							e.printStackTrace();
-						}
-						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.CONFIG_DESIGN, selectedObject);
+//						try {
+//							PlatformUI.getWorkbench()
+//									.getActiveWorkbenchWindow()
+//									.getActivePage()
+//									.showView(EndTagConfigDesignView.ID);
+//						} catch (PartInitException e) {
+//							e.printStackTrace();
+//						}
+//						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.CONFIG_DESIGN, selectedObject);
+						
+						EndTagConfigDesignWindow etcdw = new EndTagConfigDesignWindow(endTag);
+						etcdw.open();
 					}
 				};
 				objectIndex.setText("组态模板设计(&C)");
+				if (!configDesignEnable){			// 设置按钮状态
+					objectIndex.setEnabled(false);
+				} else {
+					objectIndex.setEnabled(true);
+				}		
 				menuMng.add(objectIndex);
 			}
 		}

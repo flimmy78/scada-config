@@ -274,7 +274,7 @@ public class TplModelConfigDesignWindow extends ApplicationWindow {
 		composite_1 = new Composite(container, SWT.BORDER);
 		composite_1.setLayout(new GridLayout(1, false));
 		gd_composite_1 = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_composite_1.heightHint = 64;
+		gd_composite_1.heightHint = 64;						// 这个参数很重要，需要根据屏幕可以做自适应调整，以后再实现（防止变形）
 		composite_1.setLayoutData(gd_composite_1);
 		
 		compositeImage = new Composite(composite_1, SWT.BORDER);		
@@ -372,11 +372,7 @@ public class TplModelConfigDesignWindow extends ApplicationWindow {
 			text.setText(tplModelConfig.getImagePath());		//　获得图片路径
 
 			imageFittingEditor();								// 插入图片匹配
-			
-			
-			
-			
-			
+
 			//
 			tagCfgTplList = tagCfgTplService.findVariablesByTplName(tplName);	// 获得该模板下的所有变量
 			if (tagCfgTplList.size()!=0) {										// 存在这少一个变量
@@ -456,7 +452,7 @@ public class TplModelConfigDesignWindow extends ApplicationWindow {
 		gd_compositeImage1.widthHint = containerWidth;
 		gd_compositeImage1.heightHint = containerHeight;
 		compositeImage.setLayoutData(gd_compositeImage1);
-		compositeImage.setBounds(0, 0, containerWidth, containerHeight);		// 应用网格后，坐标位置‘0’， ‘0’即没有用，仅设置宽、高即可
+		compositeImage.setBounds(0, 0, containerWidth, containerHeight);		// 应用网格后，坐标位置‘0’， ‘0’即没有用，仅设置宽、高即可(拖动时使用)
 		//System.out.println(containerWidth + ", "  + containerHeight);
 
 		ImageData dataFit = data.scaledTo(containerWidth, containerHeight); 	// 构造符合容器大小的图片信息对象
