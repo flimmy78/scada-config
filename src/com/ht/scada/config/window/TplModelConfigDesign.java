@@ -2,12 +2,16 @@ package com.ht.scada.config.window;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.window.ApplicationWindow;
@@ -33,6 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.ht.scada.common.tag.entity.TagCfgTpl;
 import com.ht.scada.common.tag.entity.TplModelConfig;
@@ -40,9 +45,13 @@ import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.common.tag.service.TplModelConfigService;
 import com.ht.scada.config.scadaconfig.Activator;
 
+/**
+ * 变量模板的组态图设计类
+ * @author 王蓬
+ *
+ */
 public class TplModelConfigDesign extends ApplicationWindow {
-	
-	
+		
 	private int screenWidth;		// 屏幕最大宽度
 	private int screenHeight;		//　屏幕最大高度
 	
@@ -62,6 +71,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 	
 	private ArrayList<Label> labelList = new ArrayList<Label> ();							// 用于存储添加的label控件
 	private ArrayList<TagCfgTpl> tagCfgTplListWithLabel = new ArrayList<TagCfgTpl>();		// 添加标签关联的变量对象
+	private ArrayList<TagCfgTpl> tagCfgTplListDelete = new ArrayList<TagCfgTpl>();		// 移出的变量对象
 	
 	
 	private Text text;
@@ -91,6 +101,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.BORDER);
 		container.setLayout(new GridLayout(1, false));
+		
 		
 		container.addControlListener(new ControlListener(){
 
@@ -160,13 +171,13 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		});
 		btnNewButton.setText("添  加");
 		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
+		
+		Label label_1 = new Label(composite, SWT.NONE);
+		label_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		GridData gd_label_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_label_1.widthHint = 180;
+		label_1.setLayoutData(gd_label_1);
+		label_1.setText("说明：左键拖拽 右键或双击删除 ");
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
@@ -183,7 +194,9 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		new Label(composite, SWT.NONE);
 		
 		Label label = new Label(composite, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 2, 1));
+		GridData gd_label = new GridData(SWT.RIGHT, SWT.CENTER, true, false, 8, 1);
+		gd_label.widthHint = 65;
+		label.setLayoutData(gd_label);
 		label.setText("组态底图：");
 		
 		text = new Text(composite, SWT.BORDER);
@@ -229,6 +242,14 @@ public class TplModelConfigDesign extends ApplicationWindow {
 					tagCfgTplService.update(temp);		// 更改变量的X、Y坐标值				
 				}
 				
+				// 移出变量集合
+				for ( int w= 0 ; w< tagCfgTplListDelete.size(); w++ ) {
+					 temp = tagCfgTplListDelete.get(w);
+					 temp.setX(null);					// 数据更新  (null, null)
+					 temp.setY(null);
+					 tagCfgTplService.update(temp);
+				}
+				
 				
 				// 关联模板与组态底图
 				TplModelConfig tplModelConfig = tplModelConfigService.findByTplname(tplModelName);
@@ -256,18 +277,12 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		gd_composite_1.heightHint = 64;
 		composite_1.setLayoutData(gd_composite_1);
 		
-		compositeImage = new Composite(composite_1, SWT.BORDER);
-		GridData gd_compositeImage = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
-		gd_compositeImage.widthHint = 254;
-		compositeImage.setLayoutData(gd_compositeImage);
-		
+		compositeImage = new Composite(composite_1, SWT.BORDER);		
 		compositeImage.setBackgroundMode(SWT.INHERIT_DEFAULT);						// 设置透明
 		
 		
 		// 初始化控件
 		initWindow(tplModelName);
-		
-		
 		return container;
 	}
 
@@ -334,7 +349,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 	
 	/**
 	 * 初始化控件
-	 * @param tplName
+	 * @param tplName 变量模板名
 	 */
 	public void initWindow(String tplName){
 		// 初始化控件
@@ -343,7 +358,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		tagCfgTplList = tagCfgTplService.findVariablesByTplName(tplModelName);	// 获得该模板下的所有变量
 		String [] tplNameArray = new String [tagCfgTplList.size()];
 		for (int i= 0 ; i<tplNameArray.length; i++) {
-			tplNameArray[i] = tagCfgTplList.get(i).getTagNameConfigDesing();
+			tplNameArray[i] = tagCfgTplList.get(i).getTagName();
 		}
 		combo.setItems(tplNameArray);							// 给combo赋值
 		combo.select(0);
@@ -357,6 +372,41 @@ public class TplModelConfigDesign extends ApplicationWindow {
 			text.setText(tplModelConfig.getImagePath());		//　获得图片路径
 
 			imageFittingEditor();								// 插入图片匹配
+			
+			
+			
+			
+			
+			//
+			tagCfgTplList = tagCfgTplService.findVariablesByTplName(tplName);	// 获得该模板下的所有变量
+			if (tagCfgTplList.size()!=0) {										// 存在这少一个变量
+				TagCfgTpl temp =  new TagCfgTpl();	
+				for (int i = 0; i< tagCfgTplList.size(); i++ ) {
+					temp = tagCfgTplList.get(i);
+					if (temp.getX()!=null && temp.getY()!=null) {				// 该变量已经被设置组态坐标
+						
+						Label label = new Label(compositeImage, SWT.BORDER);
+						int showX = ( temp.getX() * containerWidthObject) / originalImageWidthObject; 		// 相对容器的原图X坐标
+						int showY = ( temp.getY() * containerHeightObject) / originalImageHeightObject;		// 相对容器的原图Y坐标
+						System.out.println(temp.getX() + ", " + containerWidthObject + ", " + originalImageWidthObject);
+						System.out.println(temp.getY() + ", " + containerHeightObject + ", " + originalImageHeightObject);
+						label.setBounds(showX, showY, 110, 27);
+						label.setText(temp.getTagName());		// 设置label的显示值
+						
+						MoveLabelListener listener = new MoveLabelListener();	// 构造一个鼠标监听对象
+						listener.setLabel(label);								// 设置关联信息
+						listener.setListener(listener);
+						listener.setContainer(compositeImage.getBounds());
+						label.addMouseListener(listener);						// 为该label添加监听器
+							
+						tagCfgTplListWithLabel.add(temp);						// 将已有坐标信息的变量添加进当前方案
+						labelList.add(label);
+					}		
+				}
+			}
+			
+			
+		//	System.out.println(tagCfgTplListAready.size() + " PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
 		}
 		
 	}
@@ -406,6 +456,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		gd_compositeImage1.widthHint = containerWidth;
 		gd_compositeImage1.heightHint = containerHeight;
 		compositeImage.setLayoutData(gd_compositeImage1);
+		compositeImage.setBounds(0, 0, containerWidth, containerHeight);		// 应用网格后，坐标位置‘0’， ‘0’即没有用，仅设置宽、高即可
 		//System.out.println(containerWidth + ", "  + containerHeight);
 
 		ImageData dataFit = data.scaledTo(containerWidth, containerHeight); 	// 构造符合容器大小的图片信息对象
@@ -424,6 +475,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		}
 		labelList.clear();	// 清空标签列表
 		tagCfgTplListWithLabel.clear();
+		tagCfgTplListDelete.clear();
 	}
 	
 	/**
@@ -487,6 +539,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		}
 		labelList.clear();	// 清空标签列表
 		tagCfgTplListWithLabel.clear();
+		tagCfgTplListDelete.clear();
 	}
 	
 	
@@ -495,7 +548,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 	 * @author 王蓬
 	 * @time   2013.12.5
 	 */
-	class MoveLabelListener implements MouseMoveListener, MouseListener {
+	class MoveLabelListener implements MouseMoveListener, MouseListener   {
 
 		private Label label;						// 监听的label
 		private MoveLabelListener listener;			// 监听对象
@@ -525,7 +578,30 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		@Override
 		public void mouseDoubleClick(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+			 int j = JOptionPane.showConfirmDialog(null,"确定要删除此变量么？","信息提示",JOptionPane.YES_NO_OPTION);          
+			 if(j==0){            
+				 System.out.println("确定删除");
+				 Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
+				 // System.out.println(tempLabel);
+				 tempLabel.setVisible(false);					// 隐藏按钮
+				 int tplIndexInTplList = 0; 
+				 for(int i=0 ; i<labelList.size();i++){
+					 if(labelList.get(i) == tempLabel ){
+						 tplIndexInTplList = i;	// 获得选中的索引
+						 break;
+					 }
+				 }
+				 
+				 TagCfgTpl temp = tagCfgTplListWithLabel.get(tplIndexInTplList);	// 获得移出的对象
+				 tagCfgTplListDelete.add(temp);							// 加入移出变量集合
+
+				 labelList.remove(tplIndexInTplList);					// 从集合中移出
+				 tagCfgTplListWithLabel.remove(tplIndexInTplList);
+				 
+				 
+			 } else {
+				 System.out.println("取消删除");
+			 }
 		}
 
 		// 当鼠标按下时，注册鼠标移动监听器
@@ -533,14 +609,60 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		public void mouseDown(MouseEvent e) {
 			// TODO Auto-generated method stub
 			label.addMouseMoveListener(listener);
+			
+			
+			if (e.button ==3 ) {									// 捕捉到了鼠标右击事件
+				
+				final JPopupMenu popup = new JPopupMenu("Popup");  
+				final JMenuItem item1  = new JMenuItem("删除变量");
+				final Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
+				
+				item1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						 int j = JOptionPane.showConfirmDialog(null,"确定要删除此变量么？","信息提示",JOptionPane.YES_NO_OPTION);     
+						 if(j==0){            
+							 //System.out.println("确定删除");
+							 Display.getDefault().syncExec(new Runnable() {
+									public void run() {
+										tempLabel.setVisible(false);					// 隐藏按钮
+									}
+								});
+								
+								 int tplIndexInTplList = 0; 
+								 for(int i=0 ; i<labelList.size();i++){
+									 if(labelList.get(i) == tempLabel ){
+										 tplIndexInTplList = i;	// 获得选中的索引
+										 break;
+									 }
+								 }
+								 
+								 TagCfgTpl temp = tagCfgTplListWithLabel.get(tplIndexInTplList);	// 获得移出的对象
+								 tagCfgTplListDelete.add(temp);							// 加入移出变量集合
+
+								 labelList.remove(tplIndexInTplList);					// 从集合中移出
+								 tagCfgTplListWithLabel.remove(tplIndexInTplList);
+						 } else {
+							// System.out.println("取消删除");
+						 }
+						
+						 popup.setVisible(false);
+					}
+				});
+				popup.add(item1);
+
+				//e.x是label框内的相对坐标
+				popup.show(null, tempLabel.getBounds().x + e.x , tempLabel.getBounds().y + e.y + gd_composite_1.heightHint);
+				popup.setInvoker(null);
+			}
+			
 		}
+		
 
 		// 当鼠标抬起时，停止拖放，移除鼠标移动监听器
 		@Override
 		public void mouseUp(MouseEvent e) {
 			// TODO Auto-generated method stub
-			label.removeMouseMoveListener(listener);
-			
+			label.removeMouseMoveListener(listener);			
 		}
 
 		// 当鼠标移动时
@@ -570,9 +692,15 @@ public class TplModelConfigDesign extends ApplicationWindow {
 		
 			// 重新设置按钮的位置，使之跟随鼠标移动 (相对坐标)
 			label.setBounds( labelNormalX, labelNormalY , current.width, current.height);
-	
 		}
-		
 	}
+	
+
+	
+	
+	
+
+
+	
 	
 }

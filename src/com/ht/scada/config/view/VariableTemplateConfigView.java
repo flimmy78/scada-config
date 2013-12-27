@@ -473,7 +473,7 @@ public class VariableTemplateConfigView extends ViewPart {
 
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
-				return tct.getTagNameConfigDesing();
+				return tct.getTagNameShow();
 			}
 
 			protected void setValue(Object element, Object value) {
@@ -482,7 +482,7 @@ public class VariableTemplateConfigView extends ViewPart {
 //					return;
 //				}
 				TagCfgTpl tct = (TagCfgTpl) element;
-				tct.setTagNameConfigDesing((String) value);
+				tct.setTagNameShow((String) value);
 				gridTableViewer.update(tct, null);
 			}
 		});
@@ -1634,7 +1634,7 @@ public class VariableTemplateConfigView extends ViewPart {
 
 				TagCfgTpl tagCfgTpl = new TagCfgTpl();
 				tagCfgTpl.setTagName("新增的变量");
-				tagCfgTpl.setTagNameConfigDesing("新增的变量CD");
+				tagCfgTpl.setTagNameShow("新增的变量CD");
 
 				tagCfgTplList.add(tagCfgTpl);
 
@@ -1824,7 +1824,7 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 0:// 变量名
 				return tagCfgTpl.getTagName();
 			case 1:// 组态设计显示名
-				return tagCfgTpl.getTagNameConfigDesing() ;
+				return tagCfgTpl.getTagNameShow() ;
 			case 2:// 变量类型
 				return tagCfgTpl.getVarType() == null ? null : getVarType(tagCfgTpl.getVarType()).getValue();
 			case 3:// 变量子类型
