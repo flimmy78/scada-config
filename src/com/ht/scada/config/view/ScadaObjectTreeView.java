@@ -311,7 +311,7 @@ public class ScadaObjectTreeView extends ViewPart {
 							PlatformUI.getWorkbench()
 									.getActiveWorkbenchWindow()
 									.getActivePage()
-									.showView(EndTagConfigDesign.ID);
+									.showView(EndTagConfigDesignView.ID);
 						} catch (PartInitException e) {
 							e.printStackTrace();
 						}

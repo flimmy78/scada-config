@@ -19,13 +19,13 @@ import com.ht.scada.config.util.ViewPropertyChange;
  * @author 王蓬
  * @time 2013.12.20
  */
-public class EndTagConfigDesign extends ViewPart  implements IPropertyChangeListener {
+public class EndTagConfigDesignView extends ViewPart  implements IPropertyChangeListener {
 
 	public static final String ID = "com.ht.scada.config.view.ConfigDesign"; //$NON-NLS-1$
 	private Text text;
 
 	private EndTag endTag;		// 监控节点对象
-	public EndTagConfigDesign() {
+	public EndTagConfigDesignView() {
 	}
 
 	/**

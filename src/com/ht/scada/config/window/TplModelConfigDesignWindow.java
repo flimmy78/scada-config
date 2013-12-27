@@ -50,7 +50,7 @@ import com.ht.scada.config.scadaconfig.Activator;
  * @author 王蓬
  *
  */
-public class TplModelConfigDesign extends ApplicationWindow {
+public class TplModelConfigDesignWindow extends ApplicationWindow {
 		
 	private int screenWidth;		// 屏幕最大宽度
 	private int screenHeight;		//　屏幕最大高度
@@ -85,7 +85,7 @@ public class TplModelConfigDesign extends ApplicationWindow {
 	/**
 	 * Create the application window.
 	 */
-	public TplModelConfigDesign(String tplModelName) {
+	public TplModelConfigDesignWindow(String tplModelName) {
 		super(null);
 		setShellStyle(SWT.CLOSE | SWT.APPLICATION_MODAL);	// 模态且仅包含关闭按钮
 		

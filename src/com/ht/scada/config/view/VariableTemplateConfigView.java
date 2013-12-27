@@ -79,7 +79,7 @@ import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.GridViewerColumnSorter;
 import com.ht.scada.config.util.PinyinComparator;
 import com.ht.scada.config.window.StorageDetailInfor;
-import com.ht.scada.config.window.TplModelConfigDesign;
+import com.ht.scada.config.window.TplModelConfigDesignWindow;
 
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -264,7 +264,7 @@ public class VariableTemplateConfigView extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				String tplName = text_tpl_name.getText().trim();
 				
-				TplModelConfigDesign tmcd = new TplModelConfigDesign(tplName);
+				TplModelConfigDesignWindow tmcd = new TplModelConfigDesignWindow(tplName);
 				tmcd.open();
 				
 			}
