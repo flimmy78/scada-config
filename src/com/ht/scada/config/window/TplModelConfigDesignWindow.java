@@ -249,8 +249,7 @@ public class TplModelConfigDesignWindow extends ApplicationWindow {
 					 temp.setY(null);
 					 tagCfgTplService.update(temp);
 				}
-				
-				
+								
 				// 关联模板与组态底图
 				TplModelConfig tplModelConfig = tplModelConfigService.findByTplname(tplModelName);
 				if (tplModelConfig == null) {								// 没有新建
@@ -264,6 +263,8 @@ public class TplModelConfigDesignWindow extends ApplicationWindow {
 					tplModelConfigService.update(tplModelConfig);
 				}
 
+				// 信息提示
+				JOptionPane.showMessageDialog(null,"保存成功","信息提示",JOptionPane.INFORMATION_MESSAGE);          			
 			}
 		});
 		GridData gd_btnNewButton_1 = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);

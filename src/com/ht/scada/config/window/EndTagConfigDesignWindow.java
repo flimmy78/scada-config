@@ -55,6 +55,7 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 	private EndTagConfigService endTagConfigService = (EndTagConfigService) Activator
 			.getDefault().getApplicationContext().getBean("endTagConfigService");			// 节点组态服务对象
 	private EndTagConfig endTagConfig = new EndTagConfig();									// 节点个性组态对象
+	private List<EndTagConfig> endTagConfigList = new ArrayList<>();						// 当前节点的所有个性变量
 	
 	private EndTagService endTagService = (EndTagService) Activator
 			.getDefault().getApplicationContext().getBean("endTagService");					// 节点服务对象
@@ -70,7 +71,10 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 	
 	private ArrayList<Label> labelList = new ArrayList<Label> ();							// 用于存储添加的label控件
 	private ArrayList<TagCfgTpl> tagCfgTplListWithLabel = new ArrayList<TagCfgTpl>();		// 添加标签关联的变量对象
-	private ArrayList<TagCfgTpl> tagCfgTplListDelete = new ArrayList<TagCfgTpl>();		// 移出的变量对象
+	private ArrayList<TagCfgTpl> tagCfgTplListDelete = new ArrayList<TagCfgTpl>();			// 移出的变量对象
+	
+	private ArrayList<EndTagConfig> endTagConfigListWithLabel = new ArrayList<EndTagConfig>();	// 个性模板关联的变量
+	private ArrayList<EndTagConfig> endTagConfigListDelete = new ArrayList<EndTagConfig>();		// 移出的个性变量	
 	
 	
 	private int configFrom = 0 ;	// 组态模板类型， 0-公用模板， 1-个性模板
@@ -142,25 +146,61 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				// 判断该变量是否已经被添加
-				if (tagCfgTplListWithLabel.contains(tagCfgTplList.get(combo.getSelectionIndex()))) {
-					JOptionPane.showMessageDialog(null, "请勿添加重复变量！", "错误操作提示", JOptionPane.ERROR_MESSAGE);
-				} else {
-					tagCfgTplListWithLabel.add(tagCfgTplList.get(combo.getSelectionIndex()));
-					
-					Label label = new Label(compositeImage, SWT.BORDER);
-					label.setBounds(10, 10, 110, 27);		// 注意label的宽度定义需要根据实际待定
-					label.setText(combo.getText().trim());	// 设置label的显示值
-					
-					labelList.add(label);					// 将新建的label放入集合中
-					
-					MoveLabelListener listener = new MoveLabelListener();	// 构造一个鼠标监听对象
-					listener.setLabel(label);								// 设置关联信息
-					listener.setListener(listener);
-					listener.setContainer(compositeImage.getBounds());
-					label.addMouseListener(listener);						// 为该label添加监听器
+				// 公用模板变量添加
+				if ( configFrom ==0 ) {
+					// 判断该变量是否已经被添加
+					if (tagCfgTplListWithLabel.contains(tagCfgTplList.get(combo.getSelectionIndex()))) {
+						JOptionPane.showMessageDialog(null, "请勿添加重复变量！", "错误操作提示", JOptionPane.ERROR_MESSAGE);
+					} else {
+						tagCfgTplListWithLabel.add(tagCfgTplList.get(combo.getSelectionIndex()));
+						
+						Label label = new Label(compositeImage, SWT.BORDER);
+						label.setBounds(10, 10, 110, 27);		// 注意label的宽度定义需要根据实际待定
+						label.setText(combo.getText().trim());	// 设置label的显示值
+						
+						labelList.add(label);					// 将新建的label放入集合中
+						
+						MoveLabelListener listener = new MoveLabelListener();	// 构造一个鼠标监听对象
+						listener.setLabel(label);								// 设置关联信息
+						listener.setListener(listener);
+						listener.setContainer(compositeImage.getBounds());
+						label.addMouseListener(listener);						// 为该label添加监听器
+					}
 				}
 				
+				if ( configFrom==1 ) {							// 个性模板变量添加
+					// 判断该变量是否已经被添加
+					boolean exist = false;		// 要添加的变量已经存在
+					TagCfgTpl temp111 = tagCfgTplList.get(combo.getSelectionIndex());
+					for( int ww=0; ww< endTagConfigListWithLabel.size(); ww++ ) {
+						// System.out.println(temp111.getId() + ", " + endTagConfigListWithLabel.get(ww).getTagCfgTpl().getId() );
+						if ((int)temp111.getId() == (int)(endTagConfigListWithLabel.get(ww).getTagCfgTpl().getId()) ) {		// 同一个变量
+							// System.out.println("正在试图添加已经存在的变量...");
+							exist = true;
+							break;
+						}
+					}
+					
+					if (exist == true) {				// 添加重复的变量
+						JOptionPane.showMessageDialog(null, "请勿添加重复变量！", "错误操作提示", JOptionPane.ERROR_MESSAGE);
+					} else {
+						EndTagConfig temp = new EndTagConfig();
+						temp.setTagCfgTpl(tagCfgTplList.get(combo.getSelectionIndex()));// 将添加的变量关联过来
+						endTagConfigListWithLabel.add(temp);
+						
+						Label label = new Label(compositeImage, SWT.BORDER);
+						label.setBounds(10, 10, 110, 27);		// 注意label的宽度定义需要根据实际待定
+						label.setText(combo.getText().trim());	// 设置label的显示值
+						
+						labelList.add(label);					// 将新建的label放入集合中
+						
+						MoveLabelListener listener = new MoveLabelListener();	// 构造一个鼠标监听对象
+						listener.setLabel(label);								// 设置关联信息
+						listener.setListener(listener);
+						listener.setContainer(compositeImage.getBounds());
+						label.addMouseListener(listener);						// 为该label添加监听器
+					}
+				}	
 				
 			}
 		});
@@ -209,10 +249,6 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 							int originalX = (tempLabel.getBounds().x*originalImageWidthObject) / containerWidthObject;
 							int originalY = (tempLabel.getBounds().y*originalImageHeightObject) / containerHeightObject;
 							
-							int tplID = tagCfgTplListWithLabel.get(i).getId();
-							int endTagID = endTag.getId();
-							// System.out.println(originalX + ", " + originalY + ", " + tplID + "," + endTagID);
-							
 							EndTagConfig temp1 = new EndTagConfig();		// 在个性表中新建
 							endTagConfigService.create(temp1);				// 创建
 										
@@ -223,13 +259,7 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 							temp1.setTagCfgTpl(tagCfgTplTemp);
 							endTagConfigService.update(temp1);
 						}
-					
-//						// 移出变量集合
-//						for ( int w= 0 ; w< tagCfgTplListDelete.size(); w++ ) {
-//							tagCfgTplTemp = tagCfgTplListDelete.get(w);
-//							endTagConfigService.deleteByTagCfgTplId(tagCfgTplTemp.getId());
-//						}
-	
+						
 						// 设置监控节点组态图 属性
 						String imagePath = tplModelConfig.getImagePath();
 						ImageData data = new ImageData(imagePath); // 构建原始图片信息对象
@@ -247,12 +277,49 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 					 }
 				}
 				if (configFrom == 1 ) {				// 使用个性模板时的保存
+					System.out.println(endTagConfigListWithLabel);
+					System.out.println(endTagConfigListDelete);
+					for ( int w = 0 ; w < endTagConfigListWithLabel.size() ; w++ ) {
+						Label tempLabel = labelList.get(w);				// 获得一个label对象（此时label的坐标是绝对坐标，要进行容器内相对转换）
+						int originalX = (tempLabel.getBounds().x*originalImageWidthObject) / containerWidthObject;
+						int originalY = (tempLabel.getBounds().y*originalImageHeightObject) / containerHeightObject;
+						
+						EndTagConfig temp1 = endTagConfigListWithLabel.get(w);	// 获得个性节点对象
+						if ( temp1.getId()!=null ) {	// 原先已存在（更新）
+							temp1.setX(originalX);
+							temp1.setY(originalY);
+							endTagConfigService.update(temp1);
+						} else {						// 原先个性表中不存在（新建）
+							TagCfgTpl tagCfgTplTemp = temp1.getTagCfgTpl();
+							temp1 = new EndTagConfig();						// 在个性表中新建
+							endTagConfigService.create(temp1);				// 创建
+							
+							temp1.setX(originalX);							// 按照内容更新
+							temp1.setY(originalY);
+							temp1.setEndTag(endTag);
+							temp1.setTagCfgTpl(tagCfgTplTemp);
+							
+							endTagConfigService.update(temp1);
+						}	
+					}
 					
+					// 移出变量集合
+					EndTagConfig temp11 = new EndTagConfig();	// 获得个性节点对象
+					for ( int w= 0 ; w< endTagConfigListDelete.size(); w++ ) {
+						temp11 = endTagConfigListDelete.get(w);
+						// System.out.println(temp11.getTagCfgTpl().getTagName( ) + ", " + temp11.getId() );
+						if ( temp11.getId()!=null ) {	// 删除了模板中已有的对象
+							endTagConfigService.deleteById(temp11.getId());
+						}		
+					}
+									
+					// 信息提示
+					JOptionPane.showMessageDialog(null,"保存成功","信息提示",JOptionPane.INFORMATION_MESSAGE);          					
 				}
 			}
 		});
 		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
-		button.setText("保  存");
+		button.setText("设 计 保 存");
 		
 		Button btnNewButton_1 = new Button(composite, SWT.NONE);
 		btnNewButton_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
@@ -267,7 +334,6 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 		compositeImage = new Composite(composite_1, SWT.BORDER);
 		compositeImage.setBackgroundMode(SWT.INHERIT_DEFAULT);						// 设置透明
 	
-
 		pageInit();			// 进行页面的初始化
 		
 		return container;
@@ -304,12 +370,7 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 			lblEndTagName.setText(endTag.getName());
 			tplModelConfig = tplModelConfigService.findByTplname(endTag.getTplName());	// 获得模板组态对象
 			imageFittingEditor(tplModelConfig.getImagePath());							// 调用公用组态图
-			
-			
-			
-			
-			
-			
+
 			// 加载公用组态配置
 			tagCfgTplList = tagCfgTplService.findVariablesByTplName(endTag.getTplName());	// 获得该模板下的所有变量
 			if (tagCfgTplList.size()!=0) {													// 存在这少一个变量
@@ -338,18 +399,39 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 				}
 			}
 			
-			
-			
-			
-			
-			
-
 		} else { 												// 个性组态非空，调用个性组态设计
 			// System.out.println("个性组态设计进行中....");
 			
 			configFrom = 1;
 			
 			imageFittingEditor(endTag.getImagePath());			// 调用个性组态图
+			
+			// 加载个性组态配置
+			endTagConfigList = endTagConfigService.findByEndTagId(endTag.getId());	// 获得该节点的所有个性组态点
+			if (endTagConfigList.size() != 0 ) {
+				EndTagConfig endTagConfig = new EndTagConfig();
+				for( int k = 0; k < endTagConfigList.size(); k ++ ) {
+					endTagConfig = endTagConfigList.get(k);		
+					
+					Label label = new Label(compositeImage, SWT.BORDER);
+					int showX = ( endTagConfig.getX() * containerWidthObject) / originalImageWidthObject; 		// 相对容器的原图X坐标
+					int showY = ( endTagConfig.getY() * containerHeightObject) / originalImageHeightObject;		// 相对容器的原图Y坐标
+					// System.out.println(temp.getX() + ", " + containerWidthObject + ", " + originalImageWidthObject);
+					// System.out.println(temp.getY() + ", " + containerHeightObject + ", " + originalImageHeightObject);
+					label.setBounds(showX, showY, 110, 27);
+					String tagName = tagCfgTplService.getById(endTagConfig.getTagCfgTpl().getId()).getTagName();	// 获得变量显示值
+					label.setText(tagName);		// 设置label的显示值
+					
+					MoveLabelListener listener = new MoveLabelListener();	// 构造一个鼠标监听对象
+					listener.setLabel(label);								// 设置关联信息
+					listener.setListener(listener);
+					listener.setContainer(compositeImage.getBounds());
+					label.addMouseListener(listener);						// 为该label添加监听器
+						
+					endTagConfigListWithLabel.add(endTagConfig);			// 将已有坐标信息的变量添加进当前方案
+					labelList.add(label);
+				}
+			}	
 		}
 	}
 
@@ -461,11 +543,6 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 		containerWidthObject = containerWidth;
 		containerHeightObject = containerHeight;
 		
-		
-//		for (int i=0 ;i < labelList.size(); i++ ){					// 擦出已拖拽变量
-//			Label tempLabel = labelList.get(i);						// 获得一个label对象（此时label的坐标是绝对坐标，要进行容器内相对转换）
-//			tempLabel.setVisible(false)	;
-//		}
 		labelList.clear();	// 清空标签列表
 		tagCfgTplListWithLabel.clear();
 		tagCfgTplListDelete.clear();
@@ -510,24 +587,11 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 			// TODO Auto-generated method stub
 			 int j = JOptionPane.showConfirmDialog(null,"确定要删除此变量么？","信息提示",JOptionPane.YES_NO_OPTION);          
 			 if(j==0){            
-				 System.out.println("确定删除");
+				 // System.out.println("确定删除");
 				 Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
-				 // System.out.println(tempLabel);
 				 tempLabel.setVisible(false);					// 隐藏按钮
-				 int tplIndexInTplList = 0; 
-				 for(int i=0 ; i<labelList.size();i++){
-					 if(labelList.get(i) == tempLabel ){
-						 tplIndexInTplList = i;	// 获得选中的索引
-						 break;
-					 }
-				 }
 				 
-				 TagCfgTpl temp = tagCfgTplListWithLabel.get(tplIndexInTplList);	// 获得移出的对象
-				 tagCfgTplListDelete.add(temp);							// 加入移出变量集合
-
-				 labelList.remove(tplIndexInTplList);					// 从集合中移出
-				 tagCfgTplListWithLabel.remove(tplIndexInTplList);
-				 
+				 tagDeleteProcess(tempLabel);								// 调用删除变量操作	 
 				 
 			 } else {
 				 System.out.println("取消删除");
@@ -539,10 +603,8 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 		public void mouseDown(MouseEvent e) {
 			// TODO Auto-generated method stub
 			label.addMouseMoveListener(listener);
-			
-			
-			if (e.button ==3 ) {									// 捕捉到了鼠标右击事件
-				
+						
+			if (e.button ==3 ) {									// 捕捉到了鼠标右击事件		
 				final JPopupMenu popup = new JPopupMenu("Popup");  
 				final JMenuItem item1  = new JMenuItem("删除变量");
 				final Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
@@ -557,20 +619,7 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 										tempLabel.setVisible(false);					// 隐藏按钮
 									}
 								});
-								
-								 int tplIndexInTplList = 0; 
-								 for(int i=0 ; i<labelList.size();i++){
-									 if(labelList.get(i) == tempLabel ){
-										 tplIndexInTplList = i;	// 获得选中的索引
-										 break;
-									 }
-								 }
-								 
-								 TagCfgTpl temp = tagCfgTplListWithLabel.get(tplIndexInTplList);	// 获得移出的对象
-								 tagCfgTplListDelete.add(temp);							// 加入移出变量集合
-
-								 labelList.remove(tplIndexInTplList);					// 从集合中移出
-								 tagCfgTplListWithLabel.remove(tplIndexInTplList);
+							 tagDeleteProcess(tempLabel);								// 调用删除变量操作
 						 } else {
 							// System.out.println("取消删除");
 						 }
@@ -625,5 +674,34 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 		}
 	}
 	
+	/**
+	 * 删除节点的一些操作
+	 * @param tempLabel
+	 */
+	public void tagDeleteProcess(Label tempLabel) {
+		int tplIndexInTplList = 0; 
+		 for(int i=0 ; i<labelList.size();i++){
+			 if(labelList.get(i) == tempLabel ){
+				 tplIndexInTplList = i;							// 获得选中的索引
+				 break;
+			 }
+		 }
+		 
+		 if ( configFrom ==0 ) {			// 公用模板的删除调用
+			 TagCfgTpl temp = tagCfgTplListWithLabel.get(tplIndexInTplList);	// 获得移出的对象
+			 tagCfgTplListDelete.add(temp);										// 加入移出变量集合
+
+			 labelList.remove(tplIndexInTplList);								// 从集合中移出
+			 tagCfgTplListWithLabel.remove(tplIndexInTplList);
+		 }
+		 
+		 if ( configFrom == 1 ) {			// 个性模板删除调用
+			 EndTagConfig temp = endTagConfigListWithLabel.get(tplIndexInTplList);	// 移出的对象
+			 endTagConfigListDelete.add(temp);
+
+			 labelList.remove(tplIndexInTplList);									// 从集合中移出
+			 endTagConfigListWithLabel.remove(tplIndexInTplList);			 
+		 } 	
+	}
 	
 }
