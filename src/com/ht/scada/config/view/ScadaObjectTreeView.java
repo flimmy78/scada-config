@@ -186,7 +186,7 @@ public class ScadaObjectTreeView extends ViewPart {
 //						System.out.println(selectedObject);
 					}
 				};
-				objectIndex.setText("添加索引1(&A)");
+				objectIndex.setText("添加索引(&A)");
 				menuMng.add(objectIndex);
 				
 				

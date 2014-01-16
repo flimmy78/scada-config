@@ -1635,6 +1635,9 @@ public class VariableTemplateConfigView extends ViewPart {
 				TagCfgTpl tagCfgTpl = new TagCfgTpl();
 				tagCfgTpl.setTagName("新增的变量");
 				tagCfgTpl.setTagNameShow("新增的变量CD");
+				tagCfgTpl.setBaseValue(0.0f);
+				tagCfgTpl.setCoefValue(1.0f);
+				tagCfgTpl.setStorage("");
 
 				tagCfgTplList.add(tagCfgTpl);
 
@@ -1830,7 +1833,11 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 3:// 变量子类型
 				return tagCfgTpl.getSubType() == null ? null : (getVarSubType(tagCfgTpl.getSubType())==null?null:getVarSubType(tagCfgTpl.getSubType()).getValue());
 			case 4:// 变量分组
+			{
+				System.out.println(tagCfgTpl.getVarGroup()+ "   ---------------------------------------------------");
 				return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
+				
+			}
 			case 5:// 变量key
 				return tagCfgTpl.getVarName();
 			case 6:// 功能码
