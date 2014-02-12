@@ -22,7 +22,7 @@
 
 
 	<description>Spring公共配置 </description>
-	
+
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
 	<context:annotation-config />
 	<context:component-scan
@@ -35,12 +35,13 @@
 	<!-- 使用annotation定义事务 -->
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />
-		
+
 	<!-- Jpa Entity Manager 配置 -->
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="packagesToScan" value="com.ht.scada.common.tag.entity,com.ht.scada.common.tag.type.entity" />
+		<property name="packagesToScan"
+			value="com.ht.scada.common.tag.entity,com.ht.scada.common.tag.type.entity" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="showSql" value="true" />
@@ -67,11 +68,23 @@
 	</bean>
 
 	<!-- Spring Data Jpa配置 -->
-	<jpa:repositories base-package="com.ht.scada.common.tag.dao, com.ht.scada.common.tag.type.dao"
+	<jpa:repositories
+		base-package="com.ht.scada.common.tag.dao, com.ht.scada.common.tag.type.dao"
 		transaction-manager-ref="transactionManager"
 		entity-manager-factory-ref="entityManagerFactory">
 	</jpa:repositories>
 
+	<bean id="propertyConfigurer"
+		class="com.ht.scada.config.security.EncryptablePropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>file:././config/application.properties</value>
+				<value>classpath*:application.properties</value>
+			</list>
+		</property>
+	</bean>
 
 	<!-- 数据源配置, 使用DBCP数据库连接池 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
@@ -91,6 +104,7 @@
 		<property name="minEvictableIdleTimeMillis" value="3600000" />
 	</bean>
 
+	<!--  
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
@@ -102,5 +116,6 @@
 			</list>
 		</property>
 	</bean>
+	-->
 
 </beans>
