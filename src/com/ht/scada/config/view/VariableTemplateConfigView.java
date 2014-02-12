@@ -1511,10 +1511,10 @@ public class VariableTemplateConfigView extends ViewPart {
 				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
 				int index = (int)value;
 				if (index<=0) {
-					System.out.println("000000000000000000");
+//					System.out.println("000000000000000000");
 					tagCfgTpl.setUnit(null);		
 				} else {
-					System.out.println("111111111111111111 " + value);
+//					System.out.println("111111111111111111 " + value);
 					tagCfgTpl.setUnit("".equals(varUnitArray[index])?null:varUnitArray[index]);
 					//tagCfgTpl.setUnit("hjhjfghfghfghfgh");
 					//tct.setUnit("".equals((String)value)?null:Integer.valueOf((String)value));
@@ -1531,7 +1531,7 @@ public class VariableTemplateConfigView extends ViewPart {
 					
 				}
 
-				System.out.println("进行刷新..." + tagCfgTpl.getUnit());
+//				System.out.println("进行刷新..." + tagCfgTpl.getUnit());
 				gridTableViewer.update(tagCfgTpl, null);
 			}
 		
@@ -1834,7 +1834,7 @@ public class VariableTemplateConfigView extends ViewPart {
 				return tagCfgTpl.getSubType() == null ? null : (getVarSubType(tagCfgTpl.getSubType())==null?null:getVarSubType(tagCfgTpl.getSubType()).getValue());
 			case 4:// 变量分组
 			{
-				System.out.println(tagCfgTpl.getVarGroup()+ "   ---------------------------------------------------");
+//				System.out.println(tagCfgTpl.getVarGroup()+ "   ---------------------------------------------------");
 				return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
 				
 			}
