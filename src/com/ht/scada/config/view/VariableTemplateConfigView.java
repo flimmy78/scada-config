@@ -128,7 +128,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private String[] varSubTypeArray = new String[]{""};	//变量子类型
 	private String[] varDataTypeArray = new String[]{""};	//值类型	
 	private String[] varGroupCfgArray = new String[]{""};	//变量分组
-	private String[] varUnitArray = {"", "m", "cm", "KPa", "MPa", "KW", "KW·h", "KVA", "KVar", "V", "A", "Hz", "m³", "m³/h", "℃"};// 变量单位数组
+	private String[] varUnitArray = {"", "m", "cm", "KPa", "MPa", "KN", "KW", "KW·h", "KVA", "KVar", "V", "A", "Hz", "m³", "m³/h", "℃", "次/分"};// 变量单位数组
 	
 	private Combo combo;
 	private Combo combo_1;

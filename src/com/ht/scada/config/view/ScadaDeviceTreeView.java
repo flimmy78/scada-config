@@ -459,7 +459,7 @@ public class ScadaDeviceTreeView extends ViewPart {
 			sensorDevice.setFixPositin(sensorTemp.getFixPositin());
 			sensorDevice.setFixTime(sensorTemp.getFixTime());
 			sensorDevice.setManufacture(sensorTemp.getManufacture());
-			sensorDevice.setName(sensorTemp.getName() + "_in");
+			sensorDevice.setName(sensorTemp.getName());
 			sensorDevice.setNickName(sensorTemp.getNickName());
 			sensorDevice.setNumber(sensorTemp.getNumber());
 			sensorDevice.setRemark(sensorTemp.getRemark());
