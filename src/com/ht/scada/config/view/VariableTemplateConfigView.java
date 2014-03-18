@@ -129,6 +129,7 @@ public class VariableTemplateConfigView extends ViewPart {
 	private String[] varDataTypeArray = new String[]{""};	//值类型	
 	private String[] varGroupCfgArray = new String[]{""};	//变量分组
 	private String[] varUnitArray = {"", "m", "cm", "KPa", "MPa", "KN", "KW", "KW·h", "KVA", "KVar", "V", "A", "Hz", "m³", "m³/h", "℃", "次/分"};// 变量单位数组
+	private String [] alarmLevelArray = {"", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};		// 报警及故障级别
 	
 	private Combo combo;
 	private Combo combo_1;
@@ -1476,6 +1477,50 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 		});
 		
+		GridViewerColumn gridViewerColumn_1 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_20 = gridViewerColumn_1.getColumn();
+		gridColumn_20.setWidth(100);
+		gridColumn_20.setText("报警及故障级别");
+		gridViewerColumn_1.setEditingSupport(new EditingSupport(gridTableViewer){
+
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new ComboBoxCellEditor(grid,
+						alarmLevelArray);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				if (tagCfgTpl.getAlarmLevel() != null) {
+					int i = 1;
+					for (String varUnit : alarmLevelArray) {
+						if (varUnit.equals(tagCfgTpl.getAlarmLevel())) {
+							return i-1;
+						}
+						i++;
+					}
+				}
+				return 0;
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				int index = (int)value;
+				if (index<=0) {
+					tagCfgTpl.setAlarmLevel(null);
+				} else {
+					tagCfgTpl.setAlarmLevel(Integer.parseInt( "".equals(alarmLevelArray[index])?null:alarmLevelArray[index]) );
+				}
+
+				gridTableViewer.update(tagCfgTpl, null);
+			}
+		
+		});
+		
 		GridViewerColumn gridViewerColumn_18 = new GridViewerColumn(
 				gridTableViewer, SWT.NONE);
 		GridColumn gridColumn_18 = gridViewerColumn_18.getColumn();
@@ -1834,7 +1879,6 @@ public class VariableTemplateConfigView extends ViewPart {
 				return tagCfgTpl.getSubType() == null ? null : (getVarSubType(tagCfgTpl.getSubType())==null?null:getVarSubType(tagCfgTpl.getSubType()).getValue());
 			case 4:// 变量分组
 			{
-//				System.out.println(tagCfgTpl.getVarGroup()+ "   ---------------------------------------------------");
 				return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
 				
 			}
@@ -1862,15 +1906,19 @@ public class VariableTemplateConfigView extends ViewPart {
 				return tagCfgTpl.getStorage();
 			case 15:// 触发规则
 				return tagCfgTpl.getTriggerName();
-			case 16:// 单位
+			case 16:// 报警级别
+				return tagCfgTpl.getAlarmLevel() == null ? "" : String
+						.valueOf(tagCfgTpl.getAlarmLevel());
+				
+			case 17:// 单位
 				return tagCfgTpl.getUnit();
-			case 17:// 最大值
+			case 18:// 最大值
 				return tagCfgTpl.getMaxValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getMaxValue());
-			case 18:// 最小值
+			case 19:// 最小值
 				return tagCfgTpl.getMinValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getMinValue());
-			case 19:// 脉冲单位
+			case 20:// 脉冲单位
 				return tagCfgTpl.getUnitValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getUnitValue());
 
@@ -2098,6 +2146,7 @@ public class VariableTemplateConfigView extends ViewPart {
 			newTag.setVarGroup(temp.getVarGroup());
 			newTag.setVarName(temp.getVarName());
 			newTag.setVarType(temp.getVarType());
+			newTag.setAlarmLevel(temp.getAlarmLevel());
 			
 			tagCfgTplList.add(newTag);	//添加入当前模板
 		}
