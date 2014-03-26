@@ -35,6 +35,7 @@ import com.ht.scada.config.view.tree.RootTreeModel;
 import com.ht.scada.config.window.EndTagConfigDesignWindow;
 import com.ht.scada.config.window.EndTagDeviceConfigWindow;
 import com.ht.scada.config.window.EndTagIOConfigWindow;
+import com.ht.scada.config.window.SystemConfigDesignWindow;
 
 public class ScadaObjectTreeView extends ViewPart {
 	
@@ -182,8 +183,6 @@ public class ScadaObjectTreeView extends ViewPart {
 							e.printStackTrace();
 						}
 						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.MAJOR_ADD, selectedObject);
-//						System.out.println(ViewPropertyChange.getInstance().toString());
-//						System.out.println(selectedObject);
 					}
 				};
 				objectIndex.setText("添加索引(&A)");
@@ -212,7 +211,36 @@ public class ScadaObjectTreeView extends ViewPart {
 				objectIndex.setText("删除索引(&D)");
 				menuMng.add(objectIndex);
 				
-				menuMng.add(new Separator());
+				objectIndex = new Action() {
+					public void run() {
+						try {
+							SystemConfigPictureRelated.majorTag = (MajorTag) selectedObject;
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getActivePage()
+									.showView(SystemConfigPictureRelated.ID);					// 嵌入式操作页面
+							
+						} catch (PartInitException e) {
+							e.printStackTrace();
+						}
+						// ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.MAJOR_SYSTEM_PICTURE_RELATED, selectedObject);
+					}
+				};
+				objectIndex.setText("索引组态图片关联(&R)");
+				menuMng.add(objectIndex);
+				
+				objectIndex = new Action() {
+					public void run() {
+						// 系统组态设计页面
+						SystemConfigDesignWindow scdw = new SystemConfigDesignWindow(majorTag);	// 弹出式操作页面
+						scdw.open();
+					}
+				};
+				objectIndex.setText("索引组态展示设计(&C)");
+				menuMng.add(objectIndex);
+				
+				
+				menuMng.add(new Separator());		// 添加一个分割线
 				
 				objectIndex = new Action() {
 					public void run() {
@@ -326,16 +354,6 @@ public class ScadaObjectTreeView extends ViewPart {
 				// 一下标签用于设置监控对象的组态图设计
 				objectIndex = new Action() {
 					public void run() {
-//						try {
-//							PlatformUI.getWorkbench()
-//									.getActiveWorkbenchWindow()
-//									.getActivePage()
-//									.showView(EndTagConfigDesignView.ID);
-//						} catch (PartInitException e) {
-//							e.printStackTrace();
-//						}
-//						ViewPropertyChange.getInstance().firePropertyChangeListener(FirePropertyConstants.CONFIG_DESIGN, selectedObject);
-						
 						EndTagConfigDesignWindow etcdw = new EndTagConfigDesignWindow(endTag);
 						etcdw.open();
 					}

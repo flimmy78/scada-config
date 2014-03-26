@@ -298,6 +298,9 @@ public class VariableTemplateConfigView extends ViewPart {
 						label_1.setText("变量分组：");
 		
 				combo_1 = new Combo(composite_3, SWT.NONE);
+				GridData gd_combo_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+				gd_combo_1.widthHint = 132;
+				combo_1.setLayoutData(gd_combo_1);
 				combo_1.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {

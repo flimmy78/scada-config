@@ -11,25 +11,27 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Shell;
 
 import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.EndTagConfig;
@@ -40,12 +42,7 @@ import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.common.tag.service.TplModelConfigService;
 import com.ht.scada.config.scadaconfig.Activator;
-import com.ht.scada.config.window.TplModelConfigDesignWindow.MoveLabelListener;
-
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import com.ht.scada.config.util.LayoutUtil;
 
 public class EndTagConfigDesignWindow extends ApplicationWindow {
 
@@ -110,7 +107,6 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-		System.out.println("111");
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
 		
@@ -322,6 +318,12 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 		button.setText("设 计 保 存");
 		
 		Button btnNewButton_1 = new Button(composite, SWT.NONE);
+		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				close();
+			}
+		});
 		btnNewButton_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		btnNewButton_1.setText("取  消");
 		

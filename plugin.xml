@@ -136,10 +136,10 @@
             id="com.ht.scada.config.view.ScadaDeviceTableTreeView"
             name="监控设备显示">
       </view>
-      <view
-            class="com.ht.scada.config.view.EndTagConfigDesignView"
-            id="com.ht.scada.config.view.ConfigDesign"
-            name="组态设计">
+       <view
+            class="com.ht.scada.config.view.SystemConfigPictureRelated"
+            id="com.ht.scada.config.view.SystemConfigPictureRelated"
+            name="管理区系统组态图片关联">
       </view>
    </extension>
    <extension

@@ -193,7 +193,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		endTagSubTypeList.add(endTagSubType4);
 		endTagSubTypeList.add(endTagSubType5);
 		
-		// 19 + 1(其它)
+		// 23 + 1(其它)
 		VarGroupCfg varGroupCfgDianYC = new VarGroupCfg(VarGroupEnum.DIAN_YC.toString(), VarGroupEnum.DIAN_YC.getValue());
 		VarGroupCfg varGroupCfgDianYM = new VarGroupCfg(VarGroupEnum.DIAN_YM.toString(), VarGroupEnum.DIAN_YM.getValue());
 		VarGroupCfg varGroupCfgDianXB = new VarGroupCfg(VarGroupEnum.DIAN_XB.toString(), VarGroupEnum.DIAN_XB.getValue());
@@ -205,9 +205,15 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarGroupCfg varGroupCfgRTUStatus = new VarGroupCfg(VarGroupEnum.RTU_ZHUANG_TAI.toString(), VarGroupEnum.RTU_ZHUANG_TAI.getValue());
 		VarGroupCfg varGroupCfgSensorRun = new VarGroupCfg(VarGroupEnum.SENSOR_RUN.toString(), VarGroupEnum.SENSOR_RUN.getValue());	
 		VarGroupCfg varGroupCfgYouJingZhuangTai = new VarGroupCfg(VarGroupEnum.YOU_JING_ZHUANG_TAI.toString(), VarGroupEnum.YOU_JING_ZHUANG_TAI.getValue());
-		VarGroupCfg varGroupCfgYouJingSOE = new VarGroupCfg(VarGroupEnum.YOU_JING_SOE.toString(), VarGroupEnum.YOU_JING_SOE.getValue());
-		VarGroupCfg varGroupCfgJiaReLuSOE = new VarGroupCfg(VarGroupEnum.JIA_RE_LU_SOE.toString(), VarGroupEnum.JIA_RE_LU_SOE.getValue());
-		VarGroupCfg varGroupCfgDianSOE = new VarGroupCfg(VarGroupEnum.DIAN_SOE.toString(), VarGroupEnum.DIAN_SOE.getValue());
+		
+		VarGroupCfg varGroupCfgChouYouJiSOE = new VarGroupCfg(VarGroupEnum.CHOU_YOU_JI_SOE.toString(), VarGroupEnum.CHOU_YOU_JI_SOE.getValue());
+		VarGroupCfg varGroupCfgJingChangYiBiaoXZSOE = new VarGroupCfg(VarGroupEnum.JING_CHANG_YI_BIAO_XIAN_ZHI_SOE.toString(), VarGroupEnum.JING_CHANG_YI_BIAO_XIAN_ZHI_SOE.getValue());
+		VarGroupCfg varGroupCfgJingKouLiuChengSBSOE = new VarGroupCfg(VarGroupEnum.JING_KOU_LIU_CHENG_SHE_BEI_SOE.toString(), VarGroupEnum.JING_KOU_LIU_CHENG_SHE_BEI_SOE.getValue());
+		VarGroupCfg varGroupCfgDianCanSOE = new VarGroupCfg(VarGroupEnum.DIAN_CAN_SOE.toString(), VarGroupEnum.DIAN_CAN_SOE.getValue());
+		VarGroupCfg varGroupCfgYouJingQiTingSOE = new VarGroupCfg(VarGroupEnum.YOU_JING_QI_TING_SOE.toString(), VarGroupEnum.YOU_JING_QI_TING_SOE.getValue());
+		VarGroupCfg varGroupCfgJiaReLuQiTingSOE = new VarGroupCfg(VarGroupEnum.JIA_RE_LU_QI_TING_SOE.toString(), VarGroupEnum.JIA_RE_LU_QI_TING_SOE.getValue());
+		VarGroupCfg varGroupCfgGongTuBaoJing = new VarGroupCfg(VarGroupEnum.GONG_TU_BAO_JING.toString(), VarGroupEnum.GONG_TU_BAO_JING.getValue());
+		
 		VarGroupCfg varGroupCfgJiaReLu = new VarGroupCfg(VarGroupEnum.JIA_RE_LU.toString(), VarGroupEnum.JIA_RE_LU.getValue());
 		VarGroupCfg varGroupCfgBianPinQi = new VarGroupCfg(VarGroupEnum.BIAN_PIN_QI.toString(), VarGroupEnum.BIAN_PIN_QI.getValue());
 		VarGroupCfg varGroupCfgXuLiang = new VarGroupCfg(VarGroupEnum.XU_LIANG.toString(), VarGroupEnum.XU_LIANG.getValue());
@@ -230,9 +236,14 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varGroupCfgList.add(varGroupCfgRTUStatus);
 		varGroupCfgList.add(varGroupCfgSensorRun);
 		varGroupCfgList.add(varGroupCfgYouJingZhuangTai);
-		varGroupCfgList.add(varGroupCfgYouJingSOE);
-		varGroupCfgList.add(varGroupCfgJiaReLuSOE);
-		varGroupCfgList.add(varGroupCfgDianSOE);
+		varGroupCfgList.add(varGroupCfgChouYouJiSOE);
+		varGroupCfgList.add(varGroupCfgJingChangYiBiaoXZSOE);
+		varGroupCfgList.add(varGroupCfgJingKouLiuChengSBSOE);
+		varGroupCfgList.add(varGroupCfgDianCanSOE);
+		varGroupCfgList.add(varGroupCfgYouJingQiTingSOE);
+		varGroupCfgList.add(varGroupCfgJiaReLuQiTingSOE);
+		varGroupCfgList.add(varGroupCfgGongTuBaoJing);
+		
 		varGroupCfgList.add(varGroupCfgJiaReLu);
 		varGroupCfgList.add(varGroupCfgBianPinQi);
 		varGroupCfgList.add(varGroupCfgXuLiang);
@@ -256,9 +267,13 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varGroupCfgSet.add(varGroupCfgRTUStatus);
 		varGroupCfgSet.add(varGroupCfgSensorRun);
 		varGroupCfgSet.add(varGroupCfgYouJingZhuangTai);
-		varGroupCfgSet.add(varGroupCfgYouJingSOE);
-		varGroupCfgSet.add(varGroupCfgJiaReLuSOE);
-		varGroupCfgSet.add(varGroupCfgDianSOE);
+		varGroupCfgSet.add(varGroupCfgChouYouJiSOE);
+		varGroupCfgSet.add(varGroupCfgJingChangYiBiaoXZSOE);
+		varGroupCfgSet.add(varGroupCfgJingKouLiuChengSBSOE);
+		varGroupCfgSet.add(varGroupCfgDianCanSOE);
+		varGroupCfgSet.add(varGroupCfgYouJingQiTingSOE);
+		varGroupCfgSet.add(varGroupCfgJiaReLuQiTingSOE);
+		varGroupCfgSet.add(varGroupCfgGongTuBaoJing);	
 		varGroupCfgSet.add(varGroupCfgJiaReLu);
 		varGroupCfgSet.add(varGroupCfgBianPinQi);
 		varGroupCfgSet.add(varGroupCfgXuLiang);
