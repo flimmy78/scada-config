@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import org.eclipse.jface.action.StatusLineManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -310,7 +311,8 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 					}
 									
 					// 信息提示
-					JOptionPane.showMessageDialog(null,"保存成功","信息提示",JOptionPane.INFORMATION_MESSAGE);          					
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "信息提示", "保存成功");
+					
 				}
 			}
 		});
