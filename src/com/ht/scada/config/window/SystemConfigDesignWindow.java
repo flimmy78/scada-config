@@ -14,6 +14,11 @@ import javax.swing.JPopupMenu;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -37,12 +42,6 @@ import com.ht.scada.common.tag.service.PrecinctSystemConfigService;
 import com.ht.scada.common.tag.service.PrecinctSystemEndTagListService;
 import com.ht.scada.config.scadaconfig.Activator;
 
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-
 /**
  * 相关主索引的系统组态设计页面
  * @author 王蓬
@@ -51,6 +50,7 @@ import org.eclipse.swt.events.SelectionEvent;
 public class SystemConfigDesignWindow extends ApplicationWindow {
 	
 	public static String [] sysNameArray = { "系统总图", "集输系统", "注水系统" };	// 系统名称数组（后期可提取成枚举变量）
+	public static String splitOfItems = ":";		// 项之间的分割符
 	
 	private int screenWidth;		// 屏幕最大宽度
 	private int screenHeight;		//　屏幕最大高度
@@ -117,7 +117,7 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		container.setLayout(new GridLayout(1, false));
 		
 		Composite composite = new Composite(container, SWT.BORDER);
-		composite.setLayout(new GridLayout(21, false));
+		composite.setLayout(new GridLayout(19, false));
 		gd_compositeTop = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		gd_compositeTop.heightHint = 35;
 		composite.setLayoutData(gd_compositeTop);
@@ -127,6 +127,20 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		label.setText("系统选择：");
 		
 		comboSysname = new Combo(composite, SWT.NONE);
+		comboSysname.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				for ( int i=0; i<labelList.size(); i++ ) {
+					Label tempLabel = labelList.get(i);
+					tempLabel.setVisible(false);
+				}
+				
+				labelList.clear();						// 相关集合清空
+				precinctSystemEndTagListSets.clear();
+				
+				pageInit();								// 页面重新初始化
+			}
+		});
 		GridData gd_comboSysname = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_comboSysname.widthHint = 60;
 		comboSysname.setLayoutData(gd_comboSysname);
@@ -210,15 +224,11 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
 		
 		Button btnDesignSave = new Button(composite, SWT.NONE);
 		btnDesignSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println(precinctSystemEndTagListSets.size()  + " 个！" );
-				
 				
 				for ( int w = 0 ; w < precinctSystemEndTagListSets.size() ; w++ ) {
 					Label tempLabel = labelList.get(w);				// 获得一个label对象（此时label的坐标是绝对坐标，要进行容器内相对转换）
@@ -240,7 +250,7 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 					temp1.setRangeLocateY(originalY);
 					temp1.setRangeWidth(100);
 					temp1.setRangeHeight(50);
-					temp1.setItemsSet("123456789: " + temp1.getId());
+					
 					
 					precinctSystemEndTagListService.update(temp1);
 				}
@@ -257,7 +267,6 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 								
 				// 信息提示
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "信息提示", "保存成功");
-				
 				
 			}
 		});
@@ -307,9 +316,8 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		precinctSystemConfig = precinctSystemConfigService.findBySysNameAndMajorTagId(comboSysname.getText().trim(), majorTag.getId());
 		if ( precinctSystemConfig == null || (precinctSystemConfig.getImagePath()==null || precinctSystemConfig.getImagePath().equals("")) ) {
 			
-			Label lblNewLabel = new Label(compositeImage, SWT.NONE);
-			lblNewLabel.setBounds(10, 20, 300, 17);
-			lblNewLabel.setText("该系统暂没进行组态配置，请先进行图片关联");
+			compositeImage.setBackgroundImage(null); // 清空图片
+			MessageDialog.openInformation(getParentShell(), "信息提示", "该系统暂未进行组态配置");
 			
 			return;
 		} 
@@ -381,7 +389,6 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		containerWidthObject = containerWidth;
 		containerHeightObject = containerHeight;
 		
-		
 		labelList.clear();	// 清空标签列表
 		precinctSystemEndTagListSets.clear();
 		precinctSystemEndTagListDelete.clear();
@@ -400,15 +407,21 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 			for (int i = 0; i< precinctSystemEndTagListSets.size(); i++ ) {
 				temp = precinctSystemEndTagListSets.get(i);
 				if (temp.getItemsLocateX()!=null && temp.getItemsLocateY()!=null) {				// 该变量已经被设置组态坐标
-					System.out.println(temp.getEndTag().getName());
-					
+
 					Label label = new Label(compositeImage, SWT.BORDER);
 					int showX = ( temp.getItemsLocateX() * containerWidthObject) / originalImageWidthObject; 		// 相对容器的原图X坐标
 					int showY = ( temp.getItemsLocateY() * containerHeightObject) / originalImageHeightObject;		// 相对容器的原图Y坐标
-					// System.out.println(temp.getX() + ", " + containerWidthObject + ", " + originalImageWidthObject);
-					// System.out.println(temp.getY() + ", " + containerHeightObject + ", " + originalImageHeightObject);
 					label.setBounds(showX, showY, 110, 27);
-					label.setText(temp.getEndTag().getName());				// 设置label的显示值
+					
+					String labelShowText = temp.getEndTag().getName();			// 标签中展示的数值
+					if ( temp.getItemsSet() == null || (temp.getItemsSet().equals("")) ) {
+						// doNothing
+					} else {
+						int nums = temp.getItemsSet().split(splitOfItems).length;
+						
+						labelShowText = labelShowText + " : " + nums + "个 ";
+					}
+					label.setText(labelShowText);							// 设置label的显示值
 
 					MoveLabelListener listener = new MoveLabelListener();	// 构造一个鼠标监听对象
 					listener.setLabel(label);								// 设置关联信息
@@ -456,24 +469,39 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 
 		@Override
 		public void mouseDoubleClick(MouseEvent e) {
-			 int j = JOptionPane.showConfirmDialog(null,"确定要删除此变量么？","信息提示",JOptionPane.YES_NO_OPTION);          
+			// 原先删除操作
+			// int j = JOptionPane.showConfirmDialog(null,"确定要删除此变量么？","信息提示",JOptionPane.YES_NO_OPTION);          
 			 
-			 if(j==0){            
-				 // System.out.println("确定删除");
-				 Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
-				 tempLabel.setVisible(false);					// 隐藏按钮
+			// if(j==0){            
+			//	 // System.out.println("确定删除");
+			//	 Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
+			//	 tempLabel.setVisible(false);					// 隐藏按钮
 				 
-				 endTagDeleteProcess(tempLabel);// 调用删除变量操作	 
+			//	 endTagDeleteProcess(tempLabel);// 调用删除变量操作	 
 				 
-			 } else {
-				 System.out.println("取消删除");
-			 }
+			//} else {
+			//	 System.out.println("取消删除");
+			//}
+			
+			Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
+			int endTagIndexInList = 0; 
+			for(int i=0 ; i<labelList.size();i++){
+				if(labelList.get(i) == tempLabel ){
+					endTagIndexInList = i;							// 获得选中的索引
+					break;
+				}
+			}
+			PrecinctSystemEndTagList temp = precinctSystemEndTagListSets.get(endTagIndexInList);	// 移出的对象
+			
+			SystemConfigEndtagDesignWindow scedw = new SystemConfigEndtagDesignWindow(null, temp, tempLabel);
+			scedw.open();
+			
+			mouseUp(e);		// 释放鼠标
 		}
 
 		// 当鼠标按下时，注册鼠标移动监听器
 		@Override
 		public void mouseDown(MouseEvent e) {
-			// TODO Auto-generated method stub
 			label.addMouseMoveListener(listener);
 						
 			if (e.button ==3 ) {									// 捕捉到了鼠标右击事件		

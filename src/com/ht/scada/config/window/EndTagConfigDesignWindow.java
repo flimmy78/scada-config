@@ -600,6 +600,8 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 			 } else {
 				 System.out.println("取消删除");
 			 }
+			 
+			mouseUp(e);		// 释放鼠标
 		}
 
 		// 当鼠标按下时，注册鼠标移动监听器
