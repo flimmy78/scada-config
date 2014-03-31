@@ -491,7 +491,22 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 					break;
 				}
 			}
+
 			PrecinctSystemEndTagList temp = precinctSystemEndTagListSets.get(endTagIndexInList);	// 移出的对象
+			
+			if ( temp.getItemsLocateX() == null ) {
+				int originalX = (tempLabel.getBounds().x*originalImageWidthObject) / containerWidthObject;
+				int originalY = (tempLabel.getBounds().y*originalImageHeightObject) / containerHeightObject;
+				
+				temp.setItemsLocateX(originalX);
+				temp.setItemsLocateY(originalY);
+				
+				temp.setRangeLocateX(originalX);
+				temp.setRangeLocateY(originalY);
+				temp.setRangeWidth(100);
+				temp.setRangeHeight(50);
+			}
+		
 			
 			SystemConfigEndtagDesignWindow scedw = new SystemConfigEndtagDesignWindow(null, temp, tempLabel);
 			scedw.open();
