@@ -469,20 +469,6 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 
 		@Override
 		public void mouseDoubleClick(MouseEvent e) {
-			// 原先删除操作
-			// int j = JOptionPane.showConfirmDialog(null,"确定要删除此变量么？","信息提示",JOptionPane.YES_NO_OPTION);          
-			 
-			// if(j==0){            
-			//	 // System.out.println("确定删除");
-			//	 Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
-			//	 tempLabel.setVisible(false);					// 隐藏按钮
-				 
-			//	 endTagDeleteProcess(tempLabel);// 调用删除变量操作	 
-				 
-			//} else {
-			//	 System.out.println("取消删除");
-			//}
-			
 			Label tempLabel = (Label) e.getSource();		// 获得时间操作的标签
 			int endTagIndexInList = 0; 
 			for(int i=0 ; i<labelList.size();i++){
@@ -507,7 +493,6 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 				temp.setRangeHeight(50);
 			}
 		
-			
 			SystemConfigEndtagDesignWindow scedw = new SystemConfigEndtagDesignWindow(null, temp, tempLabel);
 			scedw.open();
 			

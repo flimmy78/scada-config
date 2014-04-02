@@ -64,6 +64,7 @@ public class SystemConfigEndtagDesignWindow extends ApplicationWindow {
 		
 		this.precinctSystemEndTagListObject = temp;
 		this.shownlabel = tempLabel;
+		
 	}
 
 	/**
@@ -265,6 +266,8 @@ public class SystemConfigEndtagDesignWindow extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
+				precinctSystemEndTagListObject.setItemsLocateX(shownlabel.getBounds().x);
+				precinctSystemEndTagListObject.setItemsLocateY(shownlabel.getBounds().y);
 				precinctSystemEndTagListObject.setRangeLocateX(Integer.parseInt(txtRangeX.getText().trim()));	// 设置范围
 				precinctSystemEndTagListObject.setRangeLocateY(Integer.parseInt(txtRangeY.getText().trim()));
 				precinctSystemEndTagListObject.setRangeWidth(Integer.parseInt(txtRangeWidth.getText().trim()));
@@ -323,8 +326,8 @@ public class SystemConfigEndtagDesignWindow extends ApplicationWindow {
 	public void pageInit () {
 		
 		lblEndtag.setText(precinctSystemEndTagListObject.getEndTag().getName());
-		lbllocateX.setText("X坐标： " + precinctSystemEndTagListObject.getItemsLocateX() + "");
-		lbllocateY.setText("Y坐标： " + precinctSystemEndTagListObject.getItemsLocateY() + "");
+		lbllocateX.setText("X坐标： " + shownlabel.getBounds().x + "");
+		lbllocateY.setText("Y坐标： " + shownlabel.getBounds().y + "");
 		txtRangeX.setText(precinctSystemEndTagListObject.getRangeLocateX() + "");
 		txtRangeY.setText(precinctSystemEndTagListObject.getRangeLocateY() + "");
 		txtRangeWidth.setText(precinctSystemEndTagListObject.getRangeWidth() + "");
@@ -344,7 +347,6 @@ public class SystemConfigEndtagDesignWindow extends ApplicationWindow {
 			}
 			listAll.setItems(tplNameArray);							// 给listAll赋值
 		}
-		
 		
 		
 		shownItemsStrArray.clear();		// 先清空一下
@@ -370,7 +372,6 @@ public class SystemConfigEndtagDesignWindow extends ApplicationWindow {
 			
 			listShown.setItems(showTagnameArray);
 		}
-		
 		
 	}
 }
