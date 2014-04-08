@@ -21,6 +21,10 @@
 		<class>com.ht.scada.common.tag.entity.EndTagConfig</class>
 		<class>com.ht.scada.common.tag.entity.PrecinctSystemConfig</class>
 		<class>com.ht.scada.common.tag.entity.PrecinctSystemEndTagList</class>
+		<class>com.ht.scada.common.tag.entity.UserRecord</class>
+		
+		<class>com.ht.scada.security.entity.User</class>
+		<class>com.ht.scada.security.entity.UserRole</class>
 		
 		<class>com.ht.scada.common.tag.type.entity.VarType</class>
 		<class>com.ht.scada.common.tag.type.entity.VarSubType</class>
