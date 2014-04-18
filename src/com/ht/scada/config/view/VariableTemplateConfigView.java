@@ -2143,12 +2143,16 @@ public class VariableTemplateConfigView extends ViewPart {
 			newTag.setStorage(temp.getStorage());
 			newTag.setSubType(temp.getSubType());
 			newTag.setTagName(temp.getTagName());
+			newTag.setTagNameShow(temp.getTagNameShow());
 			newTag.setTplName(temp.getTplName());
 			newTag.setTriggerName(temp.getTriggerName());
+			newTag.setUnit(temp.getUnit());
 			newTag.setUnitValue(temp.getUnitValue());
 			newTag.setVarGroup(temp.getVarGroup());
 			newTag.setVarName(temp.getVarName());
 			newTag.setVarType(temp.getVarType());
+			newTag.setX(temp.getX());
+			newTag.setY(temp.getY());
 			newTag.setAlarmLevel(temp.getAlarmLevel());
 			
 			tagCfgTplList.add(newTag);	//添加入当前模板
