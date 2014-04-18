@@ -1,7 +1,5 @@
 package com.ht.scada.config.view;
 
-import javax.swing.JOptionPane;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -345,7 +343,8 @@ public class ScadaObjectTreeView extends ViewPart {
 				}
 				if (configDesignEnable == true ){	 // 关联了模板
 					TplModelConfig tplModelConfigTemp = tplModelConfigService.findByTplname(endTag.getTplName());
-					if (tplModelConfigTemp == null && endTag.getImageWidth() == null ) {	// 个性和共性均为配置模板底图
+					
+					if (tplModelConfigTemp == null && endTag.getImagePath() == null ) {	// 个性和共性均为配置模板底图
 						configDesignEnable = false;
 					}
 				}		

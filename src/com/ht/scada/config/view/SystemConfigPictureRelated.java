@@ -37,6 +37,7 @@ import com.ht.scada.config.util.ViewPropertyChange;
 public class SystemConfigPictureRelated extends ViewPart implements IPropertyChangeListener {
 	
 	public static String [] sysNameArray = { "系统总图", "集输系统", "注水系统" };	// 系统名称数组（后期可提取成枚举变量）
+	public int sysNameID = 0;					// 系统名ID，默认为总系统
 	
 	public static MajorTag majorTag;		// 该操作页面对应的主索引
 	private List<PrecinctSystemConfig> precinctSystemConfigs;		// 存储某个管理区下已关联组态的系统
@@ -173,6 +174,16 @@ public class SystemConfigPictureRelated extends ViewPart implements IPropertyCha
 					psc.setImagePath(txtPictureFilePath.getText().trim());
 					psc.setMajorTag(majorTag);
 					psc.setSysname(comboSysnames.getText().trim());
+					
+					if (psc.getSysname().equals(sysNameArray[0])) {
+						sysNameID = 0; 	// 获得系统号
+					} else if (psc.getSysname().equals(sysNameArray[1])){
+						sysNameID = 1; 	// 获得系统号
+					} else {
+						sysNameID = 2; 	// 获得系统号
+					}
+					psc.setSysnameID(sysNameID);
+					
 					
 					precinctSystemConfigService.create(psc);	// 创建新对象
 					precinctSystemConfigs.add(psc);				// 新创建的加入已存在集合

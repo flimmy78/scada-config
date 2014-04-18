@@ -41,6 +41,7 @@ import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.common.tag.service.PrecinctSystemConfigService;
 import com.ht.scada.common.tag.service.PrecinctSystemEndTagListService;
 import com.ht.scada.config.scadaconfig.Activator;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * 相关主索引的系统组态设计页面
@@ -51,6 +52,9 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 	
 	public static String [] sysNameArray = { "系统总图", "集输系统", "注水系统" };	// 系统名称数组（后期可提取成枚举变量）
 	public static String splitOfItems = ":";		// 项之间的分割符
+	
+	private int standardWidth = 150; 	// 响应区域基准-宽
+	private int standardHeight = 150;	// 响应区域基准-高
 	
 	private int screenWidth;		// 屏幕最大宽度
 	private int screenHeight;		//　屏幕最大高度
@@ -83,6 +87,8 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 	private Combo comboEndtag;					// 要添加的监控对象名称		
 	private Composite composite_1 ;
 	private GridData gd_composite_1 ;
+	private Text txtFieldWidth;
+	private Text txtFieldHeight;
 	
 	public SystemConfigDesignWindow(MajorTag majorTag) {
 		super(null);
@@ -156,8 +162,6 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		GridData gd_comboEndtag = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_comboEndtag.widthHint = 112;
 		comboEndtag.setLayoutData(gd_comboEndtag);
-
-		
 			
 			Button btnAddEndtag = new Button(composite, SWT.NONE);
 			btnAddEndtag.addSelectionListener(new SelectionAdapter() {
@@ -194,7 +198,7 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 						
 						
 						Label label = new Label(compositeImage, SWT.BORDER);
-						label.setBounds(10, 10, 110, 27);				// 注意label的宽度定义需要根据实际待定
+						label.setBounds(10, 10, standardWidth, standardHeight);				// 注意label的宽度定义需要根据实际待定
 						label.setText(comboEndtag.getText().trim());	// 设置label的显示值
 						
 						labelList.add(label);					// 将新建的label放入集合中
@@ -215,9 +219,20 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 			btnAddEndtag.setText("添  加");
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
+		
+		Label label_2 = new Label(composite, SWT.NONE);
+		label_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label_2.setText("响应范围基准(宽/高)：");
+		
+		txtFieldWidth = new Text(composite, SWT.BORDER);
+		txtFieldWidth.setEnabled(false);
+		txtFieldWidth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		txtFieldWidth.setText( standardWidth + "" );
+		
+		txtFieldHeight = new Text(composite, SWT.BORDER);
+		txtFieldHeight.setEnabled(false);
+		txtFieldHeight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		txtFieldHeight.setText( standardHeight + "" );
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
@@ -226,6 +241,7 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		new Label(composite, SWT.NONE);
 		
 		Button btnDesignSave = new Button(composite, SWT.NONE);
+		btnDesignSave.setVisible(false);
 		btnDesignSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -246,10 +262,10 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 					temp1.setItemsLocateX(originalX);
 					temp1.setItemsLocateY(originalY);
 					
-					temp1.setRangeLocateX(originalX);	// 设计范围
-					temp1.setRangeLocateY(originalY);
-					temp1.setRangeWidth(100);
-					temp1.setRangeHeight(50);
+					//temp1.setRangeLocateX(originalX);	// 设计范围
+					//temp1.setRangeLocateY(originalY);
+					//temp1.setRangeWidth(100);
+					//temp1.setRangeHeight(50);
 					
 					
 					precinctSystemEndTagListService.update(temp1);
@@ -316,8 +332,10 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		precinctSystemConfig = precinctSystemConfigService.findBySysNameAndMajorTagId(comboSysname.getText().trim(), majorTag.getId());
 		if ( precinctSystemConfig == null || (precinctSystemConfig.getImagePath()==null || precinctSystemConfig.getImagePath().equals("")) ) {
 			
-			compositeImage.setBackgroundImage(null); // 清空图片
+			compositeImage.setBackgroundImage(null); 				// 清空图片
 			MessageDialog.openInformation(getParentShell(), "信息提示", "该系统暂未进行组态配置");
+			
+			// close();	// 未进行组态设计时，直接关闭页面
 			
 			return;
 		} 
@@ -336,8 +354,8 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 	public void imageFittingEditor(String imagePath){
 		// 设置图片显示
 		
-		int containerWidth = screenWidth - 40; 								// 容器宽度 (40是自定义的，给边框留出的像素)
-		int containerHeight = screenHeight - gd_compositeTop.heightHint ; 	// 容器高度（屏幕高度-上部容器高度）
+		int containerWidth = screenWidth - 10; 								 // 容器宽度 (40是自定义的，给边框留出的像素)
+		int containerHeight = screenHeight - gd_compositeTop.heightHint -10; // 容器高度（屏幕高度-上部容器高度）
 		int containerWidthOriginal = containerWidth;
 		int containerHeightOriginal = containerHeight;
 		//System.out.println("容器原始大小为(宽、高)： " + containerWidth + ", " + containerHeight);
@@ -354,12 +372,12 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 			} else {											// 按照图片比例(高长)，重新绘制容器宽度: 容器宽度 = (容器高度*图片宽度)/ 图片高度
 				containerWidth = ( containerHeight * originalImageWidth ) / originalImageHeight	;
 			}
-			//System.out.println("容器适应大小为(宽、高)： " + containerWidth + ", " + containerHeight);
+			System.out.println("容器适应1大小为(宽、高)： " + containerWidth + ", " + containerHeight);
 
 		} else { // 原始图小于等于容器大小
 			containerWidth = originalImageWidth;
 			containerHeight = originalImageHeight;
-			//System.out.println("容器适应大小为(宽、高)： " + containerWidth + ", " + containerHeight);
+			System.out.println("容器适应2大小为(宽、高)： " + containerWidth + ", " + containerHeight);
 		}	
 		
 		// 若设置的容器大小超出原始容器大小，再次根据原始容器带下调整容器 
@@ -377,11 +395,13 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		gd_compositeImage1.heightHint = containerHeight;
 		compositeImage.setLayoutData(gd_compositeImage1);
 		compositeImage.setBounds(0, 0, containerWidth, containerHeight);		// 应用网格后，坐标位置‘0’， ‘0’即没有用，仅设置宽、高即可(拖动时使用)
-		// System.out.println(containerWidth + ", "  + containerHeight);
+		System.out.println(containerWidth + ", "  + containerHeight);
 
 		ImageData dataFit = data.scaledTo(containerWidth, containerHeight); 	// 构造符合容器大小的图片信息对象
 		Image image = new Image(compositeImage.getDisplay(), dataFit); 			// 构造图片对象
 		compositeImage.setBackgroundImage(image);
+//		compositeImage.setBackgroundMode(SWT.COLOR_BLUE);						// 设置透明
+
 		
 		// 为全局变量赋值
 		originalImageWidthObject = originalImageWidth;
@@ -473,7 +493,7 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 			int endTagIndexInList = 0; 
 			for(int i=0 ; i<labelList.size();i++){
 				if(labelList.get(i) == tempLabel ){
-					endTagIndexInList = i;							// 获得选中的索引
+					endTagIndexInList = i;					// 获得选中的索引
 					break;
 				}
 			}
@@ -489,8 +509,8 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 				
 				temp.setRangeLocateX(originalX);
 				temp.setRangeLocateY(originalY);
-				temp.setRangeWidth(100);
-				temp.setRangeHeight(50);
+				temp.setRangeWidth(standardWidth);
+				temp.setRangeHeight(standardHeight);
 			}
 		
 			SystemConfigEndtagDesignWindow scedw = new SystemConfigEndtagDesignWindow(null, temp, tempLabel);
@@ -590,9 +610,9 @@ public class SystemConfigDesignWindow extends ApplicationWindow {
 		 PrecinctSystemEndTagList temp = precinctSystemEndTagListSets.get(endTagIndexInList);	// 移出的对象
 		 precinctSystemEndTagListDelete.add(temp);
 		 
-		 labelList.remove(endTagIndexInList);					// 从集合中移出
+		 labelList.remove(endTagIndexInList);							// 从集合中移出
 		 precinctSystemEndTagListSets.remove(endTagIndexInList);			 
+		 
+		 precinctSystemEndTagListService.deleteById(temp.getId());		// 执行删除操作 （更新数据库）
 	}
-	
-	
 }
