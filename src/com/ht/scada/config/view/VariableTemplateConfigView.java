@@ -1877,13 +1877,14 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 1:// 组态设计显示名
 				return tagCfgTpl.getTagNameShow() ;
 			case 2:// 变量类型
-				return tagCfgTpl.getVarType() == null ? null : getVarType(tagCfgTpl.getVarType()).getValue();
+				// return tagCfgTpl.getVarType() == null ? null : getVarType(tagCfgTpl.getVarType()).getValue();
+				return tagCfgTpl.getSubType() == null ? null : (getVarType(tagCfgTpl.getVarType())==null?null:getVarType(tagCfgTpl.getVarType()).getValue());
 			case 3:// 变量子类型
 				return tagCfgTpl.getSubType() == null ? null : (getVarSubType(tagCfgTpl.getSubType())==null?null:getVarSubType(tagCfgTpl.getSubType()).getValue());
 			case 4:// 变量分组
 			{
-				return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
-				
+				// return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
+				return tagCfgTpl.getVarGroup() == null ? null : (getVarGroupCfg(tagCfgTpl.getVarGroup())==null?null:getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue());
 			}
 			case 5:// 变量key
 				return tagCfgTpl.getVarName();
@@ -1898,7 +1899,8 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 10:// 位偏移量
 				return String.valueOf(tagCfgTpl.getBitOffset());
 			case 11:// 值类型
-				return tagCfgTpl.getDataType() == null ? null : getDataType(tagCfgTpl.getDataType()).getValue();
+				// return tagCfgTpl.getDataType() == null ? null : getDataType(tagCfgTpl.getDataType()).getValue();
+				return tagCfgTpl.getDataType() == null ? null : (getDataType(tagCfgTpl.getDataType())==null?null:getDataType(tagCfgTpl.getDataType()).getValue());
 			case 12:// 基数
 				return tagCfgTpl.getBaseValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getBaseValue());

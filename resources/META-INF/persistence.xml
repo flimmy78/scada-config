@@ -36,7 +36,9 @@
 		<class>com.ht.scada.common.tag.type.entity.CommunicationProtocalType</class>
 		<class>com.ht.scada.common.tag.type.entity.EndTagExtInfoName</class>
 		<class>com.ht.scada.common.tag.type.entity.DataValueType</class>
-<!-- 		<properties>
+		<class>com.ht.scada.common.tag.entity.SoeRecordTemp</class>
+	<!--	
+ 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
