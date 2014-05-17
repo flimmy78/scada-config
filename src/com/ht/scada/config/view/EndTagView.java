@@ -130,6 +130,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private ComboViewer comboViewer_endSubType;
 	private Text text_code;
 	private Text textImagePath;
+	private Text textUrls;
 
 	public void createPartControl(Composite parent) {
 
@@ -268,6 +269,15 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		});
 		btnImageChoose.setBounds(211, 0, 55, 23);
 		btnImageChoose.setText("打  开");
+		
+		Label lblrul = new Label(parent, SWT.NONE);
+		lblrul.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblrul.setText("视频url集合：");
+		
+		textUrls = new Text(parent, SWT.BORDER);
+		GridData gd_textUrls = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_textUrls.widthHint = 270;
+		textUrls.setLayoutData(gd_textUrls);
 
 		gridTableViewer = new GridTableViewer(parent, SWT.BORDER);
 		final Grid grid = gridTableViewer.getGrid();
@@ -371,6 +381,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
+					endTag.setVideoUrls("".equals(textUrls.getText().trim())?null:textUrls.getText().trim());
 					
 					//以下8行处理图片保存
 					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
@@ -427,6 +438,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
+					endTag.setVideoUrls("".equals(textUrls.getText().trim())?null:textUrls.getText().trim());
 					
 					//以下8行处理图片保存
 					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
@@ -545,6 +557,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			text_name.setText(endTag.getName());
 			text_code.setText(endTag.getCode()==null?"":endTag.getCode());
 			textImagePath.setText(endTag.getImagePath()==null?"":endTag.getImagePath());
+			textUrls.setText(endTag.getVideoUrls()==null?"":endTag.getVideoUrls());
 
 			//初始化监控对象类型
 			if (endTag.getType() != null) {

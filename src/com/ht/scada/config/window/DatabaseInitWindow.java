@@ -81,7 +81,7 @@ public class DatabaseInitWindow extends ApplicationWindow {
 		ip1.setText("服务器地址：");
 		
 		textIp = new Text(container, SWT.BORDER);
-		GridData gd_textIp = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_textIp = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_textIp.widthHint = 90;
 		textIp.setLayoutData(gd_textIp);
 		textIp.setText("127.0.0.1");
@@ -93,7 +93,7 @@ public class DatabaseInitWindow extends ApplicationWindow {
 		label_4.setBounds(21, 112, 61, 17);
 		
 		textDatabaseName = new Text(container, SWT.BORDER);
-		GridData gd_textDatabaseName = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_textDatabaseName = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_textDatabaseName.widthHint = 90;
 		textDatabaseName.setLayoutData(gd_textDatabaseName);
 		textDatabaseName.setText("scada");
@@ -105,7 +105,7 @@ public class DatabaseInitWindow extends ApplicationWindow {
 		label_1.setText("用户名：");
 		
 		textUsername = new Text(container, SWT.BORDER);
-		GridData gd_textUsername = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_textUsername = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_textUsername.widthHint = 90;
 		textUsername.setLayoutData(gd_textUsername);
 		textUsername.setText("root");
@@ -117,7 +117,7 @@ public class DatabaseInitWindow extends ApplicationWindow {
 		label_2.setText("密码：");
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
-		GridData gd_textPassword = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_textPassword = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_textPassword.widthHint = 90;
 		textPassword.setLayoutData(gd_textPassword);
 		textPassword.setText("dltx_212");
@@ -127,7 +127,7 @@ public class DatabaseInitWindow extends ApplicationWindow {
 		controlerInit(fileName);
 		
 		Button button = new Button(container, SWT.NONE);
-		GridData gd_button = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_button = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		gd_button.widthHint = 80;
 		button.setLayoutData(gd_button);
 		button.addSelectionListener(new SelectionAdapter() {
@@ -157,7 +157,7 @@ public class DatabaseInitWindow extends ApplicationWindow {
 	}
 	@Override
 	protected void configureShell(Shell shell) {
-		shell.setText("数据库初始化（暂未实现，手工修改）");
+		shell.setText("数据库初始化");
 		shell.setSize(330, 280);
 		super.configureShell(shell);
 	}
