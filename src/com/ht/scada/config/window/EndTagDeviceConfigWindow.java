@@ -520,56 +520,56 @@ public class EndTagDeviceConfigWindow extends ApplicationWindow {
 			public void mouseUp(MouseEvent e) {
 				endTagService.saveAll(endTagList);
 				//初始化变量IO
-				for(EndTag endTag : endTagList) {
-					if(endTag.getTplName() != null && !"".equals(endTag.getTplName())) {
-						List<TagCfgTpl> tagCfgTplList = tagCfgTplService.getAllTagTpl();
-						if(tagCfgTplList != null && !tagCfgTplList.isEmpty()) {
-							for(TagCfgTpl t : tagCfgTplList) {
-								if(t.getVarType().equalsIgnoreCase("YC")) {
-									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
-									if(varIOInfo == null) {
-										varIOInfo = new VarIOInfo();
-										varIOInfo.setBaseValue(0);
-										varIOInfo.setCoefValue(1);
-										varIOInfo.setEndTag(endTag);
-										varIOInfo.setVarName(t.getVarName());
-										varIOInfoService.create(varIOInfo);
-									}
-								} else if(t.getVarType().equalsIgnoreCase("YM")) {
-									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
-									if(varIOInfo == null) {
-										varIOInfo = new VarIOInfo();
-										varIOInfo.setBaseValue(0);
-										varIOInfo.setCoefValue(1);
-										varIOInfo.setEndTag(endTag);
-										varIOInfo.setVarName(t.getVarName());
-										varIOInfoService.create(varIOInfo);
-									}
-								} else if(t.getVarType().equalsIgnoreCase("YK")) {
-									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
-									if(varIOInfo == null) {
-										varIOInfo = new VarIOInfo();
-										varIOInfo.setBaseValue(0);
-										varIOInfo.setCoefValue(1);
-										varIOInfo.setEndTag(endTag);
-										varIOInfo.setVarName(t.getVarName());
-										varIOInfoService.create(varIOInfo);
-									}
-								} else if(t.getVarType().equalsIgnoreCase("YT")) {
-									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
-									if(varIOInfo == null) {
-										varIOInfo = new VarIOInfo();
-										varIOInfo.setBaseValue(0);
-										varIOInfo.setCoefValue(1);
-										varIOInfo.setEndTag(endTag);
-										varIOInfo.setVarName(t.getVarName());
-										varIOInfoService.create(varIOInfo);
-									}
-								}
-							}
-						}
-					}
-				}
+//				for(EndTag endTag : endTagList) {
+//					if(endTag.getTplName() != null && !"".equals(endTag.getTplName())) {
+//						List<TagCfgTpl> tagCfgTplList = tagCfgTplService.getAllTagTpl();
+//						if(tagCfgTplList != null && !tagCfgTplList.isEmpty()) {
+//							for(TagCfgTpl t : tagCfgTplList) {
+//								if(t.getVarType().equalsIgnoreCase("YC")) {
+//									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
+//									if(varIOInfo == null) {
+//										varIOInfo = new VarIOInfo();
+//										varIOInfo.setBaseValue(0);
+//										varIOInfo.setCoefValue(1);
+//										varIOInfo.setEndTag(endTag);
+//										varIOInfo.setVarName(t.getVarName());
+//										varIOInfoService.create(varIOInfo);
+//									}
+//								} else if(t.getVarType().equalsIgnoreCase("YM")) {
+//									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
+//									if(varIOInfo == null) {
+//										varIOInfo = new VarIOInfo();
+//										varIOInfo.setBaseValue(0);
+//										varIOInfo.setCoefValue(1);
+//										varIOInfo.setEndTag(endTag);
+//										varIOInfo.setVarName(t.getVarName());
+//										varIOInfoService.create(varIOInfo);
+//									}
+//								} else if(t.getVarType().equalsIgnoreCase("YK")) {
+//									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
+//									if(varIOInfo == null) {
+//										varIOInfo = new VarIOInfo();
+//										varIOInfo.setBaseValue(0);
+//										varIOInfo.setCoefValue(1);
+//										varIOInfo.setEndTag(endTag);
+//										varIOInfo.setVarName(t.getVarName());
+//										varIOInfoService.create(varIOInfo);
+//									}
+//								} else if(t.getVarType().equalsIgnoreCase("YT")) {
+//									VarIOInfo varIOInfo = varIOInfoService.getByEndTagIdAndVarName(endTag.getId(), t.getVarName());
+//									if(varIOInfo == null) {
+//										varIOInfo = new VarIOInfo();
+//										varIOInfo.setBaseValue(0);
+//										varIOInfo.setCoefValue(1);
+//										varIOInfo.setEndTag(endTag);
+//										varIOInfo.setVarName(t.getVarName());
+//										varIOInfoService.create(varIOInfo);
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
 				
 				
 				MessageDialog.openInformation(getShell(), "提示", "保存成功！");
