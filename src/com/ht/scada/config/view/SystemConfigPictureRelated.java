@@ -131,7 +131,7 @@ public class SystemConfigPictureRelated extends ViewPart implements IPropertyCha
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				JFileChooser j1 = new JFileChooser();
-				j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录"));
+				// j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录"));
 				int n = j1.showOpenDialog(null);
 				if(j1.getSelectedFile() != null ){
 					String fileName = j1.getSelectedFile().toString();

@@ -207,8 +207,8 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarGroupCfg varGroupCfgYouJingZhuangTai = new VarGroupCfg(VarGroupEnum.YOU_JING_ZHUANG_TAI.toString(), VarGroupEnum.YOU_JING_ZHUANG_TAI.getValue());
 		
 		VarGroupCfg varGroupCfgChouYouJiSOE = new VarGroupCfg(VarGroupEnum.CHOU_YOU_JI_SOE.toString(), VarGroupEnum.CHOU_YOU_JI_SOE.getValue());
-		VarGroupCfg varGroupCfgJingChangYiBiaoXZSOE = new VarGroupCfg(VarGroupEnum.JING_CHANG_YI_BIAO_XIAN_ZHI_SOE.toString(), VarGroupEnum.JING_CHANG_YI_BIAO_XIAN_ZHI_SOE.getValue());
-		VarGroupCfg varGroupCfgJingKouLiuChengSBSOE = new VarGroupCfg(VarGroupEnum.JING_KOU_LIU_CHENG_SHE_BEI_SOE.toString(), VarGroupEnum.JING_KOU_LIU_CHENG_SHE_BEI_SOE.getValue());
+		VarGroupCfg varGroupCfgJingChangYiBiaoXZSOE = new VarGroupCfg(VarGroupEnum.JCYBXZ_SOE.toString(), VarGroupEnum.JCYBXZ_SOE.getValue());
+		VarGroupCfg varGroupCfgJingKouLiuChengSBSOE = new VarGroupCfg(VarGroupEnum.JKLCSB_SOE.toString(), VarGroupEnum.JKLCSB_SOE.getValue());
 		VarGroupCfg varGroupCfgDianCanSOE = new VarGroupCfg(VarGroupEnum.DIAN_CAN_SOE.toString(), VarGroupEnum.DIAN_CAN_SOE.getValue());
 		VarGroupCfg varGroupCfgYouJingQiTingSOE = new VarGroupCfg(VarGroupEnum.YOU_JING_QI_TING_SOE.toString(), VarGroupEnum.YOU_JING_QI_TING_SOE.getValue());
 		VarGroupCfg varGroupCfgJiaReLuQiTingSOE = new VarGroupCfg(VarGroupEnum.JIA_RE_LU_QI_TING_SOE.toString(), VarGroupEnum.JIA_RE_LU_QI_TING_SOE.getValue());

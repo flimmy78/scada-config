@@ -1090,8 +1090,8 @@ public class ScadaChannelConfigView extends ViewPart implements
 			textChannelName.setText("");
 			comboProtocal.setText("");
 			textIdx.setText("");
-			textOffline.setText("");
-			textInterval.setText("");
+			textOffline.setText("3");
+			textInterval.setText("500");
 //			textSchedule.setText("");
 //			Date nowDate = new Date();
 //			Calendar nowCalendar = Utils.date2CalendarUtil(nowDate);
@@ -1108,6 +1108,51 @@ public class ScadaChannelConfigView extends ViewPart implements
 			frames.clear();
 			framesIEC.clear();
 			gridTableViewer.refresh();
+			// gridTableViewer_1.refresh();
+			
+			
+			// 进行IEC104的一些默认帧配置 , 2014.6.2 日增加，便于添加新的通道
+			if (comboProtocal.getText().equals(protocalTypeStr[0])) {	// IEC协议时候的初始设置
+				IECFrameStr tempFrame = new IECFrameStr();
+				
+				tempFrame.setCallTypeNum("0x8B");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("600");
+				framesIEC.add(tempFrame);
+				
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x88");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("30");
+				framesIEC.add(tempFrame);
+				
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x67");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("600");
+				framesIEC.add(tempFrame);
+				
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x65");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("600");
+				framesIEC.add(tempFrame);
+				
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x8E");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("600");
+				framesIEC.add(tempFrame);
+
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x91");
+				tempFrame.setFrameName("sz");
+				tempFrame.setInterval("600");
+				framesIEC.add(tempFrame);
+
+				gridTableViewer_1.setInput(framesIEC);
+			}
+			
 			gridTableViewer_1.refresh();
 			
 		} else if (event.getProperty().equals(
@@ -1218,8 +1263,8 @@ public class ScadaChannelConfigView extends ViewPart implements
 				FirePropertyConstants.ACQUISITIONCHANNEL_ADD) ) {
 			
 			//清空插件
-			textIP.setText("");
-			textPort.setText("");//
+			textIP.setText("192.168.请补齐");
+			textPort.setText("2404");//
 			textDTUID.setText("");
 			textDtuPort.setText("");
 			textHeart.setText("");
