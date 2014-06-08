@@ -1878,7 +1878,7 @@ public class VariableTemplateConfigView extends ViewPart {
 				return tagCfgTpl.getTagNameShow() ;
 			case 2:// 变量类型
 				// return tagCfgTpl.getVarType() == null ? null : getVarType(tagCfgTpl.getVarType()).getValue();
-				return tagCfgTpl.getSubType() == null ? null : (getVarType(tagCfgTpl.getVarType())==null?null:getVarType(tagCfgTpl.getVarType()).getValue());
+				return tagCfgTpl.getVarType() == null ? null : (getVarType(tagCfgTpl.getVarType())==null?null:getVarType(tagCfgTpl.getVarType()).getValue());
 			case 3:// 变量子类型
 				return tagCfgTpl.getSubType() == null ? null : (getVarSubType(tagCfgTpl.getSubType())==null?null:getVarSubType(tagCfgTpl.getSubType()).getValue());
 			case 4:// 变量分组
