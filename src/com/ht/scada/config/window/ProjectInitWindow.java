@@ -224,7 +224,8 @@ public class ProjectInitWindow extends ApplicationWindow {
 		VarGroupCfg varGroupCfgYaoTiaoYouJing = new VarGroupCfg(VarGroupEnum.YAO_TIAO_YOU_JING.toString(), VarGroupEnum.YAO_TIAO_YOU_JING.getValue());
 		VarGroupCfg varGroupCfgYaoTiaoCGQ = new VarGroupCfg(VarGroupEnum.YAO_TIAO_CGQ.toString(), VarGroupEnum.YAO_TIAO_CGQ.getValue());	
 		VarGroupCfg varGroupCfgQT = new VarGroupCfg(VarGroupEnum.QI_TA.toString(), VarGroupEnum.QI_TA.getValue());
-				
+		
+		
 		varGroupCfgList.add(varGroupCfgDianYC);
 		varGroupCfgList.add(varGroupCfgDianYM);
 		varGroupCfgList.add(varGroupCfgDianXB);
@@ -283,7 +284,7 @@ public class ProjectInitWindow extends ApplicationWindow {
 		varGroupCfgSet.add(varGroupCfgYaoTiaoYouJing);
 		varGroupCfgSet.add(varGroupCfgYaoTiaoCGQ);	
 		varGroupCfgSet.add(varGroupCfgQT);
-		
+		varGroupCfgSet.add(varGroupCfgJiLiangZhan);	// 变量分组，计量站
 		
 		endTagType.setVarGroupCfgSet(varGroupCfgSet);	// 监控对象（油井）需要监控的 变量
 		
