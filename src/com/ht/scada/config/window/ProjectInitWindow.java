@@ -600,10 +600,12 @@ public class ProjectInitWindow extends ApplicationWindow {
 		CommunicationProtocalType communicationProtocalType2 = new CommunicationProtocalType(CommunicationProtocalEnum.ModbusTCP.toString(), CommunicationProtocalEnum.ModbusTCP.getValue());
 		CommunicationProtocalType communicationProtocalType3 = new CommunicationProtocalType(CommunicationProtocalEnum.ModbusRTU.toString(), CommunicationProtocalEnum.ModbusRTU.getValue());
 		CommunicationProtocalType communicationProtocalType4 = new CommunicationProtocalType(CommunicationProtocalEnum.DL645.toString(), CommunicationProtocalEnum.DL645.getValue());
+		CommunicationProtocalType communicationProtocalType5 = new CommunicationProtocalType(CommunicationProtocalEnum.OPC.toString(), CommunicationProtocalEnum.OPC.getValue());
 		commProtocalList.add(communicationProtocalType1);
 		commProtocalList.add(communicationProtocalType2);
 		commProtocalList.add(communicationProtocalType3);
 		commProtocalList.add(communicationProtocalType4);
+		commProtocalList.add(communicationProtocalType5);
 		
 		typeService.insertMajorTagType(majorTagTypeList);
 		typeService.insertEndTagType(endTagTypeList);
