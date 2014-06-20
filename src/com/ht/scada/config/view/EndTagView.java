@@ -1,6 +1,5 @@
 package com.ht.scada.config.view;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
-import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,13 +34,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -258,7 +250,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				JFileChooser j1 = new JFileChooser();
-				j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录")); //\\192.168.0.212\软件\csView软件开发\组态图图片目录
+				// j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录")); //打开服务器相对目录（暂时打开绝对路径下的）
 				int n = j1.showOpenDialog(null);
 				if(j1.getSelectedFile() != null ){
 					String fileName = j1.getSelectedFile().toString();
