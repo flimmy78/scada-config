@@ -1,6 +1,5 @@
 package com.ht.scada.config.view;
 
-import java.io.File;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -33,10 +32,11 @@ import com.ht.scada.config.util.ViewPropertyChange;
  * 相关主索引的系统组态图片关联
  * @author 王蓬
  * @time 2013.3.24
+ * @time 2014.6.26 日增加联合站 处理方法
  */
 public class SystemConfigPictureRelated extends ViewPart implements IPropertyChangeListener {
 	
-	public static String [] sysNameArray = { "系统总图", "集输系统", "注水系统" };	// 系统名称数组（后期可提取成枚举变量）
+	public static String [] sysNameArray = { "系统总图", "集输系统", "注水系统" , "联合站", "注水站" };	// 系统名称数组（后期可提取成枚举变量）
 	public int sysNameID = 0;					// 系统名ID，默认为总系统
 	
 	public static MajorTag majorTag;		// 该操作页面对应的主索引
@@ -179,8 +179,12 @@ public class SystemConfigPictureRelated extends ViewPart implements IPropertyCha
 						sysNameID = 0; 	// 获得系统号
 					} else if (psc.getSysname().equals(sysNameArray[1])){
 						sysNameID = 1; 	// 获得系统号
-					} else {
+					} else if (psc.getSysname().equals(sysNameArray[2])){ 
 						sysNameID = 2; 	// 获得系统号
+					} else if (psc.getSysname().equals(sysNameArray[3])){
+						sysNameID = 3;
+					} else if (psc.getSysname().equals(sysNameArray[4])){
+						sysNameID = 4;
 					}
 					psc.setSysnameID(sysNameID);
 					

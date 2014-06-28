@@ -2,7 +2,6 @@ package com.ht.scada.config.view;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -39,6 +37,8 @@ import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -53,18 +53,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ht.scada.common.tag.dao.TplModelConfigDao;
-import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.TagCfgTpl;
-import com.ht.scada.common.tag.entity.TplModelConfig;
 import com.ht.scada.common.tag.entity.VarGroupCfg;
-import com.ht.scada.common.tag.service.EndTagConfigService;
 import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.common.tag.service.TplModelConfigService;
 import com.ht.scada.common.tag.type.entity.DataValueType;
@@ -81,15 +75,11 @@ import com.ht.scada.config.util.PinyinComparator;
 import com.ht.scada.config.window.StorageDetailInfor;
 import com.ht.scada.config.window.TplModelConfigDesignWindow;
 
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-
 /**
  * 变量模板配置
  * 
  * @author 赵磊,王蓬
+ * @time	2014.6.28 增加 “设备地址”选项
  * 
  */
 public class VariableTemplateConfigView extends ViewPart {
@@ -1665,7 +1655,47 @@ public class VariableTemplateConfigView extends ViewPart {
 				gridTableViewer.update(tct, null);
 			}
 		});
+		
+		
+		GridViewerColumn gridViewerColumn_2 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_21 = gridViewerColumn_2.getColumn();
+		gridColumn_21.setWidth(100);
+		gridColumn_21.setText("设备地址");
 
+		gridViewerColumn_2.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				 
+				return String.valueOf( tct.getDeviceAddr()==null?"":tct.getDeviceAddr() );
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {	// 防止输入空值
+//					MessageDialog.openError(grid.getShell(), "错误", "设备地址不能为空！");
+					
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setDeviceAddr(null);
+					gridTableViewer.update(tct, null);
+					
+					return;
+				}
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setDeviceAddr(Integer.parseInt((String)value));
+				gridTableViewer.update(tct, null);
+			}
+		});
+		
+		
+		
 		Menu menu = new Menu(grid);
 		grid.setMenu(menu);
 
@@ -1926,6 +1956,9 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 20:// 脉冲单位
 				return tagCfgTpl.getUnitValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getUnitValue());
+			case 21:// 设备地址
+				return tagCfgTpl.getDeviceAddr() == null ? "" : String
+						.valueOf(tagCfgTpl.getDeviceAddr());
 
 			default:
 				break;

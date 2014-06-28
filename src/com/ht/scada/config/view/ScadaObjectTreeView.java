@@ -24,6 +24,7 @@ import com.ht.scada.common.tag.entity.TplModelConfig;
 import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.common.tag.service.MajorTagService;
 import com.ht.scada.common.tag.service.TplModelConfigService;
+import com.ht.scada.common.tag.util.EndTagTypeEnum;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.ViewPropertyChange;
@@ -337,17 +338,32 @@ public class ScadaObjectTreeView extends ViewPart {
 				
 				// 个性组态设计是否可用（仅仅当节点关联完模板，并且模板或者节点至少一个存在组态图时可用）
 				boolean configDesignEnable = true;	
-				if (endTag.getTplName()==null) {
-					//JOptionPane.showConfirmDialog(null, "", "", JOptionPane.ERROR_MESSAGE);
-					configDesignEnable = false;
-				}
-				if (configDesignEnable == true ){	 // 关联了模板
-					TplModelConfig tplModelConfigTemp = tplModelConfigService.findByTplname(endTag.getTplName());
-					
-					if (tplModelConfigTemp == null && endTag.getImagePath() == null ) {	// 个性和共性均为配置模板底图
+				
+				//2014.6.26  日添加， 判断是不是联合站子系统节点
+				EndTag temp11 = endTag.getParent();
+				if (endTag.getType().equals(EndTagTypeEnum.LIAN_HE_ZHAN_SUB.toString())) {	// 联合站子系统单独处理
+					if ( endTag.getParent().getTplName()!=null ) {
+						configDesignEnable = true;
+					}
+					else {
 						configDesignEnable = false;
 					}
-				}		
+				} else {																	// 其余的一种处理模式
+					if (endTag.getTplName()==null) {
+						//JOptionPane.showConfirmDialog(null, "", "", JOptionPane.ERROR_MESSAGE);
+						configDesignEnable = false;
+						
+					} 
+					if (configDesignEnable == true ){	 // 关联了模板
+						TplModelConfig tplModelConfigTemp = tplModelConfigService.findByTplname(endTag.getTplName());
+						
+						if (tplModelConfigTemp == null && endTag.getImagePath() == null ) {	// 个性和共性均为配置模板底图
+							configDesignEnable = false;
+						}
+					}		
+				}
+				
+				
 				
 				menuMng.add(new Separator());	// 分割线
 				// 一下标签用于设置监控对象的组态图设计

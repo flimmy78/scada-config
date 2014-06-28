@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class SystemConfigDesignWindow extends ApplicationWindow {
 	
-	public static String [] sysNameArray = { "系统总图", "集输系统", "注水系统" };	// 系统名称数组（后期可提取成枚举变量）
+	public static String [] sysNameArray = { "系统总图", "集输系统", "注水系统" , "联合站", "注水站" };	// 系统名称数组（后期可提取成枚举变量）
 	public static String splitOfItems = ":";		// 项之间的分割符
 	
 	private int standardWidth = 150; 	// 响应区域基准-宽

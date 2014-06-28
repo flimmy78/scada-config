@@ -42,6 +42,7 @@ import com.ht.scada.common.tag.service.EndTagConfigService;
 import com.ht.scada.common.tag.service.EndTagService;
 import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.common.tag.service.TplModelConfigService;
+import com.ht.scada.common.tag.util.EndTagTypeEnum;
 import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.LayoutUtil;
 
@@ -357,7 +358,13 @@ public class EndTagConfigDesignWindow extends ApplicationWindow {
 	public void pageInit() {
 		System.out.println("系统初始化");
 		
-		tagCfgTplList = tagCfgTplService.findVariablesByTplName(endTag.getTplName());	// 获得该节点关联模板的所有变量
+		// 是联合站子对象，用父节点的模板
+		if (endTag.getType().equals(EndTagTypeEnum.LIAN_HE_ZHAN_SUB.toString())) {
+			tagCfgTplList = tagCfgTplService.findVariablesByTplName(endTag.getParent().getTplName());	// 获得该节点关联模板的所有变量
+		} else {	// 普通对象，用本身关联的模板
+			tagCfgTplList = tagCfgTplService.findVariablesByTplName(endTag.getTplName());	// 获得该节点关联模板的所有变量
+		}
+		
 		String [] tplNameArray = new String [tagCfgTplList.size()];
 		for (int i= 0 ; i<tplNameArray.length; i++) {
 			tplNameArray[i] = tagCfgTplList.get(i).getTagName();
