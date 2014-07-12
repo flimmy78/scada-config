@@ -1751,6 +1751,43 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 		});
 		menuItem_1.setText("删除变量");
+		
+		GridViewerColumn gridViewerColumn_3 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_22 = gridViewerColumn_3.getColumn();
+		gridColumn_22.setWidth(100);
+		gridColumn_22.setText("通道序号");
+		
+		gridViewerColumn_3.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				 
+				return String.valueOf( tct.getChannelIdx()==null?"":tct.getChannelIdx() );
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {	// 防止输入空值
+//					MessageDialog.openError(grid.getShell(), "错误", "设备地址不能为空！");
+					
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setChannelIdx(null);
+					gridTableViewer.update(tct, null);
+					
+					return;
+				}
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setChannelIdx(Integer.parseInt((String)value));
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		gridTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		gridTableViewer.setLabelProvider(new ViewerLabelProvider_1());
@@ -1959,6 +1996,9 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 21:// 设备地址
 				return tagCfgTpl.getDeviceAddr() == null ? "" : String
 						.valueOf(tagCfgTpl.getDeviceAddr());
+			case 22:// 通道序号
+				return tagCfgTpl.getChannelIdx() == null ? "" : String
+						.valueOf(tagCfgTpl.getChannelIdx());
 
 			default:
 				break;
