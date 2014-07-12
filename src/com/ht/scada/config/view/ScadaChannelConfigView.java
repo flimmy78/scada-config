@@ -275,7 +275,10 @@ public class ScadaChannelConfigView extends ViewPart implements
 								comboProtocal.setLayoutData(gd_comboProtocal);
 								comboProtocal.select(0);
 						new Label(groupBasicInfo, SWT.NONE);
-						new Label(groupBasicInfo, SWT.NONE);
+						
+						final Button button = new Button(groupBasicInfo, SWT.CHECK);
+						button.setText("启用");
+						button.setSelection(true);
 						
 						Group group_1 = new Group(composite, SWT.NONE);
 						group_1.setBounds(10, 99, 306, 422);
@@ -818,6 +821,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 //					acquisitionChannel.setSchedule(textSchedule.getText().trim());
 									acquisitionChannel.setPortInfo(portInforStr);
 									acquisitionChannel.setFrames(frameInforStr);
+									acquisitionChannel.setUsed(button.getSelection());
 									
 //					Date nowDate = new Date();
 //					acquisitionChannel.setUpdateTime(nowDate);
@@ -880,6 +884,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 //					acquisitionChannel.setSchedule(textSchedule.getText().trim());
 									acquisitionChannel.setPortInfo(portInforStr);
 									acquisitionChannel.setFrames(frameInforStr);
+									acquisitionChannel.setUsed(button.getSelection());
 									
 									
 									// 更新数据库
