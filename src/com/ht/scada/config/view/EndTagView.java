@@ -123,6 +123,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private Text text_code;
 	private Text textImagePath;
 	private Text textUrls;
+	private Text text_idx;
 
 	public void createPartControl(Composite parent) {
 
@@ -270,6 +271,15 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		GridData gd_textUrls = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_textUrls.widthHint = 270;
 		textUrls.setLayoutData(gd_textUrls);
+		
+		Label label_3 = new Label(parent, SWT.NONE);
+		label_3.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label_3.setText("通道序号：");
+		
+		text_idx = new Text(parent, SWT.BORDER);
+		GridData gd_text_idx = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_text_idx.widthHint = 200;
+		text_idx.setLayoutData(gd_text_idx);
 
 		gridTableViewer = new GridTableViewer(parent, SWT.BORDER);
 		final Grid grid = gridTableViewer.getGrid();
@@ -374,6 +384,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
 					endTag.setVideoUrls("".equals(textUrls.getText().trim())?null:textUrls.getText().trim());
+					endTag.setChannelIdxMulti("".equals(text_idx.getText().trim())?null:text_idx.getText().trim());
 					
 					//以下8行处理图片保存
 					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
@@ -431,6 +442,8 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
 					endTag.setVideoUrls("".equals(textUrls.getText().trim())?null:textUrls.getText().trim());
+					
+					endTag.setChannelIdxMulti("".equals(text_idx.getText().trim())?null:text_idx.getText().trim());
 					
 					//以下8行处理图片保存
 					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
@@ -520,6 +533,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			comboViewer_endType.getCombo().setText("");
 			comboViewer_endSubType.getCombo().setText("");
 			textImagePath.setText("");
+			text_idx.setText("");
 			
 			//初始化属性
 			endTagExtInfoNameList = new ArrayList<EndTagExtInfoName>();
@@ -550,6 +564,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			text_code.setText(endTag.getCode()==null?"":endTag.getCode());
 			textImagePath.setText(endTag.getImagePath()==null?"":endTag.getImagePath());
 			textUrls.setText(endTag.getVideoUrls()==null?"":endTag.getVideoUrls());
+			text_idx.setText(endTag.getChannelIdxMulti()==null?"":endTag.getChannelIdxMulti());
 
 			//初始化监控对象类型
 			if (endTag.getType() != null) {
