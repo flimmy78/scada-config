@@ -232,17 +232,21 @@ public class ScadaChannelConfigView extends ViewPart implements
 	private Text text_dz;
 	private Text text_xh;
 	private Button button;
+	private Text text_jd;
 
 	public void createPartControl(Composite parent) {
 		parent.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		parent.setLayout(new GridLayout(1, false));
 
 		Composite composite = new Composite(parent, SWT.NONE);
+		GridData gd_composite = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_composite.widthHint = 500;
+		composite.setLayoutData(gd_composite);
 		composite.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		composite.setLayout(null);
 
 		Group groupBasicInfo = new Group(composite, SWT.NONE);
-		groupBasicInfo.setBounds(10, 10, 306, 140);
+		groupBasicInfo.setBounds(10, 10, 350, 140);
 		groupBasicInfo.setText("基本信息");
 		groupBasicInfo.setLayout(new GridLayout(4, false));
 
@@ -258,7 +262,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 		textChannelName.setLayoutData(gd_textChannelName);
 
 		Label labelIdx = new Label(groupBasicInfo, SWT.NONE);
-		labelIdx.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false,
+		labelIdx.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
 				1, 1));
 		labelIdx.setText(" 序号：");
 
@@ -327,11 +331,16 @@ public class ScadaChannelConfigView extends ViewPart implements
 		text_dz = new Text(groupBasicInfo, SWT.BORDER);
 		text_dz.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
-		new Label(groupBasicInfo, SWT.NONE);
-		new Label(groupBasicInfo, SWT.NONE);
+		
+		Label label_5 = new Label(groupBasicInfo, SWT.NONE);
+		label_5.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label_5.setText("关联节点：");
+		
+		text_jd = new Text(groupBasicInfo, SWT.BORDER);
+		text_jd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Group group_1 = new Group(composite, SWT.NONE);
-		group_1.setBounds(10, 150, 306, 422);
+		group_1.setBounds(10, 150, 350, 422);
 		group_1.setText("通讯信息");
 		group_1.setLayout(new GridLayout(1, false));
 
@@ -919,6 +928,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 					acquisitionChannel.setManufacture("".equals(text_cj.getText().trim())?null:text_cj.getText().trim());
 					acquisitionChannel.setType("".equals(text_xh.getText().trim())?null:text_xh.getText().trim());
 					acquisitionChannel.setAddress("".equals(text_dz.getText().trim())?null:text_dz.getText().trim());
+					acquisitionChannel.setEndTags("".equals(text_jd.getText().trim())?null:text_jd.getText().trim());
 
 					// Date nowDate = new Date();
 					// acquisitionChannel.setUpdateTime(nowDate);
@@ -987,7 +997,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 					acquisitionChannel.setManufacture("".equals(text_cj.getText().trim())?null:text_cj.getText().trim());
 					acquisitionChannel.setType("".equals(text_xh.getText().trim())?null:text_xh.getText().trim());
 					acquisitionChannel.setAddress("".equals(text_dz.getText().trim())?null:text_dz.getText().trim());
-
+					acquisitionChannel.setEndTags("".equals(text_jd.getText().trim())?null:text_jd.getText().trim());
 					// 更新数据库
 					acquisitionChannelService.update(acquisitionChannel);
 					ScadaDeviceTreeView.treeViewer.update(acquisitionChannel,
@@ -1203,6 +1213,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 			text_cj.setText("");
 			text_xh.setText("");
 			text_dz.setText("");
+			text_jd.setText("");
 			// textSchedule.setText("");
 			// Date nowDate = new Date();
 			// Calendar nowCalendar = Utils.date2CalendarUtil(nowDate);
@@ -1285,9 +1296,10 @@ public class ScadaChannelConfigView extends ViewPart implements
 			text_xh.setText(acquisitionChannel.getType()==null?"":acquisitionChannel.getType());
 			text_dz.setText(acquisitionChannel.getAddress()==null?"":acquisitionChannel.getAddress());
 			
-			acquisitionChannel.setManufacture("".equals(text_cj.getText().trim())?null:text_cj.getText().trim());
-			acquisitionChannel.setType("".equals(text_xh.getText().trim())?null:text_xh.getText().trim());
-			acquisitionChannel.setAddress("".equals(text_dz.getText().trim())?null:text_dz.getText().trim());
+			text_cj.setText(acquisitionChannel.getManufacture()==null?"":acquisitionChannel.getManufacture());
+			text_xh.setText(acquisitionChannel.getType()==null?"":acquisitionChannel.getType());
+			text_dz.setText(acquisitionChannel.getAddress()==null?"":acquisitionChannel.getAddress());
+			text_jd.setText(acquisitionChannel.getEndTags()==null?"":acquisitionChannel.getEndTags());
 
 			// Date updateTime = acquisitionChannel.getUpdateTime();
 			// Calendar updateTimeCalendar =
