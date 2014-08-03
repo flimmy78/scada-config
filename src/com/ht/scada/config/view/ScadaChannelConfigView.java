@@ -1076,7 +1076,8 @@ public class ScadaChannelConfigView extends ViewPart implements
 			public void widgetSelected(SelectionEvent e) {
 				IECFrameStr tempFrame = new IECFrameStr();
 				tempFrame.setCallTypeNum("new");
-				tempFrame.setFrameName("可为空");
+//				tempFrame.setFrameName("可为空");
+//				tempFrame.setFrameName("可为空");
 				tempFrame.setInterval("请输入");
 
 				framesIEC.add(tempFrame);
