@@ -1076,7 +1076,8 @@ public class ScadaChannelConfigView extends ViewPart implements
 			public void widgetSelected(SelectionEvent e) {
 				IECFrameStr tempFrame = new IECFrameStr();
 				tempFrame.setCallTypeNum("new");
-				tempFrame.setFrameName("可为空");
+//				tempFrame.setFrameName("可为空");
+//				tempFrame.setFrameName("可为空");
 				tempFrame.setInterval("请输入");
 
 				framesIEC.add(tempFrame);
@@ -1244,7 +1245,7 @@ public class ScadaChannelConfigView extends ViewPart implements
 				tempFrame = new IECFrameStr();
 				tempFrame.setCallTypeNum("0x88");
 				tempFrame.setFrameName("");
-				tempFrame.setInterval("30");
+				tempFrame.setInterval("5");
 				framesIEC.add(tempFrame);
 
 				tempFrame = new IECFrameStr();
@@ -1270,7 +1271,31 @@ public class ScadaChannelConfigView extends ViewPart implements
 				tempFrame.setFrameName("sz");
 				tempFrame.setInterval("600");
 				framesIEC.add(tempFrame);
+				
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x8C");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("30");
+				framesIEC.add(tempFrame);
+				
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x8D");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("30");
+				framesIEC.add(tempFrame);
 
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x92");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("60");
+				framesIEC.add(tempFrame);
+				
+				tempFrame = new IECFrameStr();
+				tempFrame.setCallTypeNum("0x93");
+				tempFrame.setFrameName("");
+				tempFrame.setInterval("60");
+				framesIEC.add(tempFrame);
+				
 				gridTableViewer_1.setInput(framesIEC);
 			}
 
