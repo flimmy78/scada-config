@@ -1421,18 +1421,18 @@ public class VariableTemplateConfigView extends ViewPart {
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
 				
-				sdi =new StorageDetailInfor();
-				if (tct.getStorage() == null || tct.getStorage().length() == 0) {
-					sdi.setStorageStr("fault|-|-|-|-");
-				} else {
-					sdi.setStorageStr(tct.getStorage()); 
-				}
-					
 //				sdi =new StorageDetailInfor();
-//				sdi.setStorageStr(tct.getStorage());
-				sdi.open();
-				return sdi.getStorageStr();
-				//return tct.getStorage()==null?"":tct.getStorage();
+//				if (tct.getStorage() == null || tct.getStorage().length() == 0) {
+//					sdi.setStorageStr("fault|-|-|-|-");
+//				} else {
+//					sdi.setStorageStr(tct.getStorage()); 
+//				}
+//					
+////				sdi =new StorageDetailInfor();
+////				sdi.setStorageStr(tct.getStorage());
+//				sdi.open();
+//				return sdi.getStorageStr();
+				return tct.getStorage()==null?"":tct.getStorage();
 			
 			}
 

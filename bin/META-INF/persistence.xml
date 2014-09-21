@@ -23,6 +23,21 @@
 		<class>com.ht.scada.common.tag.entity.PrecinctSystemEndTagList</class>
 		<class>com.ht.scada.common.tag.entity.UserRecord</class>
 		<class>com.ht.scada.common.tag.entity.UserWorkShift</class>
+		<class>com.ht.scada.common.tag.entity.WellInfo</class>
+		<class>com.ht.scada.common.tag.entity.WellDailyData</class>
+		<class>com.ht.scada.common.tag.entity.WellHourlyData</class>
+		<class>com.ht.scada.common.tag.entity.StatisticsData</class>
+		<class>com.ht.scada.common.tag.entity.WaterWellDailyData</class>
+		<class>com.ht.scada.common.tag.entity.WaterWellHourlyData</class>
+		<class>com.ht.scada.common.tag.entity.OilWellCalcData</class>
+		<class>com.ht.scada.common.tag.entity.WaterWellCalcData</class>
+		
+		<class>com.ht.scada.data.entity.SoeRecord</class>
+		<class>com.ht.scada.data.entity.FaultRecord</class>
+		<class>com.ht.scada.data.entity.OffLimitsRecord</class>
+		<class>com.ht.scada.data.entity.YkRecord</class>
+		<class>com.ht.scada.data.entity.YtRecord</class>
+		<class>com.ht.scada.data.entity.YxRecord</class>
 		
 		<class>com.ht.scada.security.entity.User</class>
 		<class>com.ht.scada.security.entity.UserRole</class>
@@ -37,11 +52,11 @@
 		<class>com.ht.scada.common.tag.type.entity.EndTagExtInfoName</class>
 		<class>com.ht.scada.common.tag.type.entity.DataValueType</class>
 		<class>com.ht.scada.common.tag.entity.SoeRecordTemp</class>
-	<!--	
- 		<properties>
+		
+ 		<!-- <properties>
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" /> 
 		</properties> -->
 	</persistence-unit>
 </persistence>
