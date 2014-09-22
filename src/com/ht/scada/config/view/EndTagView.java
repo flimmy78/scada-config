@@ -53,6 +53,7 @@ import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.ViewPropertyChange;
+import org.eclipse.swt.widgets.Group;
 
 /**
  * 监控对象操作页面类
@@ -123,7 +124,10 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private Text text_code;
 	private Text textImagePath;
 	private Text textUrls;
+	private Text text_mulidx;
 	private Text text_idx;
+	private Text text_address;
+	
 
 	public void createPartControl(Composite parent) {
 
@@ -272,14 +276,32 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		gd_textUrls.widthHint = 270;
 		textUrls.setLayoutData(gd_textUrls);
 		
-		Label label_3 = new Label(parent, SWT.NONE);
-		label_3.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label_3.setText("通道序号：");
+		Group group = new Group(parent, SWT.NONE);
+		group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		group.setText("通讯配置");
 		
-		text_idx = new Text(parent, SWT.BORDER);
-		GridData gd_text_idx = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_text_idx.widthHint = 200;
-		text_idx.setLayoutData(gd_text_idx);
+		Label label_3 = new Label(group, SWT.NONE);
+		label_3.setBounds(24, 25, 72, 17);
+		label_3.setText("多通道序号：");
+		
+		text_mulidx = new Text(group, SWT.BORDER);
+		text_mulidx.setBounds(113, 22, 209, 23);
+		
+		Label label_4 = new Label(group, SWT.NONE);
+		label_4.setText("单通道序号：");
+		label_4.setBounds(24, 63, 72, 17);
+		
+		text_idx = new Text(group, SWT.BORDER);
+		text_idx.setEditable(false);
+		text_idx.setBounds(113, 57, 72, 23);
+		
+		Label label_5 = new Label(group, SWT.NONE);
+		label_5.setText("监控设备号：");
+		label_5.setBounds(203, 63, 72, 17);
+		
+		text_address = new Text(group, SWT.BORDER);
+		text_address.setEditable(false);
+		text_address.setBounds(289, 57, 72, 23);
 
 		gridTableViewer = new GridTableViewer(parent, SWT.BORDER);
 		final Grid grid = gridTableViewer.getGrid();
@@ -384,7 +406,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
 					endTag.setVideoUrls("".equals(textUrls.getText().trim())?null:textUrls.getText().trim());
-					endTag.setChannelIdxMulti("".equals(text_idx.getText().trim())?null:text_idx.getText().trim());
+					endTag.setChannelIdxMulti("".equals(text_mulidx.getText().trim())?null:text_mulidx.getText().trim());
 					
 					//以下8行处理图片保存
 					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
@@ -443,7 +465,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
 					endTag.setVideoUrls("".equals(textUrls.getText().trim())?null:textUrls.getText().trim());
 					
-					endTag.setChannelIdxMulti("".equals(text_idx.getText().trim())?null:text_idx.getText().trim());
+					endTag.setChannelIdxMulti("".equals(text_mulidx.getText().trim())?null:text_mulidx.getText().trim());
 					
 					//以下8行处理图片保存
 					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
@@ -533,7 +555,9 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			comboViewer_endType.getCombo().setText("");
 			comboViewer_endSubType.getCombo().setText("");
 			textImagePath.setText("");
+			text_mulidx.setText("");
 			text_idx.setText("");
+			text_address.setText("");
 			
 			//初始化属性
 			endTagExtInfoNameList = new ArrayList<EndTagExtInfoName>();
@@ -564,7 +588,9 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			text_code.setText(endTag.getCode()==null?"":endTag.getCode());
 			textImagePath.setText(endTag.getImagePath()==null?"":endTag.getImagePath());
 			textUrls.setText(endTag.getVideoUrls()==null?"":endTag.getVideoUrls());
-			text_idx.setText(endTag.getChannelIdxMulti()==null?"":endTag.getChannelIdxMulti());
+			text_mulidx.setText(endTag.getChannelIdxMulti()==null?"":endTag.getChannelIdxMulti());
+			text_idx.setText(endTag.getChannelIdx()==null?"":endTag.getChannelIdx().toString());
+			text_address.setText(endTag.getDeviceAddr()==null?"":endTag.getDeviceAddr().toString());
 
 			//初始化监控对象类型
 			if (endTag.getType() != null) {
