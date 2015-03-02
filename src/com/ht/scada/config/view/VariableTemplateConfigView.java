@@ -2,7 +2,6 @@ package com.ht.scada.config.view;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -39,6 +37,8 @@ import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -53,18 +53,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ht.scada.common.tag.dao.TplModelConfigDao;
-import com.ht.scada.common.tag.entity.EndTag;
 import com.ht.scada.common.tag.entity.TagCfgTpl;
-import com.ht.scada.common.tag.entity.TplModelConfig;
 import com.ht.scada.common.tag.entity.VarGroupCfg;
-import com.ht.scada.common.tag.service.EndTagConfigService;
 import com.ht.scada.common.tag.service.TagCfgTplService;
 import com.ht.scada.common.tag.service.TplModelConfigService;
 import com.ht.scada.common.tag.type.entity.DataValueType;
@@ -81,15 +75,11 @@ import com.ht.scada.config.util.PinyinComparator;
 import com.ht.scada.config.window.StorageDetailInfor;
 import com.ht.scada.config.window.TplModelConfigDesignWindow;
 
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-
 /**
  * 变量模板配置
  * 
  * @author 赵磊,王蓬
+ * @time	2014.6.28 增加 “设备地址”选项
  * 
  */
 public class VariableTemplateConfigView extends ViewPart {
@@ -128,7 +118,8 @@ public class VariableTemplateConfigView extends ViewPart {
 	private String[] varSubTypeArray = new String[]{""};	//变量子类型
 	private String[] varDataTypeArray = new String[]{""};	//值类型	
 	private String[] varGroupCfgArray = new String[]{""};	//变量分组
-	private String[] varUnitArray = {"", "m", "cm", "KPa", "MPa", "KW", "KW·h", "KVA", "KVar", "V", "A", "Hz", "m³", "m³/h", "℃"};// 变量单位数组
+	private String[] varUnitArray = {"", "m", "cm", "KPa", "MPa", "KN", "KW", "KW·h", "KVA", "KVar", "V", "A", "Hz", "m³", "m³/h", "℃", "次/分"};// 变量单位数组
+	private String [] alarmLevelArray = {"", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};		// 报警及故障级别
 	
 	private Combo combo;
 	private Combo combo_1;
@@ -297,6 +288,9 @@ public class VariableTemplateConfigView extends ViewPart {
 						label_1.setText("变量分组：");
 		
 				combo_1 = new Combo(composite_3, SWT.NONE);
+				GridData gd_combo_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+				gd_combo_1.widthHint = 132;
+				combo_1.setLayoutData(gd_combo_1);
 				combo_1.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
@@ -1427,18 +1421,18 @@ public class VariableTemplateConfigView extends ViewPart {
 			protected Object getValue(Object element) {
 				TagCfgTpl tct = (TagCfgTpl) element;
 				
-				sdi =new StorageDetailInfor();
-				if (tct.getStorage() == null || tct.getStorage().length() == 0) {
-					sdi.setStorageStr("fault|-|-|-|-");
-				} else {
-					sdi.setStorageStr(tct.getStorage()); 
-				}
-					
 //				sdi =new StorageDetailInfor();
-//				sdi.setStorageStr(tct.getStorage());
-				sdi.open();
-				return sdi.getStorageStr();
-				//return tct.getStorage()==null?"":tct.getStorage();
+//				if (tct.getStorage() == null || tct.getStorage().length() == 0) {
+//					sdi.setStorageStr("fault|-|-|-|-");
+//				} else {
+//					sdi.setStorageStr(tct.getStorage()); 
+//				}
+//					
+////				sdi =new StorageDetailInfor();
+////				sdi.setStorageStr(tct.getStorage());
+//				sdi.open();
+//				return sdi.getStorageStr();
+				return tct.getStorage()==null?"":tct.getStorage();
 			
 			}
 
@@ -1474,6 +1468,50 @@ public class VariableTemplateConfigView extends ViewPart {
 				tct.setTriggerName("".equals((String)value)?null:(String)value);
 				gridTableViewer.update(tct, null);
 			}
+		});
+		
+		GridViewerColumn gridViewerColumn_1 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_20 = gridViewerColumn_1.getColumn();
+		gridColumn_20.setWidth(100);
+		gridColumn_20.setText("报警及故障级别");
+		gridViewerColumn_1.setEditingSupport(new EditingSupport(gridTableViewer){
+
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new ComboBoxCellEditor(grid,
+						alarmLevelArray);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				if (tagCfgTpl.getAlarmLevel() != null) {
+					int i = 1;
+					for (String varUnit : alarmLevelArray) {
+						if (varUnit.equals(tagCfgTpl.getAlarmLevel())) {
+							return i-1;
+						}
+						i++;
+					}
+				}
+				return 0;
+			}
+
+			protected void setValue(Object element, Object value) {
+				TagCfgTpl tagCfgTpl = (TagCfgTpl) element;
+				int index = (int)value;
+				if (index<=0) {
+					tagCfgTpl.setAlarmLevel(null);
+				} else {
+					tagCfgTpl.setAlarmLevel(Integer.parseInt( "".equals(alarmLevelArray[index])?null:alarmLevelArray[index]) );
+				}
+
+				gridTableViewer.update(tagCfgTpl, null);
+			}
+		
 		});
 		
 		GridViewerColumn gridViewerColumn_18 = new GridViewerColumn(
@@ -1617,7 +1655,47 @@ public class VariableTemplateConfigView extends ViewPart {
 				gridTableViewer.update(tct, null);
 			}
 		});
+		
+		
+		GridViewerColumn gridViewerColumn_2 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_21 = gridViewerColumn_2.getColumn();
+		gridColumn_21.setWidth(100);
+		gridColumn_21.setText("设备地址");
 
+		gridViewerColumn_2.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				 
+				return String.valueOf( tct.getDeviceAddr()==null?"":tct.getDeviceAddr() );
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {	// 防止输入空值
+//					MessageDialog.openError(grid.getShell(), "错误", "设备地址不能为空！");
+					
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setDeviceAddr(null);
+					gridTableViewer.update(tct, null);
+					
+					return;
+				}
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setDeviceAddr(Integer.parseInt((String)value));
+				gridTableViewer.update(tct, null);
+			}
+		});
+		
+		
+		
 		Menu menu = new Menu(grid);
 		grid.setMenu(menu);
 
@@ -1673,6 +1751,43 @@ public class VariableTemplateConfigView extends ViewPart {
 			}
 		});
 		menuItem_1.setText("删除变量");
+		
+		GridViewerColumn gridViewerColumn_3 = new GridViewerColumn(gridTableViewer, SWT.NONE);
+		GridColumn gridColumn_22 = gridViewerColumn_3.getColumn();
+		gridColumn_22.setWidth(100);
+		gridColumn_22.setText("通道序号");
+		
+		gridViewerColumn_3.setEditingSupport(new EditingSupport(gridTableViewer) {
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			protected CellEditor getCellEditor(Object element) {
+				CellEditor ce = new TextCellEditor(grid);
+				return ce;
+			}
+
+			protected Object getValue(Object element) {
+				TagCfgTpl tct = (TagCfgTpl) element;
+				 
+				return String.valueOf( tct.getChannelIdx()==null?"":tct.getChannelIdx() );
+			}
+
+			protected void setValue(Object element, Object value) {
+				if("".equals((String) value)) {	// 防止输入空值
+//					MessageDialog.openError(grid.getShell(), "错误", "设备地址不能为空！");
+					
+					TagCfgTpl tct = (TagCfgTpl) element;
+					tct.setChannelIdx(null);
+					gridTableViewer.update(tct, null);
+					
+					return;
+				}
+				TagCfgTpl tct = (TagCfgTpl) element;
+				tct.setChannelIdx(Integer.parseInt((String)value));
+				gridTableViewer.update(tct, null);
+			}
+		});
 
 		gridTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		gridTableViewer.setLabelProvider(new ViewerLabelProvider_1());
@@ -1829,14 +1944,14 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 1:// 组态设计显示名
 				return tagCfgTpl.getTagNameShow() ;
 			case 2:// 变量类型
-				return tagCfgTpl.getVarType() == null ? null : getVarType(tagCfgTpl.getVarType()).getValue();
+				// return tagCfgTpl.getVarType() == null ? null : getVarType(tagCfgTpl.getVarType()).getValue();
+				return tagCfgTpl.getVarType() == null ? null : (getVarType(tagCfgTpl.getVarType())==null?null:getVarType(tagCfgTpl.getVarType()).getValue());
 			case 3:// 变量子类型
 				return tagCfgTpl.getSubType() == null ? null : (getVarSubType(tagCfgTpl.getSubType())==null?null:getVarSubType(tagCfgTpl.getSubType()).getValue());
 			case 4:// 变量分组
 			{
-//				System.out.println(tagCfgTpl.getVarGroup()+ "   ---------------------------------------------------");
-				return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
-				
+				// return tagCfgTpl.getVarGroup() == null ? null : getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue();
+				return tagCfgTpl.getVarGroup() == null ? null : (getVarGroupCfg(tagCfgTpl.getVarGroup())==null?null:getVarGroupCfg(tagCfgTpl.getVarGroup()).getValue());
 			}
 			case 5:// 变量key
 				return tagCfgTpl.getVarName();
@@ -1851,7 +1966,8 @@ public class VariableTemplateConfigView extends ViewPart {
 			case 10:// 位偏移量
 				return String.valueOf(tagCfgTpl.getBitOffset());
 			case 11:// 值类型
-				return tagCfgTpl.getDataType() == null ? null : getDataType(tagCfgTpl.getDataType()).getValue();
+				// return tagCfgTpl.getDataType() == null ? null : getDataType(tagCfgTpl.getDataType()).getValue();
+				return tagCfgTpl.getDataType() == null ? null : (getDataType(tagCfgTpl.getDataType())==null?null:getDataType(tagCfgTpl.getDataType()).getValue());
 			case 12:// 基数
 				return tagCfgTpl.getBaseValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getBaseValue());
@@ -1862,17 +1978,27 @@ public class VariableTemplateConfigView extends ViewPart {
 				return tagCfgTpl.getStorage();
 			case 15:// 触发规则
 				return tagCfgTpl.getTriggerName();
-			case 16:// 单位
+			case 16:// 报警级别
+				return tagCfgTpl.getAlarmLevel() == null ? "" : String
+						.valueOf(tagCfgTpl.getAlarmLevel());
+				
+			case 17:// 单位
 				return tagCfgTpl.getUnit();
-			case 17:// 最大值
+			case 18:// 最大值
 				return tagCfgTpl.getMaxValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getMaxValue());
-			case 18:// 最小值
+			case 19:// 最小值
 				return tagCfgTpl.getMinValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getMinValue());
-			case 19:// 脉冲单位
+			case 20:// 脉冲单位
 				return tagCfgTpl.getUnitValue() == null ? "" : String
 						.valueOf(tagCfgTpl.getUnitValue());
+			case 21:// 设备地址
+				return tagCfgTpl.getDeviceAddr() == null ? "" : String
+						.valueOf(tagCfgTpl.getDeviceAddr());
+			case 22:// 通道序号
+				return tagCfgTpl.getChannelIdx() == null ? "" : String
+						.valueOf(tagCfgTpl.getChannelIdx());
 
 			default:
 				break;
@@ -2092,12 +2218,17 @@ public class VariableTemplateConfigView extends ViewPart {
 			newTag.setStorage(temp.getStorage());
 			newTag.setSubType(temp.getSubType());
 			newTag.setTagName(temp.getTagName());
+			newTag.setTagNameShow(temp.getTagNameShow());
 			newTag.setTplName(temp.getTplName());
 			newTag.setTriggerName(temp.getTriggerName());
+			newTag.setUnit(temp.getUnit());
 			newTag.setUnitValue(temp.getUnitValue());
 			newTag.setVarGroup(temp.getVarGroup());
 			newTag.setVarName(temp.getVarName());
 			newTag.setVarType(temp.getVarType());
+			newTag.setX(temp.getX());
+			newTag.setY(temp.getY());
+			newTag.setAlarmLevel(temp.getAlarmLevel());
 			
 			tagCfgTplList.add(newTag);	//添加入当前模板
 		}

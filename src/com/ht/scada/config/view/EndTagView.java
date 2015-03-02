@@ -1,6 +1,5 @@
 package com.ht.scada.config.view;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
-import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,13 +34,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +53,7 @@ import com.ht.scada.config.scadaconfig.Activator;
 import com.ht.scada.config.util.FirePropertyConstants;
 import com.ht.scada.config.util.LayoutUtil;
 import com.ht.scada.config.util.ViewPropertyChange;
+import org.eclipse.swt.widgets.Group;
 
 /**
  * 监控对象操作页面类
@@ -130,6 +123,11 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 	private ComboViewer comboViewer_endSubType;
 	private Text text_code;
 	private Text textImagePath;
+	private Text textUrls;
+	private Text text_mulidx;
+	private Text text_idx;
+	private Text text_address;
+	
 
 	public void createPartControl(Composite parent) {
 
@@ -257,7 +255,7 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				JFileChooser j1 = new JFileChooser();
-				j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录")); //\\192.168.0.212\软件\csView软件开发\组态图图片目录
+				// j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录")); //打开服务器相对目录（暂时打开绝对路径下的）
 				int n = j1.showOpenDialog(null);
 				if(j1.getSelectedFile() != null ){
 					String fileName = j1.getSelectedFile().toString();
@@ -268,6 +266,42 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 		});
 		btnImageChoose.setBounds(211, 0, 55, 23);
 		btnImageChoose.setText("打  开");
+		
+		Label lblrul = new Label(parent, SWT.NONE);
+		lblrul.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblrul.setText("视频url集合：");
+		
+		textUrls = new Text(parent, SWT.BORDER);
+		GridData gd_textUrls = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_textUrls.widthHint = 270;
+		textUrls.setLayoutData(gd_textUrls);
+		
+		Group group = new Group(parent, SWT.NONE);
+		group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		group.setText("通讯配置");
+		
+		Label label_3 = new Label(group, SWT.NONE);
+		label_3.setBounds(24, 25, 72, 17);
+		label_3.setText("多通道序号：");
+		
+		text_mulidx = new Text(group, SWT.BORDER);
+		text_mulidx.setBounds(113, 22, 209, 23);
+		
+		Label label_4 = new Label(group, SWT.NONE);
+		label_4.setText("单通道序号：");
+		label_4.setBounds(24, 63, 72, 17);
+		
+		text_idx = new Text(group, SWT.BORDER);
+		text_idx.setEditable(false);
+		text_idx.setBounds(113, 57, 72, 23);
+		
+		Label label_5 = new Label(group, SWT.NONE);
+		label_5.setText("监控设备号：");
+		label_5.setBounds(203, 63, 72, 17);
+		
+		text_address = new Text(group, SWT.BORDER);
+		text_address.setEditable(false);
+		text_address.setBounds(289, 57, 72, 23);
 
 		gridTableViewer = new GridTableViewer(parent, SWT.BORDER);
 		final Grid grid = gridTableViewer.getGrid();
@@ -371,6 +405,8 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
+					endTag.setVideoUrls("".equals(textUrls.getText().trim())?null:textUrls.getText().trim());
+					endTag.setChannelIdxMulti("".equals(text_mulidx.getText().trim())?null:text_mulidx.getText().trim());
 					
 					//以下8行处理图片保存
 					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
@@ -427,6 +463,9 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 
 					endTag.setName(text_name.getText().trim());
 					endTag.setCode("".equals(text_code.getText().trim())?null:text_code.getText().trim());
+					endTag.setVideoUrls("".equals(textUrls.getText().trim())?null:textUrls.getText().trim());
+					
+					endTag.setChannelIdxMulti("".equals(text_mulidx.getText().trim())?null:text_mulidx.getText().trim());
 					
 					//以下8行处理图片保存
 					String imagePath = textImagePath.getText().trim();	// 图片路径字符串
@@ -516,6 +555,9 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			comboViewer_endType.getCombo().setText("");
 			comboViewer_endSubType.getCombo().setText("");
 			textImagePath.setText("");
+			text_mulidx.setText("");
+			text_idx.setText("");
+			text_address.setText("");
 			
 			//初始化属性
 			endTagExtInfoNameList = new ArrayList<EndTagExtInfoName>();
@@ -545,6 +587,10 @@ public class EndTagView extends ViewPart implements IPropertyChangeListener {
 			text_name.setText(endTag.getName());
 			text_code.setText(endTag.getCode()==null?"":endTag.getCode());
 			textImagePath.setText(endTag.getImagePath()==null?"":endTag.getImagePath());
+			textUrls.setText(endTag.getVideoUrls()==null?"":endTag.getVideoUrls());
+			text_mulidx.setText(endTag.getChannelIdxMulti()==null?"":endTag.getChannelIdxMulti());
+			text_idx.setText(endTag.getChannelIdx()==null?"":endTag.getChannelIdx().toString());
+			text_address.setText(endTag.getDeviceAddr()==null?"":endTag.getDeviceAddr().toString());
 
 			//初始化监控对象类型
 			if (endTag.getType() != null) {

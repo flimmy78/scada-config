@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -209,7 +208,7 @@ public class TplModelConfigDesignWindow extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				JFileChooser j1 = new JFileChooser();
-				j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录")); //\\192.168.0.212\软件\csView软件开发\组态图图片目录
+				// j1.setCurrentDirectory(new File("//192.168.0.212/软件/csView软件开发/组态图图片目录")); //打开服务器相对目录（暂时打开绝对路径下的）
 				int n = j1.showOpenDialog(null);
 				if(j1.getSelectedFile() != null ){
 					String fileName = j1.getSelectedFile().toString();

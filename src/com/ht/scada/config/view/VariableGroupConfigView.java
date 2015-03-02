@@ -68,7 +68,7 @@ public class VariableGroupConfigView extends ViewPart implements
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 
-		gridTableViewer = new GridTableViewer(parent, SWT.BORDER);
+		gridTableViewer = new GridTableViewer(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		final Grid grid = gridTableViewer.getGrid();
 		grid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grid.setRowHeaderVisible(true);

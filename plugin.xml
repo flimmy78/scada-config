@@ -136,10 +136,10 @@
             id="com.ht.scada.config.view.ScadaDeviceTableTreeView"
             name="监控设备显示">
       </view>
-      <view
-            class="com.ht.scada.config.view.EndTagConfigDesignView"
-            id="com.ht.scada.config.view.ConfigDesign"
-            name="组态设计">
+       <view
+            class="com.ht.scada.config.view.SystemConfigPictureRelated"
+            id="com.ht.scada.config.view.SystemConfigPictureRelated"
+            name="管理区系统组态图片关联">
       </view>
    </extension>
    <extension
@@ -159,6 +159,18 @@
          <property
                name="appName"
                value="丹东华通SCADA系统通用配置软件">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="product1"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="scada-config.application"
+            name="scada-configNew">
+         <property
+               name="appName"
+               value="scada-configNew">
          </property>
       </product>
    </extension>

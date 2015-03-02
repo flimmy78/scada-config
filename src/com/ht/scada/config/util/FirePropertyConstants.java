@@ -2,7 +2,7 @@ package com.ht.scada.config.util;
 
 /**
  * 触发属性常量
- * @author 赵磊
+ * @author 赵磊、王蓬
  *
  */
 public class FirePropertyConstants {
@@ -12,6 +12,8 @@ public class FirePropertyConstants {
 	public final static String MAJOR_ADD = "major_add";
 	
 	public final static String MAJOR_EDIT = "major_edit";
+	
+	public final static String  MAJOR_SYSTEM_PICTURE_RELATED ="major_system_picture_related";
 	
 	public final static String ENDTAG_ADD = "endTag_add";
 	

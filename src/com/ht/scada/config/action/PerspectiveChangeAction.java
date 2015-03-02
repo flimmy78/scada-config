@@ -29,6 +29,7 @@ public class PerspectiveChangeAction extends Action {
 			PlatformUI.getWorkbench().showPerspective(perspectiveId,
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 		} catch (WorkbenchException e) {
+			//
 			e.printStackTrace();
 		}
 
